@@ -1,5 +1,4 @@
-﻿using B_B_Api.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace B_B_Api.Controllers

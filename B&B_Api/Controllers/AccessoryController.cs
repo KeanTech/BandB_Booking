@@ -10,7 +10,7 @@ namespace B_B_Api.Controllers
         [Route("Get")]
         public IActionResult Get()
         {
-            return NotFound();
+            return Ok("Hello");
         }
 
         [HttpPost]
