@@ -16,6 +16,7 @@ namespace B_B_ClassLibrary.Models
         public DateTime SignedDate { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        
 
     }
 }

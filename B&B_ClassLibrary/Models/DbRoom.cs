@@ -9,5 +9,7 @@ namespace B_B_ClassLibrary.Models
     public class DbRoom
     {
         public List<DbRoomAccessory> ?RoomAccessories { get; set; }
+
+        public ICollection<DbGuest> Guests { get; set; }
     }
 }
