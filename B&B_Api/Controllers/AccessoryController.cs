@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 namespace B_B_Api.Controllers
 {
     [ApiController]
