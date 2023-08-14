@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace B_B_Api.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class RoomController : Controller
     {
         [HttpGet]

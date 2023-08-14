@@ -3,7 +3,7 @@
 namespace B_B_Api.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class LandLordController : Controller
     {
         [HttpGet]

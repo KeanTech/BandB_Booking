@@ -2,7 +2,7 @@
 namespace B_B_Api.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class AccessoryController : Controller
     {
         [HttpGet]
