@@ -9,7 +9,7 @@ namespace B_B_ClassLibrary.BusinessModels
     public class Contract
     {
         public int Id { get; set; }
-        public int GuestId { get; set; }
+        public int UserId { get; set; }
         public int RoomId { get; set; }
         public DateTime SignedDate { get; set; }
         public DateTime FromDate { get; set; }

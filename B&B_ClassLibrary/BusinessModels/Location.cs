@@ -10,9 +10,14 @@ namespace B_B_ClassLibrary.BusinessModels
     {
         public int Id { get; set; }
         public int LandlordId { get; set; }
-        public DateTime SignedDate { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string ZipCode { get; set; }
+        public string Country { get; set; }
+        public int AmountOfRooms { get; set; }
+        public string? Area { get; set; }
+        public double? Rating { get; set; }
         public Location()
         {
 

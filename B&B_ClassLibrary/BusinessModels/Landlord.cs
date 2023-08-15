@@ -8,6 +8,7 @@ namespace B_B_ClassLibrary.BusinessModels
 {
     public class Landlord:User
     {
+        public int Id { get; set; }
         public string CPRNumber { get; set; }
         public string AccountNumber { get; set; }
         public string RegistrationNumber { get; set; }

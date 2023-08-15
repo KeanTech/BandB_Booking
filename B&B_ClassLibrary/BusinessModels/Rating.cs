@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace B_B_ClassLibrary.BusinessModels
 {
-    public class Guest:User
+    public class Rating
     {
-        public Guest()
-        {
-            
-        }
+        public int Id { get; set; }
+        public double? Value { get; set; }
     }
 }

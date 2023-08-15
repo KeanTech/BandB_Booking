@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using B_B_ClassLibrary.BusinessModels;
 
 <PageTitle>Home Page</PageTitle>
 <div>
@@ -23,7 +24,14 @@
             @foreach (var room in _rooms)
             {
                  <li>
-                     @room.
+                     <div>
+                         Sted: @room.Rating
+                         <br/>
+                         Rum Nr.: @room.Number
+                         <br/>
+                         Rating: @room.NumberOfBeds
+                         Pris pr. nat: @room.PricePerNight
+                     </div>
                  </li>
             }
         </ul>
@@ -37,7 +45,17 @@
 {
     private string _userName = "";
     private string _password = "";
-    private List<string> _rooms = new List<string>();
+    private List<Room> _rooms = new List<Room>() 
+    { 
+        new Room() 
+        {
+            Number = 1,
+            NumberOfBeds = 7,
+            PricePerNight = 730,
+            Rating = 2.4,            
+        }
+       
+    };
 
     protected override void OnInitialized()
     {

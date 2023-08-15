@@ -9,6 +9,11 @@ namespace B_B_ClassLibrary.BusinessModels
 {
     public class Room
     {
-        public List<RoomAccessory> ?RoomAccessories{ get; set; }
+        public int Id { get; set; }
+        public int Number { get; set; }
+        public int NumberOfBeds { get; set; }
+        public int PricePerNight { get; set; }
+        public double? Rating { get; set; }
+
     }
 }
