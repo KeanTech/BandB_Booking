@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace B_B_ClassLibrary.Models
 {
-    public class DbRoomAccessory
+    public class DbLocationRating
     {
         [Key]
         public int Id { get; set; }
-        public string Type { get; set; }
+        public double ?Rating { get; set; }
 
-        public ICollection<DbRoom> ?Rooms { get; set; }
+        public DbLocation ?Location { get; set; }
     }
 }

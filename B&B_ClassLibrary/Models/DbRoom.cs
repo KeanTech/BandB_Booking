@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,15 @@ namespace B_B_ClassLibrary.Models
 {
     public class DbRoom
     {
-        public List<DbRoomAccessory> ?RoomAccessories { get; set; }
+        [Key]
+        public int Id { get; set; }
+        public int Number { get; set; }
+        public int NumberOfBeds { get; set; }
+        public int PricePerNight { get; set; }
+        public double ?Rating { get; set; }
 
-        public ICollection<DbGuest> Guests { get; set; }
+        public DbLocation ?Location { get; set; }
+        public ICollection<DbRoomAccessory> ?Accessories { get; set; }
+        public ICollection<DbRoomRating> ?Ratings { get; set; }
     }
 }

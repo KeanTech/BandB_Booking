@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using B_B_api.Data;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace B_B_Api.Controllers
@@ -7,6 +8,13 @@ namespace B_B_Api.Controllers
     [Route("[controller]")]
     public class RoomController : Controller
     {
+        private readonly BedAndBreakfastContext _context;
+
+        public RoomController(BedAndBreakfastContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         [Route("Get")]
         public IActionResult Get()
