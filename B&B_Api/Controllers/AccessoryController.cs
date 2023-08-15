@@ -1,11 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
+﻿using B_B_api.Data;
+using Microsoft.AspNetCore.Mvc;
 namespace B_B_Api.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class AccessoryController : Controller
     {
+        private readonly BedAndBreakfastContext _context;
+
+        public AccessoryController(BedAndBreakfastContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         [Route("Get")]
         public IActionResult Get(string id)
