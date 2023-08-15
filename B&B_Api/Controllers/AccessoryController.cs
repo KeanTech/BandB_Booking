@@ -8,28 +8,28 @@ namespace B_B_Api.Controllers
     {
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get()
+        public IActionResult Get(string id)
         {
             return Ok("Hello");
         }
 
         [HttpPost]
         [Route("Create")]
-        public IActionResult Post()
+        public IActionResult Post(string id)
         {
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete()
+        public IActionResult Delete(string id)
         {
             return NotFound();
         }
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update()
+        public IActionResult Update(string id)
         {
             return NotFound();
         }

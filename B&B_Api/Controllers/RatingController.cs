@@ -3,7 +3,7 @@
 namespace B_B_Api.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class RatingController : Controller
     {
         [HttpGet]
@@ -20,7 +20,7 @@ namespace B_B_Api.Controllers
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("Delete")]
         public IActionResult Delete()
         {
