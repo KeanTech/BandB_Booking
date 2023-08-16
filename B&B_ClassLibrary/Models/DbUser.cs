@@ -14,6 +14,7 @@ namespace B_B_ClassLibrary.Models
         public string PhoneNumber { get; set; }
         public DateTime Created { get; set; }
 
+        public ICollection<DbContract> ?Contracts { get; set; }
         public DbLandlord ?Landlord { get; set; }
     }
 }

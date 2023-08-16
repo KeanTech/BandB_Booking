@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace B_B_api.Migrations
 {
     [DbContext(typeof(BedAndBreakfastContext))]
-    [Migration("20230815112611_DBInitialization")]
-    partial class DBInitialization
+    [Migration("20230816070055_DbSeeding")]
+    partial class DbSeeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,6 +86,16 @@ namespace B_B_api.Migrations
                         .IsUnique();
 
                     b.ToTable("Landlords");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccountNumber = "0000222244446666",
+                            CPRNumber = "0101906673",
+                            RegistrationNumber = "6789",
+                            UserId = 3
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocation", b =>
@@ -104,7 +114,6 @@ namespace B_B_api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Area")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -122,7 +131,7 @@ namespace B_B_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Rating")
+                    b.Property<double?>("Rating")
                         .HasColumnType("float");
 
                     b.Property<string>("ZipCode")
@@ -134,6 +143,21 @@ namespace B_B_api.Migrations
                     b.HasIndex("LandlordId");
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Havnevej 1",
+                            AmountOfRooms = 4,
+                            Area = "TestArea",
+                            City = "Skagen",
+                            Country = "Denmark",
+                            LandlordId = 1,
+                            Name = "Hansens fede Bed and Breakfast",
+                            Rating = 4.0999999999999996,
+                            ZipCode = "1000"
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationRating", b =>
@@ -147,8 +171,8 @@ namespace B_B_api.Migrations
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double?>("Rating")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -165,7 +189,7 @@ namespace B_B_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("LocationId")
+                    b.Property<int>("LocationId")
                         .HasColumnType("int");
 
                     b.Property<int>("Number")
@@ -177,7 +201,7 @@ namespace B_B_api.Migrations
                     b.Property<int>("PricePerNight")
                         .HasColumnType("int");
 
-                    b.Property<double>("Rating")
+                    b.Property<double?>("Rating")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -185,6 +209,44 @@ namespace B_B_api.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            LocationId = 1,
+                            Number = 1,
+                            NumberOfBeds = 2,
+                            PricePerNight = 500,
+                            Rating = 4.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            LocationId = 1,
+                            Number = 2,
+                            NumberOfBeds = 2,
+                            PricePerNight = 200,
+                            Rating = 2.0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            LocationId = 1,
+                            Number = 3,
+                            NumberOfBeds = 1,
+                            PricePerNight = 1000,
+                            Rating = 5.0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            LocationId = 1,
+                            Number = 4,
+                            NumberOfBeds = 3,
+                            PricePerNight = 2000,
+                            Rating = 1.0
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomAccessory", b =>
@@ -212,8 +274,8 @@ namespace B_B_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double?>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<int?>("RoomId")
                         .HasColumnType("int");
@@ -263,6 +325,41 @@ namespace B_B_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Country = "Denmark",
+                            Created = new DateTime(2023, 8, 16, 9, 0, 55, 283, DateTimeKind.Local).AddTicks(9765),
+                            Email = "ken1ander2@hotmail.com",
+                            FirstName = "Kenneth",
+                            LastName = "Andersen",
+                            Password = "12345",
+                            PhoneNumber = "12345678"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Country = "Denmark",
+                            Created = new DateTime(2023, 8, 16, 9, 0, 55, 283, DateTimeKind.Local).AddTicks(9808),
+                            Email = "mortvest5@gmail.com",
+                            FirstName = "Morten",
+                            LastName = "Vestergaard",
+                            Password = "12345",
+                            PhoneNumber = "11223344"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Country = "Denmark",
+                            Created = new DateTime(2023, 8, 16, 9, 0, 55, 283, DateTimeKind.Local).AddTicks(9810),
+                            Email = "buster@outlook.com",
+                            FirstName = "Buster",
+                            LastName = "Jørgensen",
+                            Password = "12345",
+                            PhoneNumber = "55005500"
+                        });
                 });
 
             modelBuilder.Entity("DbRoomDbRoomAccessory", b =>
@@ -289,9 +386,8 @@ namespace B_B_api.Migrations
                         .IsRequired();
 
                     b.HasOne("B_B_ClassLibrary.Models.DbUser", "User")
-                        .WithMany()
+                        .WithMany("Contracts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Room");
@@ -334,7 +430,9 @@ namespace B_B_api.Migrations
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbLocation", "Location")
                         .WithMany("Rooms")
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Location");
                 });
@@ -382,6 +480,8 @@ namespace B_B_api.Migrations
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbUser", b =>
                 {
+                    b.Navigation("Contracts");
+
                     b.Navigation("Landlord");
                 });
 #pragma warning restore 612, 618
