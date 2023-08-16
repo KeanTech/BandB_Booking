@@ -4,6 +4,7 @@ using B_B_api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace B_B_api.Migrations
 {
     [DbContext(typeof(BedAndBreakfastContext))]
-    partial class BedAndBreakfastContextModelSnapshot : ModelSnapshot
+    [Migration("20230816070003_DbInitialization")]
+    partial class DbInitialization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,16 +86,6 @@ namespace B_B_api.Migrations
                         .IsUnique();
 
                     b.ToTable("Landlords");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccountNumber = "0000222244446666",
-                            CPRNumber = "0101906673",
-                            RegistrationNumber = "6789",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocation", b =>
@@ -140,21 +133,6 @@ namespace B_B_api.Migrations
                     b.HasIndex("LandlordId");
 
                     b.ToTable("Locations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Havnevej 1",
-                            AmountOfRooms = 4,
-                            Area = "TestArea",
-                            City = "Skagen",
-                            Country = "Denmark",
-                            LandlordId = 1,
-                            Name = "Hansens fede Bed and Breakfast",
-                            Rating = 4.0999999999999996,
-                            ZipCode = "1000"
-                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationRating", b =>
@@ -206,44 +184,6 @@ namespace B_B_api.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            LocationId = 1,
-                            Number = 1,
-                            NumberOfBeds = 2,
-                            PricePerNight = 500,
-                            Rating = 4.0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            LocationId = 1,
-                            Number = 2,
-                            NumberOfBeds = 2,
-                            PricePerNight = 200,
-                            Rating = 2.0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            LocationId = 1,
-                            Number = 3,
-                            NumberOfBeds = 1,
-                            PricePerNight = 1000,
-                            Rating = 5.0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            LocationId = 1,
-                            Number = 4,
-                            NumberOfBeds = 3,
-                            PricePerNight = 2000,
-                            Rating = 1.0
-                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomAccessory", b =>
@@ -322,41 +262,6 @@ namespace B_B_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Country = "Denmark",
-                            Created = new DateTime(2023, 8, 16, 9, 0, 55, 283, DateTimeKind.Local).AddTicks(9765),
-                            Email = "ken1ander2@hotmail.com",
-                            FirstName = "Kenneth",
-                            LastName = "Andersen",
-                            Password = "12345",
-                            PhoneNumber = "12345678"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Country = "Denmark",
-                            Created = new DateTime(2023, 8, 16, 9, 0, 55, 283, DateTimeKind.Local).AddTicks(9808),
-                            Email = "mortvest5@gmail.com",
-                            FirstName = "Morten",
-                            LastName = "Vestergaard",
-                            Password = "12345",
-                            PhoneNumber = "11223344"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Country = "Denmark",
-                            Created = new DateTime(2023, 8, 16, 9, 0, 55, 283, DateTimeKind.Local).AddTicks(9810),
-                            Email = "buster@outlook.com",
-                            FirstName = "Buster",
-                            LastName = "Jørgensen",
-                            Password = "12345",
-                            PhoneNumber = "55005500"
-                        });
                 });
 
             modelBuilder.Entity("DbRoomDbRoomAccessory", b =>
