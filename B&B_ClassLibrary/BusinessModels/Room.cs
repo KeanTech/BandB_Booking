@@ -10,6 +10,7 @@ namespace B_B_ClassLibrary.BusinessModels
     public class Room
     {
         public int Id { get; set; }
+        public int LocationId { get; set; }
         public int Number { get; set; }
         public int NumberOfBeds { get; set; }
         public int PricePerNight { get; set; }

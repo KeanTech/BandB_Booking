@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.BusinessModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +19,16 @@ namespace B_B_ClassLibrary.Models
         public int NumberOfBeds { get; set; }
         public int PricePerNight { get; set; }
         public double ?Rating { get; set; }
+
+        public DbRoom(Room room)
+        {
+            Id = room.Id;
+            LocationId = room.LocationId;
+            Number = room.Number;
+            NumberOfBeds = room.NumberOfBeds;
+            PricePerNight = room.PricePerNight;
+            Rating = room.Rating;
+        }
 
         public DbLocation ?Location { get; set; }
         public ICollection<DbRoomAccessory> ?Accessories { get; set; }

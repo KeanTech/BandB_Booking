@@ -1,5 +1,8 @@
 ﻿using B_B_api.Data;
+using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace B_B_Api.Controllers
 {
@@ -15,24 +18,61 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public IActionResult Get()
+        [Route("GetAll")]
+        public async Task<ActionResult<IEnumerable<DbLocation>>> GetAll()
         {
-            return NotFound();
+            var locations = await _context.Locations.ToListAsync();
+            return locations;
+        }
+
+        [HttpGet]
+        [Route("Get")]
+        public async Task<ActionResult<DbLocation>> Get(int id)
+        {
+            var location = await _context.Locations.FindAsync(id);
+            if (location == null)
+            {
+                return NotFound();
+            }
+            return location;
+
         }
 
         [HttpPost]
         [Route("Create")]
-        public IActionResult Post()
+        public async Task<ActionResult<DbLocation>> Post(Location location)
         {
-            return NotFound();
+            var checkForLocation = _context.Locations.Where(x => x.Id == location.Id).FirstOrDefault();
+            if (checkForLocation == null)
+            {
+                DbLocation newLocation = new DbLocation(location);
+                await _context.Locations.AddAsync(newLocation);
+
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("Create", new { id = newLocation.Id }, newLocation);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete()
+        public async Task<ActionResult<DbLocation>> Delete(Location location)
         {
-            return NotFound();
+            var locationToDelete = await _context.Locations.FindAsync(location.Id);
+            if (locationToDelete == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _context.Locations.Remove(locationToDelete);
+
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
         }
 
         [HttpPost]
