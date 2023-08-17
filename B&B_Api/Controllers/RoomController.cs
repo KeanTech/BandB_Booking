@@ -37,7 +37,7 @@ namespace B_B_Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("GetRooms")]
-        public async Task<ActionResult<IEnumerable<DbRoom>>> Get(int locationId)
+        public async Task<ActionResult<IEnumerable<DbRoom>>> GetRooms(int locationId)
         {
             var allRooms = await _context.Rooms.Where(x => x.LocationId == locationId).ToListAsync();
             return allRooms;
@@ -77,27 +77,49 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Delete")]
-        public async Task<ActionResult<DbRoom>> Delete(Room room)
+        [Route("DeleteRoom")]
+        public async Task<ActionResult<DbRoom>> DeleteRoom(Room room)
         {
             var roomToDelete = await _context.Rooms.FindAsync(room.Id);
-            if (roomToDelete != null)
+            if (roomToDelete == null)
+            {
+                return NotFound();
+            }
+            else
             {
                 _context.Rooms.Remove(roomToDelete);
                 await _context.SaveChangesAsync();
                 return Ok();
             }
-            else
-            {
-                return NotFound();
-            }
         }
 
         [HttpPost]
-        [Route("Update")]
-        public IActionResult Update()
+        [Route("UpdateRoom")]
+        public async Task<ActionResult<DbRoom>> UpdateRoom(Room room)
         {
-            return NotFound();
+            var roomToUpdate = _context.Rooms.Where(x => x.Id == room.Id).FirstOrDefault();
+            if (roomToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            else
+            {
+                roomToUpdate.Number = room.Number;
+                roomToUpdate.NumberOfBeds = room.NumberOfBeds;
+                roomToUpdate.PricePerNight = room.PricePerNight;
+
+                _context.Update(roomToUpdate);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok();
+            }
         }
     }
 }

@@ -15,6 +15,11 @@ namespace B_B_ClassLibrary.Models
         public string PhoneNumber { get; set; }
         public DateTime Created { get; set; }
 
+        public DbUser()
+        {
+            
+        }
+
         public DbUser(User user)
         {
             Id = user.Id;

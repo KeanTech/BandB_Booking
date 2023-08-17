@@ -17,8 +17,8 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public async Task<ActionResult<DbUser>> Get(int id)
+        [Route("GetUser")]
+        public async Task<ActionResult<DbUser>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -32,8 +32,8 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
-        public async Task<ActionResult<DbUser>> Post(User user)
+        [Route("CreateUser")]
+        public async Task<ActionResult<DbUser>> CreateUser(User user)
         {
             var userCheck = _context.Users.Where(x => x.Id == user.Id).SingleOrDefault();
 
@@ -41,7 +41,14 @@ namespace B_B_Api.Controllers
             {
                 DbUser newUser = new DbUser(user);
                 await _context.Users.AddAsync(newUser);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
             }
             else
             {
@@ -51,10 +58,10 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Delete")]
-        public async Task<ActionResult<DbUser>> Delete(DbUser user)
+        [Route("DeleteUser")]
+        public async Task<ActionResult<DbUser>> DeleteUser(User user)
         {
-            var userToDelete = _context.Users.Where(x => x.Equals(user)).SingleOrDefault();
+            var userToDelete = await _context.Users.FindAsync(user.Id);
             if (userToDelete == null)
             {
                 return NotFound();
@@ -76,10 +83,28 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Update")]
-        public async Task<ActionResult<DbUser>> Update()
+        [Route("UpdateUser")]
+        public async Task<ActionResult<DbUser>> UpdateUser(User user)
         {
-            return NotFound();
+            var userToUpdate = _context.Users.Where(x => x.Id == user.Id).FirstOrDefault();
+            if (userToUpdate != null)
+            {
+                userToUpdate.FirstName = user.FirstName;
+                userToUpdate.Email = user.Email;
+                userToUpdate.Country = user.Country;
+                userToUpdate.LastName = user.LastName;
+                userToUpdate.PhoneNumber = user.PhoneNumber;
+                _context.Update(userToUpdate);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return Ok();
         }
     }
 }

@@ -20,6 +20,11 @@ namespace B_B_ClassLibrary.Models
         public int PricePerNight { get; set; }
         public double ?Rating { get; set; }
 
+        public DbRoom()
+        {
+            
+        }
+
         public DbRoom(Room room)
         {
             Id = room.Id;

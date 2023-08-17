@@ -18,16 +18,16 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
-        public async Task<ActionResult<IEnumerable<DbLocation>>> GetAll()
+        [Route("GetAllLocations")]
+        public async Task<ActionResult<IEnumerable<DbLocation>>> GetAllLocations()
         {
             var locations = await _context.Locations.ToListAsync();
             return locations;
         }
 
         [HttpGet]
-        [Route("Get")]
-        public async Task<ActionResult<DbLocation>> Get(int id)
+        [Route("GetLocation")]
+        public async Task<ActionResult<DbLocation>> GetLocation(int id)
         {
             var location = await _context.Locations.FindAsync(id);
             if (location == null)
@@ -39,8 +39,8 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
-        public async Task<ActionResult<DbLocation>> Post(Location location)
+        [Route("CreateLocation")]
+        public async Task<ActionResult<DbLocation>> CreateLocation(Location location)
         {
             var checkForLocation = _context.Locations.Where(x => x.Id == location.Id).FirstOrDefault();
             if (checkForLocation == null)
@@ -58,8 +58,8 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Delete")]
-        public async Task<ActionResult<DbLocation>> Delete(Location location)
+        [Route("DeleteLocation")]
+        public async Task<ActionResult<DbLocation>> DeleteLocation(Location location)
         {
             var locationToDelete = await _context.Locations.FindAsync(location.Id);
             if (locationToDelete == null)
@@ -76,10 +76,31 @@ namespace B_B_Api.Controllers
         }
 
         [HttpPost]
-        [Route("Update")]
-        public IActionResult Update()
+        [Route("UpdateLocation")]
+        public async Task<ActionResult<DbLocation>> UpdateLocation(Location location)
         {
-            return NotFound();
+            var locToUpdate = _context.Locations.Where(x => x.Id == location.Id).FirstOrDefault();
+            if (locToUpdate != null)
+            {
+                locToUpdate.Name = location.Name;
+                locToUpdate.Address = location.Address;
+                locToUpdate.City = location.City;
+                locToUpdate.ZipCode = location.ZipCode;
+                locToUpdate.Country = location.Country;
+                locToUpdate.AmountOfRooms = location.AmountOfRooms;
+                locToUpdate.Area = location.Area;
+
+                _context.Locations.Update(locToUpdate);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            return Ok();
         }
     }
 }

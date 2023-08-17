@@ -22,6 +22,11 @@ namespace B_B_ClassLibrary.Models
         public string ?Area { get; set; }
         public double ?Rating { get; set; }
 
+        public DbLocation()
+        {
+            
+        }
+
         public DbLocation(Location location)
         {
             Id = location.Id;
