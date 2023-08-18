@@ -2,7 +2,7 @@
 
 namespace B_B_App.Services
 {
-    public interface ILandlordService : IDataService
+    public interface ILandlordService<T> : IDataService<T>
     {
 
     }

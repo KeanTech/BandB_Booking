@@ -1,13 +1,12 @@
 ﻿using NPOI.SS.Formula.Functions;
-using System.Runtime.InteropServices;
 
 namespace B_B_App.Services
 {
-    public interface IDataService
+    public interface IDataService<T>
     {
-        public IEnumerable<T> Create(T type);
-        public IEnumerable<T> Get(T type);
-        public IEnumerable<T> Update(T type);
-        public IEnumerable<T> Delete(T type);
+        public Task<T> Create(T type);
+        public Task<T> Get(T type);
+        public Task<T> Update(T type);
+        public Task<T> Delete(T type);
     }
 }

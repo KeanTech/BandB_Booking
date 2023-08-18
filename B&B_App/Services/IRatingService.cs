@@ -1,6 +1,6 @@
 ﻿namespace B_B_App.Services
 {
-    public interface IRatingService
+    public interface IRatingService<T> : IDataService<T>
 {
 }
 }

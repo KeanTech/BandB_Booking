@@ -1,6 +1,6 @@
 ﻿namespace B_B_App.Services
 {
-    public interface IAccessoryService
+    public interface IAccessoryService<T> : IDataService<T>
 {
 }
 }
