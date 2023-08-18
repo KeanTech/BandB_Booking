@@ -1,6 +1,22 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using B_B_App.Components.Dialogs;
+@using B_B_ClassLibrary.BusinessModels;
+<div class="top-row ps-3 navbar navbar-dark" style="height:15%;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">B&B_App</a>
+        @if (logedIn)
+        {
+            <MudText Color="Color.Info">Welcome @_user.FirstName</MudText>
+            <MudButton ButtonType="ButtonType.Button" @onclick="LogOut" Color="Color.Warning">LogOut</MudButton>
+        }
+        else
+        {
+            if (loginDialogOpen)
+            {
+                <LoginDialog User="_user" DialogType="LoginDialog.ModalDialogType.OkCancel" OnClose="loginDialogClose"></LoginDialog>
+            }
+            <MudText Color="Color.Info">Welcome please login</MudText>
+
+            <MudButton ButtonType="ButtonType.Button" @onclick="Login"  Color="Color.Success">LogIn</MudButton>
+        }
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -14,26 +30,58 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
-
+    private bool loginDialogOpen = false;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private bool logedIn = false;
+    private User? _user;
+
+    protected override void OnInitialized()
+    {
+        if (_user == null)
+            _user = new User();
+
+        base.OnInitialized();
+    }
+
+    private async Task Login()
+    {
+        if (_user == null)
+            _user = new User();
+
+        loginDialogOpen = true;
+
+
+        return;
+    }
+
+    private async Task LogOut()
+    {
+        logedIn = false;
+        _user = null;
+        this.StateHasChanged();
+        return;
+    }
+
+    private void loginDialogClose(KeyValuePair<bool, User> pair)
+    {
+        loginDialogOpen = false;
+        
+        if (pair.Key)
+        {
+            logedIn = true;    
+        }
+
+    }
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
 }
