@@ -14,7 +14,7 @@ namespace B_B_App.Services
             throw new NotImplementedException();
         }
 
-        public Task<Location> Get(Location type)
+        public Task<Location> Get(int id)
         {
             throw new NotImplementedException();
         }

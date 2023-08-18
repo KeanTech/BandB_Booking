@@ -26,8 +26,15 @@ namespace B_B_Api.Controllers
         [Route("GetAllRooms")]
         public async Task<ActionResult<IEnumerable<DbRoom>>> GetAllRooms()
         {
-            var allRooms = await _context.Rooms.ToListAsync();
-            return allRooms;
+            try
+            {
+                var allRooms = await _context.Rooms.ToListAsync();
+                return allRooms;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>

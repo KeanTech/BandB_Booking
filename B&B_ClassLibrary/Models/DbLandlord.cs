@@ -20,6 +20,11 @@ namespace B_B_ClassLibrary.Models
         public string RegistrationNumber { get; set; }
         public string CPRNumber { get; set; }
 
+        public DbLandlord()
+        {
+            
+        }
+
         public DbLandlord(Landlord landlord)
         {
             Id = landlord.Id;

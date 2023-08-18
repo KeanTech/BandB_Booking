@@ -1,27 +1,57 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace B_B_App.Services
 {
     public class RoomService : IRoomService<Room>
     {
-        public Task<Room> Create(Room type)
+        private static HttpClient _httpClient;
+        public RoomService(HttpClient client)
         {
-            throw new NotImplementedException();
+            _httpClient = client;
         }
 
-        public Task<Room> Delete(Room type)
+
+        public async Task<Room> Create(Room room)
         {
-            throw new NotImplementedException();
+            var returnedRoom = await _httpClient.PostAsJsonAsync<Room>("https://localhost:7135/api/CreateRoom", room);
+            var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
+            return data;
         }
 
-        public Task<Room> Get(Room type)
+        public async Task<List<Room>> GetAllRooms()
         {
-            throw new NotImplementedException();
+            var allRooms = await _httpClient.GetFromJsonAsync<List<Room>>("https://localhost:7135/api/GetAllRooms");
+            return allRooms;
+            
         }
 
-        public Task<Room> Update(Room type)
+        public async Task<List<Room>> GetRooms(int locationId)
         {
-            throw new NotImplementedException();
+            var locationRooms = await _httpClient.PostAsJsonAsync<int>("https://localhost:7135/api/GetRooms", locationId);
+            var returnedLocRooms = await locationRooms.Content.ReadFromJsonAsync<List<Room>>();
+            return returnedLocRooms;
+        }
+
+        public async Task<Room> Get(int id)
+        {
+            var returnedRoom = await _httpClient.PostAsJsonAsync<int>("https://localhost:7135/api/GetRoom", id);
+            var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
+            return data;
+        }
+
+        public async Task<Room> Update(Room room)
+        {
+            var returnedRoom = await _httpClient.PostAsJsonAsync<Room>("https://localhost:7135/api/UpdateRoom", room);
+            var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
+            return data;
+        }
+        public async Task<Room> Delete(Room room)
+        {
+            var response = await _httpClient.PostAsJsonAsync<Room>("https://localhost:7135/api/DeleteRoom", room);
+            var data = await response.Content.ReadFromJsonAsync<Room>();
+            return data;
         }
     }
 }

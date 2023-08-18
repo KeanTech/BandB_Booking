@@ -14,7 +14,7 @@ namespace B_B_App.Services
             throw new NotImplementedException();
         }
 
-        public Task<Rating> Get(Rating type)
+        public Task<Rating> Get(int id)
         {
             throw new NotImplementedException();
         }

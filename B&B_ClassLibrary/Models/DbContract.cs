@@ -21,6 +21,11 @@ namespace B_B_ClassLibrary.Models
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
 
+        public DbContract()
+        {
+            
+        }
+
         public DbContract(Contract contract)
         {
             Id = contract.Id;

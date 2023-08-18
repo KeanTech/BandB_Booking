@@ -14,7 +14,7 @@ namespace B_B_App.Services
             throw new NotImplementedException();
         }
 
-        public Task<Contract> Get(Contract type)
+        public Task<Contract> Get(int id)
         {
             throw new NotImplementedException();
         }

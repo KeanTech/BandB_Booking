@@ -14,7 +14,7 @@ namespace B_B_App.Services
             throw new NotImplementedException();
         }
 
-        public Task<RoomAccessory> Get(RoomAccessory type)
+        public Task<RoomAccessory> Get(int id)
         {
             throw new NotImplementedException();
         }

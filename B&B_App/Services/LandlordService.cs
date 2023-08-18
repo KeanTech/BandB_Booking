@@ -14,7 +14,7 @@ namespace B_B_App.Services
             throw new NotImplementedException();
         }
 
-        public Task<Landlord> Get(Landlord type)
+        public Task<Landlord> Get(int id)
         {
             throw new NotImplementedException();
         }

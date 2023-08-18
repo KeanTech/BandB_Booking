@@ -30,9 +30,9 @@ namespace B_B_Api.Controllers
 
         [HttpPost]
         [Route("AddAccessory")]
-        public Task<ActionResult<DbRoomAccessory>> AddAccessory(List<DbRoomAccessory> accessories)
+        public async Task<ActionResult<DbRoomAccessory>> AddAccessory(List<DbRoomAccessory> accessories)
         {
-            
+            return NotFound();
         }
 
         [HttpPost]
