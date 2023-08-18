@@ -1,5 +1,8 @@
 ﻿using B_B_api.Data;
+using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 namespace B_B_Api.Controllers
 {
     [ApiController]
@@ -14,15 +17,20 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public IActionResult Get(string id)
+        [Route("GetAllAccessories")]
+        public async Task<ActionResult<IEnumerable<DbRoomAccessory>>> GetAllAccessories()
         {
-            return Ok("Hello");
+            var accessories = await _context.RoomAccessories.ToListAsync();
+            if (accessories == null)
+            {
+                return NotFound();
+            }
+            return accessories;
         }
 
         [HttpPost]
-        [Route("Create")]
-        public IActionResult Post(string id)
+        [Route("AddAccessory")]
+        public async Task<ActionResult<DbRoomAccessory>> AddAccessory(List<DbRoomAccessory> accessories)
         {
             return NotFound();
         }

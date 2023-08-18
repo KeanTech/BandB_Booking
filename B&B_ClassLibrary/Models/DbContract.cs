@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.BusinessModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,7 +20,22 @@ namespace B_B_ClassLibrary.Models
         public DateTime SignedDate { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        
+
+        public DbContract()
+        {
+            
+        }
+
+        public DbContract(Contract contract)
+        {
+            Id = contract.Id;
+            UserId = contract.UserId;
+            RoomId = contract.RoomId;
+            SignedDate = contract.SignedDate;
+            FromDate = contract.FromDate;
+            ToDate = contract.ToDate;
+        }
+
         public DbUser ?User { get; set; }
         public DbRoom ?Room { get; set; }
     }

@@ -1,4 +1,6 @@
 ﻿using B_B_api.Data;
+using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace B_B_Api.Controllers
@@ -15,31 +17,94 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public IActionResult Get()
+        [Route("GetLandlord")]
+        public async Task<ActionResult<DbLandlord>> GetLandlord(int id)
         {
-            return NotFound();
+            var landlord = await _context.Landlords.FindAsync(id);
+            if (landlord != null)
+            {
+                return landlord;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
-        [Route("Create")]
-        public IActionResult Post()
+        [Route("CreateLandlord")]
+        public async Task<ActionResult<DbLandlord>> CreateLandlord(Landlord landlord)
         {
-            return NotFound();
+            var landlordCheck = _context.Landlords.Where(x => x.Id == landlord.Id).FirstOrDefault();
+            if (landlordCheck != null)
+            {
+                DbLandlord newLandlord = new DbLandlord(landlord);
+                await _context.AddAsync(newLandlord);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
-        [Route("Delete")]
-        public IActionResult Delete()
+        [Route("DeleteLandlord")]
+        public async Task<ActionResult<DbLandlord>> DeleteLandlord(Landlord landlord)
         {
-            return NotFound();
+            var landlordToDelete = _context.Landlords.Where(x => x.Equals(landlord)).FirstOrDefault();
+            if (landlordToDelete == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _context.Landlords.Remove(landlordToDelete);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok();
+            }
         }
 
         [HttpPost]
-        [Route("Update")]
-        public IActionResult Update()
+        [Route("UpdateLandlord")]
+        public async Task<ActionResult<DbLandlord>> UpdateLandlord(Landlord landlord)
         {
-            return NotFound();
+            var landlordToUpdate = _context.Landlords.Where(x => x.Id == landlord.Id).FirstOrDefault();
+            if (landlordToUpdate == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                landlordToUpdate.AccountNumber = landlord.AccountNumber;
+                landlordToUpdate.RegistrationNumber = landlord.RegistrationNumber;
+                landlordToUpdate.CPRNumber = landlord.CPRNumber;
+                _context.Update(landlordToUpdate);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok();
+            }
         }
     }
 }
