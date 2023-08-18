@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject NavigationManager navi
 @using B_B_ClassLibrary.BusinessModels;
 
 <PageTitle>Home Page</PageTitle>
@@ -74,6 +75,7 @@
         {
             new Room()
             {
+                Id = 0,
                 Number = 1,
                 NumberOfBeds = 2,
                 PricePerNight = 730,
@@ -81,6 +83,7 @@
             },
             new Room()
             {
+                Id = 1,
                 Number = 2,
                 NumberOfBeds = 3,
                 PricePerNight = 310,
@@ -90,10 +93,9 @@
 
         base.OnInitialized();
     }
-    private Task test(Room room)
+    private void test(Room room)
     {
-
-        return null;
+        navi.NavigateTo($"/roomdetails/{room.Id}");
     }
 
 }
