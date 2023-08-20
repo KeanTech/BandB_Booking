@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace B_B_ClassLibrary.BusinessModels
 {
-    internal class Picture
+    public class Picture
     {
         public int Id { get; set; }
         //TypeId is either a LocationId or RoomId
