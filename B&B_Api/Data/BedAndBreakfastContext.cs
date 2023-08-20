@@ -120,8 +120,10 @@ namespace B_B_api.Data
                 });
 
 
+            modelBuilder.Entity<DbRoom>().HasMany(x => x.Pictures);
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Ratings);
             modelBuilder.Entity<DbLocation>().HasMany(x => x.Ratings);
+            modelBuilder.Entity<DbLocation>().HasMany(x => x.Pictures);
 
             modelBuilder.Entity<DbContract>()
                 .HasOne(x => x.User)

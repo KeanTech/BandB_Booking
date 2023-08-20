@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace B_B_ClassLibrary.Models
 {
-    public enum Accessory
+    public enum RoomAccessory
     {
         Desk = 1,
         TV = 2,
         Wifi = 3,
         Balcony = 4,
+
     }
 }

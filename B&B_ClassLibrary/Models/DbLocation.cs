@@ -37,5 +37,6 @@ namespace B_B_ClassLibrary.Models
         public DbLandlord ?Landlord { get; set; }
         public ICollection<DbRoom> ?Rooms { get; set; }
         public ICollection<DbLocationRating> ?Ratings { get; set; }
+        public ICollection<DbLocationPicture> Pictures { get; set; }
     }
 }
