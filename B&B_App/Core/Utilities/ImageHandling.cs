@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using B_B_ClassLibrary.Models;
+using B_B_ClassLibrary.BusinessModels;
 
 namespace B_B_App.Core.Utilities
 {
     public class ImageHandling
     {
-        private static ImageSizeAndTypes imageSizeAndTypes = new ImageSizeAndTypes();
-
         /// <summary>
         /// User need to select an image from file selection dialog for this to work 
         /// 
@@ -17,23 +16,12 @@ namespace B_B_App.Core.Utilities
         /// <param name="file"></param>
         /// <param name="dialogAnwser"></param>
         /// <returns></returns>
-        public static async Task<ImageFile> GetImageFile(IBrowserFile file, DialogAnwser dialogAnwser) 
+        public static async Task<Picture> GetImageFile(IBrowserFile file, int typeId) 
         {
-            ImageFile imageFile = new ImageFile();
+            Picture imageFile = new Picture();
 
-            if (string.IsNullOrEmpty(dialogAnwser.ImageName))
-                imageFile.FileName = file.Name;
-
-            else
-                imageFile.FileName = dialogAnwser.ImageName;
-
-            if (string.IsNullOrEmpty(dialogAnwser.ImageType))
-                imageFile.ContentType = file.ContentType;
-
-            else
-                imageFile.ContentType = dialogAnwser.ImageType;
-
-            imageFile = await GenerateImageString(file, dialogAnwser, imageFile);
+            imageFile.TypeId = typeId;
+            imageFile = await GenerateImageString(file, imageFile);
 
             return imageFile;
         }
@@ -50,55 +38,20 @@ namespace B_B_App.Core.Utilities
         /// <param name="anwser"></param>
         /// <param name="imageFile"></param>
         /// <returns></returns>
-        private static async Task<ImageFile> GenerateImageString(IBrowserFile file, DialogAnwser anwser, ImageFile imageFile) 
+        private static async Task<Picture> GenerateImageString(IBrowserFile file,  Picture imageFile) 
         {
             IBrowserFile resizedFile;
-            int[] sizes = GetImageSizes(anwser);
-
-            //resize the image and create the thumbnails
-            if(string.IsNullOrEmpty(anwser.ImageType))
-                resizedFile = await file.RequestImageFileAsync(file.ContentType, sizes[0], sizes[1]); // resize the image file
-            else
-                resizedFile = await file.RequestImageFileAsync(anwser.ImageType, sizes[0], sizes[1]);
-
+            resizedFile = await file.RequestImageFileAsync(file.ContentType, 250, 400); // resize the image file
+            
             var buf = new byte[resizedFile.Size]; // allocate a buffer to fill with the file's data
             using (var stream = resizedFile.OpenReadStream())
             {
                 await stream.ReadAsync(buf); // copy the stream to the buffer
             }
 
-            imageFile.Base64data = "data:image/png;base64," + Convert.ToBase64String(buf); // convert to a base64 string!!
-            imageFile.FileSize = resizedFile.Size;
-
+            imageFile.Base64 = "data:image/png;base64," + Convert.ToBase64String(buf); // convert to a base64 string!!
+            
             return imageFile;
         }
-
-        /// <summary>
-        /// Used in ImageHandling to get the Image width and height
-        /// 
-        /// Uses the Dialog to get the dimentions and have a default size if nothing is selected
-        /// 
-        /// 
-        /// So no need for a preselected size
-        /// </summary>
-        /// <param name="anwser"></param>
-        /// <returns></returns>
-        private static int[] GetImageSizes(DialogAnwser anwser) 
-        {
-            int[] imageSizes = new int[2];
-            string[] sizes;
-            if (string.IsNullOrEmpty(anwser.ImageSize) == false)
-            {
-                sizes = anwser.ImageSize.Split('x');
-            }
-            else
-                sizes = imageSizeAndTypes.ImageSizes[0].Split('x');
-
-            imageSizes[0] = int.Parse(sizes[0]);
-            imageSizes[1] = int.Parse(sizes[1]);
-
-            return imageSizes;
-        }
-
     }
 }

@@ -6,7 +6,7 @@
 
 <FormEditor TModel="Room" Model="@_room" Pictures="_pictures"></FormEditor>
 
-<MudButton ButtonType="ButtonType.Button", Color="Color.Info"></MudButton>
+<MudButton ButtonType="ButtonType.Button" , Color="Color.Info"></MudButton>
 <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" class="btn btn-primary" />
 @code {
     [Parameter]
@@ -14,12 +14,14 @@
     private Room _room = new Room();
     private User? _user;
     private List<Picture>? _pictures { get; set; }
+    private List<Picture> _addedPictures;
     private IBrowserFile? file;
 
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
-        
+        _addedPictures = new List<Picture>();
+
         if (loginManager.IsLandLord(_user.Id))
             _room = await roomService.Get(Id);
 
@@ -31,6 +33,17 @@
     private void AddPicture(InputFileChangeEventArgs e)
     {
         file = e.File;
+    }
+
+    private async void UploadPicture()
+    {
+        
+        if (file != null)
+        {
+            Picture imageFile = await ImageHandling.GetImageFile(file, _room.Id);
+            
+        }
+
     }
 
 }
