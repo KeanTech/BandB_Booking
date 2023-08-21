@@ -1,0 +1,58 @@
+﻿@using B_B_ClassLibrary.BusinessModels;
+<div class="modal fade show" id="myModal" style="display:block; position:relative; z-index:3;"   aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color:darkslateblue">
+            <div class="modal-header">
+                <h4 class="modal-title indigo-text text-lighten-1">Login</h4>
+                <button type="button" class="close" @onclick="ModalCancel">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <MudTextField @bind-Value="User.Email" Placeholder="Username" For="@(() => User.Email)" DisableUnderLine="true" Margin="Margin.Dense" Class="purple lighten-5"></MudTextField>
+                    <MudTextField @bind-Value="User.Password" InputType="InputType.Password" Placeholder="Password" For="@(() => User.Password)" DisableUnderLine="true" Margin="Margin.Dense" Class="purple lighten-5"></MudTextField>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                @switch (DialogType)
+                {
+                    case ModalDialogType.Ok:
+                        <MudButton ButtonType="ButtonType.Button" Color="Color.Warning" Variant="Variant.Filled" @onclick=@ModalOk>OK</MudButton>
+                        break;
+                    case ModalDialogType.OkCancel:
+                        <MudButton ButtonType="ButtonType.Button" Color="Color.Info" Variant="Variant.Filled" @onclick=@ModalOk>OK</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Color="Color.Error" Variant="Variant.Filled" @onclick="@ModalCancel" Style="margin:0px 0px 0px 10px">Cancel</MudButton>
+                        break;
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public User User { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyValuePair<bool, User>> OnClose { get; set; }
+
+    [Parameter]
+    public ModalDialogType DialogType { get; set; }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(new KeyValuePair<bool, User>(false, User));
+    }
+
+    private Task ModalOk()
+    {
+        return OnClose.InvokeAsync(new KeyValuePair<bool, User>(true, User));
+    }
+
+    public enum ModalDialogType
+    {
+        Ok,
+        OkCancel,
+    }
+}

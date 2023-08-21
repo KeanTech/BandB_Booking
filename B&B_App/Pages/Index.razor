@@ -1,38 +1,56 @@
 ﻿@page "/"
+@inject NavigationManager navi
+@inject IRoomService<Room> roomService
 @using B_B_ClassLibrary.BusinessModels;
 
 <PageTitle>Home Page</PageTitle>
 <div>
-    <div style="text-align:center; border-width:1px;">
-        <Lable>UserName
-        <InputText @bind-Value="_userName"></InputText>
-        </Lable>
-        <br />
-        <Lable >Password  
-        <InputText style="margin:1px 1px 1px 6px" @bind-Value="_password"></InputText>
-        </Lable>
-    
-        <div style="text-align:justify-all; margin:5px 70px 0px 0px">
-                <Button style="" @onclick="SignIn">Login</Button>
-        </div>
-
-    </div>
-
     <div>
 
         <ul>
+            @if(_rooms != null)
             @foreach (var room in _rooms)
             {
-                 <li>
-                     <div>
-                         Sted: @room.Rating
-                         <br/>
-                         Rum Nr.: @room.Number
-                         <br/>
-                         Rating: @room.NumberOfBeds
-                         Pris pr. nat: @room.PricePerNight
-                     </div>
-                 </li>
+                <li class="indigo darken">
+                    <!-- #region Room info card -->
+                    <div style="display:flex; align-items:center; justify-content:center;">
+                        <div style="flex-basis:20%">
+                            <MudCard Class="deep-purple lighten-4 blue-text text-lighten5">
+                                <MudCardContent>
+                                    <MudText>Rating: @room.Rating</MudText>
+
+                                    <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(room.Rating)" />
+                                    <MudText>Rum Nr.: @room.Number</MudText>
+                                    <MudText>Antal senge: @room.NumberOfBeds</MudText>
+                                    <MudText>Pris pr. nat: @room.PricePerNight</MudText>
+
+                                </MudCardContent>
+                                <MudCardActions Style="align-content:center">
+                                    <MudButton @onclick="() => test(room)" Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+
+                                </MudCardActions>
+                            </MudCard>
+                        </div>
+                        <!-- #region Carousel -->
+                        <div style="padding-left:100px; flex-basis:60%">
+                            <MudCarousel Class="mud-width-full" Style="height:150px;" ArrowsPosition="Position.Bottom" ShowBullets="false" AutoCycle="@autocycle" TData="object">
+                                @foreach (var item in pictures)
+                                {
+                                    <MudCarouselItem Transition="transition" Style="align-items:center">
+                                        <MudImage Width="700" Src="@item" Alt="True shit"></MudImage>
+                                    </MudCarouselItem>
+                                }
+
+                            </MudCarousel>
+                        </div>
+
+                        <!-- #endregion -->
+
+                    </div>
+                    <MudDivider DividerType="DividerType.Middle"/>
+                    <!-- #endregion -->
+
+                </li>
             }
         </ul>
 
@@ -43,29 +61,25 @@
 
 @code
 {
-    private string _userName = "";
-    private string _password = "";
-    private List<Room> _rooms = new List<Room>() 
-    { 
-        new Room() 
-        {
-            Number = 1,
-            NumberOfBeds = 7,
-            PricePerNight = 730,
-            Rating = 2.4,            
-        }
-       
-    };
-
-    protected override void OnInitialized()
+    private List<Room> _rooms;
+    bool success;
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool enableSwipeGesture = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Fade;
+    private List<string> pictures = new List<string>() { "images/vær1.jpg", "images/vær2.jpg", "images/vær3.jpg" };
+    
+    protected override async Task OnInitializedAsync()
     {
         // Load data here
+        _rooms = await roomService.GetAllRooms();
+
         base.OnInitialized();
     }
-
-    private Task SignIn()
+    private void test(Room room)
     {
-        // Validate username and password here!
-        return null;
+        navi.NavigateTo($"/roomdetails/{room.Id}");
     }
+
 }

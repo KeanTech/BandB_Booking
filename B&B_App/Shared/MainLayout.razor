@@ -1,13 +1,17 @@
-﻿@inherits LayoutComponentBase
+﻿@using B_B_ClassLibrary.BusinessModels;
+@inherits LayoutComponentBase
 
 <div class="page">
+
     <div class="sidebar">
         <NavMenu />
+        <MudThemeProvider />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
     </div>
+    
+    <MudMainContent class="content px-4">
+        @Body
+    </MudMainContent>
 
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
 </div>

@@ -10,6 +10,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var policyName = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: policyName,
+                      builder =>
+                      {
+                          builder
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader();
+                      });
+});
+
+
 builder.Services.AddDbContext<BedAndBreakfastContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("BedAndBreakfastDbContext"));
@@ -24,10 +39,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(policyName);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader());
-app.MapControllers();
 
+app.MapControllers();
 app.Run();
