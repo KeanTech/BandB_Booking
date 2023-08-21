@@ -19,31 +19,37 @@ namespace B_B_api.Controllers
 
         [HttpGet]
         [Route("GetRoomPictures/{roomId}")]
-        public async Task<ActionResult<ICollection<DbRoomPicture>>> GetRoomPictures(int roomId)
+        public IActionResult GetRoomPictures(int roomId)
         {
-            var pictures = await _context.RoomPictures.Where(x => x.RoomId == roomId).ToListAsync();
-            return Ok(pictures);
+            var pictures = _context.RoomPictures.Where(x => x.RoomId == roomId).ToList();
+            if (pictures.Any())
+                return Ok(pictures);
+            else
+                return NotFound();
         }
 
         [HttpGet]
         [Route("GetLocationPictures/{locationId}")]
-        public async Task<ActionResult<ICollection<DbLocationPicture>>> GetLocationPictures(int locationId)
+        public IActionResult GetLocationPictures(int locationId)
         {
-            var pictures = await _context.LocationPictures.Where(x => x.LocationId == locationId).ToListAsync();
-            return Ok(pictures);
+            var pictures = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
+            if (pictures.Any())
+                return Ok(pictures);
+            else
+                return NotFound();
         }
 
         [HttpPost]
         [Route("AddRoomPictures")]
-        public async Task<ActionResult<DbRoomPicture>> AddRoomPictures(List<Picture> pictures)
+        public IActionResult AddRoomPictures(List<Picture> pictures)
         {
             foreach (var picture in pictures)
             {
                 DbRoomPicture newPicture = new DbRoomPicture(picture);
-                await _context.RoomPictures.AddAsync(newPicture);
+                _context.RoomPictures.AddAsync(newPicture);
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -55,15 +61,15 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("AddLocationPictures")]
-        public async Task<ActionResult<DbLocationPicture>> AddLocationPictures(List<Picture> pictures)
+        public IActionResult AddLocationPictures(List<Picture> pictures)
         {
             foreach (var picture in pictures)
             {
                 DbLocationPicture newPicture = new DbLocationPicture(picture);
-                await _context.LocationPictures.AddAsync(newPicture);
+                _context.LocationPictures.AddAsync(newPicture);
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -74,8 +80,8 @@ namespace B_B_api.Controllers
         }
 
         [HttpPost]
-        [Route("DeleteRoomPictures")]
-        public async Task<ActionResult<DbRoomPicture>> DeleteRoomPictures(int roomId)
+        [Route("DeleteRoomPictures/{Id}")]
+        public IActionResult DeleteRoomPictures(int roomId)
         {
             var picsToRemove = _context.RoomPictures.Where(x => x.RoomId == roomId).ToList();
             if (picsToRemove != null)
@@ -84,7 +90,7 @@ namespace B_B_api.Controllers
                 {
                     _context.RemoveRange(picsToRemove);
 
-                    await _context.SaveChangesAsync();
+                    _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -100,8 +106,8 @@ namespace B_B_api.Controllers
         }
 
         [HttpPost]
-        [Route("DeleteLocationPictures")]
-        public async Task<ActionResult<DbLocationPicture>> DeleteLocationPictures(int locationId)
+        [Route("DeleteLocationPictures/{Id}")]
+        public IActionResult DeleteLocationPictures(int locationId)
         {
             var picsToRemove = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
             if (picsToRemove != null)
@@ -111,7 +117,7 @@ namespace B_B_api.Controllers
                 {
                     _context.RemoveRange(picsToRemove);
 
-                    await _context.SaveChangesAsync();
+                    _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {

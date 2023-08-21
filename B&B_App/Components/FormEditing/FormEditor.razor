@@ -18,7 +18,7 @@
             }
         }
     }
-    @if (Pictures is not null || Pictures.Any())
+    @if (Pictures.Any())
     {
         <MudGrid>
             @foreach (var item in Pictures)
@@ -36,7 +36,7 @@
     public TModel? Model { get; set; }
 
     [Parameter]
-    public List<Picture>? Pictures { get; set; }
+    public List<Picture> Pictures { get; set; }
 
     private List<PropertyInfo> props = new List<PropertyInfo>();
     private void LoadPropertyNames()
@@ -49,6 +49,9 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        if (Pictures == null)
+            Pictures = new List<Picture>();
+
         LoadPropertyNames();
     }
 
