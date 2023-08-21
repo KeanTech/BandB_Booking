@@ -1,0 +1,20 @@
+﻿@page "/roomEditor"
+@page "/roomEditor/{Id:int}"
+@inject IRoomService<Room> roomService
+
+<FormEditor TModel="Room" Model="_room"></FormEditor>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+    private Room _room = new Room();
+    private User _user;
+    protected override async Task OnInitializedAsync()
+    {
+        _user = LoginManager.User;
+        if(_user)
+        _room = await roomService.Get(Id);
+    }
+
+}

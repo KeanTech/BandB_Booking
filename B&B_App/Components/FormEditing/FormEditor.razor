@@ -1,0 +1,61 @@
+﻿@using System.Reflection;
+@using System.ComponentModel;
+@typeparam TModel
+
+<MudCard>
+    <MudCardHeader>
+        Rediger information
+    </MudCardHeader>
+    @if (props.Any())
+    {
+        @foreach (var item in props)
+        {
+            @if (item.Name.Contains("Id") == false)
+            {
+                <MudCardContent>
+                    <MudTextField Placeholder="@item.Name" Value="item.GetValue(Model)" HelperText="@GetDisplayName(item.Name)"></MudTextField>
+                </MudCardContent>
+            }
+        }
+    }
+
+</MudCard>
+
+@code {
+    [Parameter]
+    public TModel Model { get; set; }
+
+    private List<PropertyInfo> props = new List<PropertyInfo>();
+    private void LoadPropertyNames()
+    {
+        props = Model.GetType().GetProperties().ToList();
+        StateHasChanged();
+
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadPropertyNames();
+    }
+
+    private string GetDisplayName(string name)
+    {
+        MemberInfo? property = typeof(Room).GetProperty(name);
+        if (property == null)
+            return "";
+        try
+        {
+            var attribute = property
+            .GetCustomAttributes(typeof(DisplayNameAttribute), true);
+            if (attribute.Length > 0)
+                return attribute.Cast<DisplayNameAttribute>().Single().DisplayName;
+        }
+        catch (Exception ex)
+        {
+            var test = ex;
+        }
+
+        return "";
+    }
+}

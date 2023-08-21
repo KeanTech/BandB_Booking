@@ -1,0 +1,18 @@
+﻿@page "/Bookings"
+@inject IRoomService<Room> roomService
+
+@foreach (var item in _rooms)
+{
+   <MudCard>
+       <MudCardContent>
+           
+       </MudCardContent>
+   </MudCard>
+}
+
+
+@code {
+    private List<Room> _rooms = new List<Room>();
+
+
+}

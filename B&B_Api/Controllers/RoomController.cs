@@ -51,7 +51,7 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetRoom")]
+        [Route("GetRoom/{id}")]
         public async Task<ActionResult<DbRoom>> GetRoom(int id)
         {
             var room = await _context.Rooms.FindAsync(id);

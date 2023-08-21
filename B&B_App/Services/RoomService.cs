@@ -19,7 +19,7 @@ namespace B_B_App.Services
             var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
             return data;
         }
-
+        
         public async Task<List<Room>> GetAllRooms()
         {
             var allRooms = await _httpClient.GetFromJsonAsync<List<Room>>("Room/GetAllRooms");
@@ -36,9 +36,9 @@ namespace B_B_App.Services
 
         public async Task<Room> Get(int id)
         {
-            var returnedRoom = await _httpClient.PostAsJsonAsync<int>("Room/GetRoom", id);
-            var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
-            return data;
+            var returnedRoom = await _httpClient.GetFromJsonAsync<Room>($"Room/GetRoom/{id}");
+            //var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
+            return returnedRoom;
         }
 
         public async Task<Room> Update(Room room)
