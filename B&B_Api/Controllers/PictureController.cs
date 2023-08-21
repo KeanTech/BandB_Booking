@@ -80,12 +80,10 @@ namespace B_B_api.Controllers
             var picsToRemove = _context.RoomPictures.Where(x => x.RoomId == roomId).ToList();
             if (picsToRemove != null)
             {
-                foreach (var picture in picsToRemove)
-                {
-                    _context.Remove(picture);
-                }
                 try
                 {
+                    _context.RemoveRange(picsToRemove);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
@@ -108,12 +106,11 @@ namespace B_B_api.Controllers
             var picsToRemove = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
             if (picsToRemove != null)
             {
-                foreach (var picture in picsToRemove)
-                {
-                    _context.Remove(picture);
-                }
+                
                 try
                 {
+                    _context.RemoveRange(picsToRemove);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
