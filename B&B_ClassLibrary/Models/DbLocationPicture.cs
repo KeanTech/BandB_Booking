@@ -24,6 +24,10 @@ namespace B_B_ClassLibrary.Models
             Base64 = picture.Base64;
         }
 
+        public DbLocationPicture()
+        {
+            
+        }
         public ICollection<DbLocation> ?Locations { get; set; }
 
     }

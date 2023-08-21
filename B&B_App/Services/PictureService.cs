@@ -20,7 +20,7 @@ namespace B_B_App.Services
 
         public async Task<List<Picture>> AddRoomPictures(List<Picture> pictures)
         {
-            var returnedPictures = await _httpClient.PostAsJsonAsync<List<Picture>>("Picture/AddLocationPictures", pictures);
+            var returnedPictures = await _httpClient.PostAsJsonAsync<List<Picture>>("Picture/AddRoomPictures", pictures);
             var data = await returnedPictures.Content.ReadFromJsonAsync<List<Picture>>();
             return data;
         }
@@ -45,7 +45,7 @@ namespace B_B_App.Services
 
         public async Task<List<Picture>> GetRoomPictures(int roomId)
         {
-            var returnedPictures = await _httpClient.GetFromJsonAsync<List<Picture>>($"Picture/GetRoomPictures{roomId}");
+            var returnedPictures = await _httpClient.GetFromJsonAsync<List<Picture>>($"Picture/GetRoomPictures/{roomId}");
             return returnedPictures;
         }
     }

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager navi
 @inject IRoomService<Room> roomService
+@using B_B_App.Components.FormEditing
 @using B_B_ClassLibrary.BusinessModels;
 
 <PageTitle>Home Page</PageTitle>
@@ -8,50 +9,53 @@
     <div>
 
         <ul>
-            @if(_rooms != null)
-            @foreach (var room in _rooms)
+            @if (_rooms != null)
             {
-                <li class="indigo darken">
-                    <!-- #region Room info card -->
-                    <div style="display:flex; align-items:center; justify-content:center;">
-                        <div style="flex-basis:20%">
-                            <MudCard Class="deep-purple lighten-4 blue-text text-lighten5">
-                                <MudCardContent>
-                                    <MudText>Rating: @room.Rating</MudText>
+                @foreach (var room in _rooms)
+                {
+                    <li class="indigo lighten-5">
+                        <!-- #region Room info card -->
+                        <div style="display:flex; align-items:center; justify-content:center;">
+                            <div style="flex-basis:50%">
+                                <MudCard Class="">
+                                    <MudCardContent>
+                                        <MudText>Rating: @room.Rating</MudText>
 
-                                    <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(room.Rating)" />
-                                    <MudText>Rum Nr.: @room.Number</MudText>
-                                    <MudText>Antal senge: @room.NumberOfBeds</MudText>
-                                    <MudText>Pris pr. nat: @room.PricePerNight</MudText>
+                                        <MudRating ReadOnly="true" SelectedValue="@Convert.ToInt32(room.Rating)" />
+                                        <MudText>Rum Nr.: @room.Number</MudText>
+                                        <MudText>Antal senge: @room.NumberOfBeds</MudText>
+                                        <MudText>Pris pr. nat: @room.PricePerNight</MudText>
 
-                                </MudCardContent>
-                                <MudCardActions Style="align-content:center">
-                                    <MudButton @onclick="() => test(room)" Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                                    </MudCardContent>
+                                    <MudCardActions Style="align-content:center">
+                                        <MudButton @onclick="() => test(room)" Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
 
-                                </MudCardActions>
-                            </MudCard>
+                                    </MudCardActions>
+                                </MudCard>
+                            </div>
+                            <!-- #region Carousel -->
+                            <div style="padding-left:250px; flex-basis:60%">
+                                <MudCarousel Class="mud-width-full" Style="height:220px;" ShowArrows="false" ShowBullets="false" AutoCycle="@autocycle" TData="object">
+                                    @foreach (var item in pictures)
+                                    {
+                                        <MudCarouselItem Transition="transition" Style="align-items:center">
+                                            <MudImage Width="400" Height="220" ObjectFit="ObjectFit.Cover" Src="@item" Alt="True shit"></MudImage>
+                                        </MudCarouselItem>
+                                    }
+
+                                </MudCarousel>
+                            </div>
+
+                            <!-- #endregion -->
+
                         </div>
-                        <!-- #region Carousel -->
-                        <div style="padding-left:100px; flex-basis:60%">
-                            <MudCarousel Class="mud-width-full" Style="height:150px;" ArrowsPosition="Position.Bottom" ShowBullets="false" AutoCycle="@autocycle" TData="object">
-                                @foreach (var item in pictures)
-                                {
-                                    <MudCarouselItem Transition="transition" Style="align-items:center">
-                                        <MudImage Width="700" Src="@item" Alt="True shit"></MudImage>
-                                    </MudCarouselItem>
-                                }
-
-                            </MudCarousel>
-                        </div>
-
+                        <MudDivider DividerType="DividerType.Middle" />
                         <!-- #endregion -->
 
-                    </div>
-                    <MudDivider DividerType="DividerType.Middle"/>
-                    <!-- #endregion -->
-
-                </li>
+                    </li>
+                }
             }
+
         </ul>
 
     </div>
@@ -61,7 +65,7 @@
 
 @code
 {
-    private List<Room> _rooms;
+    private List<Room>? _rooms;
     bool success;
     private bool arrows = true;
     private bool bullets = true;
@@ -69,7 +73,7 @@
     private bool autocycle = true;
     private Transition transition = Transition.Fade;
     private List<string> pictures = new List<string>() { "images/vær1.jpg", "images/vær2.jpg", "images/vær3.jpg" };
-    
+
     protected override async Task OnInitializedAsync()
     {
         // Load data here

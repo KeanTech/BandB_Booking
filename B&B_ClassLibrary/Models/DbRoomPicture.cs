@@ -23,6 +23,10 @@ namespace B_B_ClassLibrary.Models
             RoomId = picture.TypeId;
             Base64 = picture.Base64;
         }
+        public DbRoomPicture()
+        {
+            
+        }
 
         public ICollection<DbRoom> ?Rooms { get; set; }
     }

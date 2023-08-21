@@ -29,6 +29,13 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
+            @if (logedIn)
+            {
+                <NavLink class="nav-link" href="/reservations" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Bookings
+                </NavLink>
+
+            }
         </div>
     </nav>
 </div>
