@@ -1,13 +1,18 @@
 ﻿using B_B_App.Services;
 using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Models;
 
 namespace B_B_App.Core.Managers
 {
     public class LoginManager 
     {
-        public LoginManager(IUserService userService)
+        private readonly IUserService<User> _userService;
+        private readonly ILandlordService<DbLandlord> _landlordService;
+
+        public LoginManager(IUserService<User> userService, ILandlordService<DbLandlord> landlordService)
         {
-            
+            _userService = userService;
+            _landlordService = landlordService;
         }
         public static User User { get; private set; }
 
