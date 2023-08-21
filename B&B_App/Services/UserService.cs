@@ -1,4 +1,5 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace B_B_App.Services
@@ -18,11 +19,17 @@ namespace B_B_App.Services
             return data;
         }
 
-        public async Task<User> Delete(User user)
+        public async Task<bool> Delete(User user)
         {
             var response = await _httpClient.PostAsJsonAsync<User>("User/DeleteUser", user);
-            var data = await response.Content.ReadFromJsonAsync<User>();
-            return data;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async Task<User> Get(int id)

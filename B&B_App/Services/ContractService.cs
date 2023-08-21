@@ -1,27 +1,48 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net.Http.Json;
+using System.Net;
 
 namespace B_B_App.Services
 {
     public class ContractService : IContractService<Contract>
     {
-        public Task<Contract> Create(Contract type)
+        private static HttpClient _httpClient;
+        public ContractService(HttpClient client)
         {
-            throw new NotImplementedException();
+            _httpClient = client;
         }
 
-        public Task<Contract> Delete(Contract type)
+        public async Task<Contract> Create(Contract contract)
         {
-            throw new NotImplementedException();
+            var returnedContract = await _httpClient.PostAsJsonAsync("Contract/CreateContract", contract);
+            var data = await returnedContract.Content.ReadFromJsonAsync<Contract>();
+            return data;
         }
 
-        public Task<Contract> Get(int id)
+        public async Task<bool> Delete(Contract contract)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync<Contract>("Contract/DeleteContract", contract);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public Task<Contract> Update(Contract type)
+        public async Task<Contract> Get(int id)
         {
-            throw new NotImplementedException();
+            var returnedContract = await _httpClient.GetFromJsonAsync<Contract>($"Contract/GetConract{id}");
+            return returnedContract;
+        }
+
+        public async Task<Contract> Update(Contract contract)
+        {
+            var updatedContract = await _httpClient.PostAsJsonAsync<Contract>("Contract/UpdateContract", contract);
+            var data = await updatedContract.Content.ReadFromJsonAsync<Contract>();
+            return data;
         }
     }
 }
