@@ -1,4 +1,5 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace B_B_App.Services
@@ -13,28 +14,34 @@ namespace B_B_App.Services
 
         public async Task<User> Create(User user)
         {
-            var returnedUser = await _httpClient.PostAsJsonAsync<User>("https://localhost:7135/api/CreateUser", user);
+            var returnedUser = await _httpClient.PostAsJsonAsync<User>("User/CreateUser", user);
             var data = await returnedUser.Content.ReadFromJsonAsync<User>();
             return data;
         }
 
-        public async Task<User> Delete(User user)
+        public async Task<bool> Delete(User user)
         {
-            var response = await _httpClient.PostAsJsonAsync<User>("https://localhost:7135/api/DeleteUser", user);
-            var data = await response.Content.ReadFromJsonAsync<User>();
-            return data;
+            var response = await _httpClient.PostAsJsonAsync<User>("User/DeleteUser", user);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async Task<User> Get(int id)
         {
-            var returnedUser = await _httpClient.PostAsJsonAsync<int>("https://localhost:7135/api/GetUser", id);
+            var returnedUser = await _httpClient.PostAsJsonAsync<int>("User/GetUser", id);
             var data = await returnedUser.Content.ReadFromJsonAsync<User>();
             return data;
         }
 
         public async Task<User> Update(User user)
         {
-            var updatedUser = await _httpClient.PostAsJsonAsync<User>("https://localhost:7135/api/UpdateUser", user);
+            var updatedUser = await _httpClient.PostAsJsonAsync<User>("User/UpdateUser", user);
             var data = await updatedUser.Content.ReadFromJsonAsync<User>();
             return data;
         }

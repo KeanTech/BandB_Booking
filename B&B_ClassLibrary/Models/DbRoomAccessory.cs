@@ -11,7 +11,7 @@ namespace B_B_ClassLibrary.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Type { get; set; }
+        public RoomAccessory Type { get; set; }
 
         public ICollection<DbRoom> ?Rooms { get; set; }
     }

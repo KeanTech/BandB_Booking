@@ -9,7 +9,7 @@ namespace B_B_App.Services
             throw new NotImplementedException();
         }
 
-        public Task<Rating> Delete(Rating type)
+        public Task<bool> Delete(Rating type)
         {
             throw new NotImplementedException();
         }

@@ -1,27 +1,48 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace B_B_App.Services
 {
     public class LandlordService : ILandlordService<Landlord>
     {
-        public Task<Landlord> Create(Landlord type)
+        private static HttpClient _httpClient;
+        public LandlordService(HttpClient client)
         {
-            throw new NotImplementedException();
+            _httpClient = client;
         }
 
-        public Task<Landlord> Delete(Landlord type)
+        public async Task<Landlord> Create(Landlord landlord)
         {
-            throw new NotImplementedException();
+            var returnedLandlord = await _httpClient.PostAsJsonAsync<Landlord>("Landlord/CreateLandlord", landlord);
+            var data = await returnedLandlord.Content.ReadFromJsonAsync<Landlord>();
+            return data;
         }
 
-        public Task<Landlord> Get(int id)
+        public async Task<bool> Delete(Landlord landlord)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync<Landlord>("Landlord/DeleteLandlord", landlord);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public Task<Landlord> Update(Landlord type)
+        public async Task<Landlord> Get(int id)
         {
-            throw new NotImplementedException();
+            var returnedLandlord = await _httpClient.GetFromJsonAsync<Landlord>($"Landlord/GetLandlord{id}");
+            return returnedLandlord;
+        }
+
+        public async Task<Landlord> Update(Landlord landlord)
+        {
+            var updatedLandlord = await _httpClient.PostAsJsonAsync<Landlord>("Landlord/UpdateLandlord", landlord);
+            var data = await updatedLandlord.Content.ReadFromJsonAsync<Landlord>();
+            return data;
         }
     }
 }

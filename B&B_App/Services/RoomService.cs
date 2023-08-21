@@ -1,4 +1,5 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -47,11 +48,17 @@ namespace B_B_App.Services
             var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
             return data;
         }
-        public async Task<Room> Delete(Room room)
+        public async Task<bool> Delete(Room room)
         {
             var response = await _httpClient.PostAsJsonAsync<Room>("Room/DeleteRoom", room);
-            var data = await response.Content.ReadFromJsonAsync<Room>();
-            return data;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -15,8 +15,8 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public IActionResult Get()
+        [Route("GetRating")]
+        public IActionResult GetRating()
         {
             return NotFound();
         }
