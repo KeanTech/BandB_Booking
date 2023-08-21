@@ -18,6 +18,8 @@ namespace B_B_api.Data
         public DbSet<DbRoomAccessory> RoomAccessories { get; set; }
         public DbSet<DbLocationRating> LocationRatings { get; set; }
         public DbSet<DbRoomRating> RoomRatings { get; set; }
+        public DbSet<DbRoomPicture> RoomPictures { get; set; }
+        public DbSet<DbLocationPicture> LocationPictures { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

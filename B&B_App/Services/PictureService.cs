@@ -1,27 +1,52 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using System.Net.Http.Json;
 
 namespace B_B_App.Services
 {
-    public class PictureService : IPictureService<Picture>
+    public class PictureService : IPictureService
     {
-        public Task<Picture> Create(Picture type)
+        private static HttpClient _httpClient;
+        public PictureService(HttpClient client)
         {
-            throw new NotImplementedException();
+            _httpClient = client;
         }
 
-        public Task<Picture> Delete(Picture type)
+        public async Task<List<Picture>> AddLocationPictures(List<Picture> pictures)
         {
-            throw new NotImplementedException();
+            var returnedPictures = await _httpClient.PostAsJsonAsync<List<Picture>>("Picture/AddLocationPictures", pictures);
+            var data = await returnedPictures.Content.ReadFromJsonAsync<List<Picture>>();
+            return data;
         }
 
-        public Task<Picture> Get(int id)
+        public async Task<List<Picture>> AddRoomPictures(List<Picture> pictures)
         {
-            throw new NotImplementedException();
+            var returnedPictures = await _httpClient.PostAsJsonAsync<List<Picture>>("Picture/AddLocationPictures", pictures);
+            var data = await returnedPictures.Content.ReadFromJsonAsync<List<Picture>>();
+            return data;
         }
 
-        public Task<Picture> Update(Picture type)
+        public async Task<HttpResponseMessage> DeleteLocationPictures(int locationId)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync<int>("Picture/DeleteLocationPictures", locationId);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> DeleteRoomPictures(int roomId)
+        {
+            var response = await _httpClient.PostAsJsonAsync<int>("Picture/DeleteRoomPictures", roomId);
+            return response;
+        }
+
+        public async Task<List<Picture>> GetLocationPictures(int locationId)
+        {
+            var returnedPictures = await _httpClient.GetFromJsonAsync<List<Picture>>($"Picture/GetLocationPictures/{locationId}");
+            return returnedPictures;
+        }
+
+        public async Task<List<Picture>> GetRoomPictures(int roomId)
+        {
+            var returnedPictures = await _httpClient.GetFromJsonAsync<List<Picture>>($"Picture/GetRoomPictures{roomId}");
+            return returnedPictures;
         }
     }
 }

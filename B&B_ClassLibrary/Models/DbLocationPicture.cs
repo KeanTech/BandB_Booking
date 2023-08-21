@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.BusinessModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,13 @@ namespace B_B_ClassLibrary.Models
         [ForeignKey("DbLocation")]
         public int LocationId { get; set; }
         public string Base64 { get; set; }
+
+        public DbLocationPicture(Picture picture)
+        {
+            Id = picture.Id;
+            LocationId = picture.TypeId;
+            Base64 = picture.Base64;
+        }
 
         public ICollection<DbLocation> ?Locations { get; set; }
 
