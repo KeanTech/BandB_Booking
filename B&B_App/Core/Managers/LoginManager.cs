@@ -7,9 +7,9 @@ namespace B_B_App.Core.Managers
     public class LoginManager 
     {
         private readonly IUserService<User> _userService;
-        private readonly ILandlordService<DbLandlord> _landlordService;
+        private readonly ILandlordService<Landlord> _landlordService;
 
-        public LoginManager(IUserService<User> userService, ILandlordService<DbLandlord> landlordService)
+        public LoginManager(IUserService<User> userService, ILandlordService<Landlord> landlordService)
         {
             _userService = userService;
             _landlordService = landlordService;
@@ -18,15 +18,18 @@ namespace B_B_App.Core.Managers
 
         public static void Login(User user) => User = user;
 
-        public static bool IsLandLord(string userId) 
+        public bool IsLandLord(int userId) 
         {
+            var landLord = _landlordService.Get(userId);
+            if(landLord != null)
+                return true;
 
-
-            return true;
+            return false;
         }
 
-        public static bool LandLordOwnsRoom(string roomId) 
+        public static bool LandLordOwnsRoom(string roomId, string landLordId) 
         {
+            // use LandlordService here
             return false;
         }
     }

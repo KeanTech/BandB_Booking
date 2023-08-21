@@ -18,12 +18,25 @@
             }
         }
     }
-
+    @if (Pictures is not null || Pictures.Any())
+    {
+        <MudGrid>
+            @foreach (var item in Pictures)
+            {
+                <MudItem xs="3">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300"></MudImage></MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    }
 </MudCard>
 
 @code {
     [Parameter]
-    public TModel Model { get; set; }
+    public TModel? Model { get; set; }
+
+    [Parameter]
+    public List<Picture>? Pictures { get; set; }
 
     private List<PropertyInfo> props = new List<PropertyInfo>();
     private void LoadPropertyNames()

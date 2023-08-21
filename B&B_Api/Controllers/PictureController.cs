@@ -18,19 +18,19 @@ namespace B_B_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetRoomPictures")]
+        [Route("GetRoomPictures/{roomId}")]
         public async Task<ActionResult<ICollection<DbRoomPicture>>> GetRoomPictures(int roomId)
         {
             var pictures = await _context.RoomPictures.Where(x => x.RoomId == roomId).ToListAsync();
-            return pictures;
+            return Ok(pictures);
         }
 
         [HttpGet]
-        [Route("GetLocationPictures")]
+        [Route("GetLocationPictures/{locationId}")]
         public async Task<ActionResult<ICollection<DbLocationPicture>>> GetLocationPictures(int locationId)
         {
             var pictures = await _context.LocationPictures.Where(x => x.LocationId == locationId).ToListAsync();
-            return pictures;
+            return Ok(pictures);
         }
 
         [HttpPost]

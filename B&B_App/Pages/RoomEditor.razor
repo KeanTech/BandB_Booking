@@ -1,20 +1,36 @@
 ﻿@page "/roomEditor"
 @page "/roomEditor/{Id:int}"
 @inject IRoomService<Room> roomService
+@inject IPictureService pictureService
+@inject LoginManager loginManager
 
-<FormEditor TModel="Room" Model="_room"></FormEditor>
+<FormEditor TModel="Room" Model="@_room" Pictures="_pictures"></FormEditor>
 
+<MudButton ButtonType="ButtonType.Button", Color="Color.Info"></MudButton>
+<InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" class="btn btn-primary" />
 @code {
-
     [Parameter]
     public int Id { get; set; }
     private Room _room = new Room();
-    private User _user;
+    private User? _user;
+    private List<Picture>? _pictures { get; set; }
+    private IBrowserFile? file;
+
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
-        if(_user)
-        _room = await roomService.Get(Id);
+        
+        if (loginManager.IsLandLord(_user.Id))
+            _room = await roomService.Get(Id);
+
+        _pictures = await pictureService.GetRoomPictures(Id);
+
+
+    }
+
+    private void AddPicture(InputFileChangeEventArgs e)
+    {
+        file = e.File;
     }
 
 }
