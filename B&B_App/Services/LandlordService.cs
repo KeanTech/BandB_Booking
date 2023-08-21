@@ -34,7 +34,7 @@ namespace B_B_App.Services
 
         public async Task<Landlord> Get(int userId)
         {
-            var returnedLandlord = await _httpClient.GetFromJsonAsync<Landlord>($"Landlord/GetLandlord/{id}");
+            var returnedLandlord = await _httpClient.GetFromJsonAsync<Landlord>($"Landlord/GetLandlord/{userId}");
             return returnedLandlord;
         }
 
