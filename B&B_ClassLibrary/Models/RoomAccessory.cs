@@ -12,6 +12,5 @@ namespace B_B_ClassLibrary.Models
         TV = 2,
         Wifi = 3,
         Balcony = 4,
-
     }
 }

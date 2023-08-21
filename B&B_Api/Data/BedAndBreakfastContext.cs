@@ -121,6 +121,28 @@ namespace B_B_api.Data
                     LocationId = 1,
                 });
 
+            modelBuilder.Entity<DbRoomAccessory>().HasData(
+                new DbRoomAccessory
+                {
+                    Id = 1,
+                    Type = RoomAccessory.Desk
+                },
+                new DbRoomAccessory
+                {
+                    Id = 2,
+                    Type = RoomAccessory.TV
+                },
+                new DbRoomAccessory
+                {
+                    Id = 3,
+                    Type = RoomAccessory.Wifi
+                },
+                new DbRoomAccessory
+                {
+                    Id = 4,
+                    Type = RoomAccessory.Balcony
+                });
+
 
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Pictures);
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Ratings);

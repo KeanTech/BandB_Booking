@@ -128,5 +128,21 @@ namespace B_B_Api.Controllers
                 return Ok();
             }
         }
+
+        [HttpGet]
+        [Route("IsRoomOwner")]
+        public async Task<ActionResult<bool>> IsRoomOwner(int roomId, int landlordId)
+        {
+            var room = await _context.Rooms.FindAsync(roomId);
+            var location = _context.Locations.Where(x => x.Id == room.LocationId).FirstOrDefault();
+            if (location.LandlordId == landlordId)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
