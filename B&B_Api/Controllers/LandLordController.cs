@@ -20,7 +20,7 @@ namespace B_B_Api.Controllers
         [Route("GetLandlord/{Id}")]
         public async Task<ActionResult<DbLandlord>> GetLandlord(int id)
         {
-            var landlord = _context.Landlords.Where(x => x.UserId == id).FirstOrDefault();
+            var landlord = await _context.Landlords.FindAsync(id);
             if (landlord != null)
             {
                 return landlord;
