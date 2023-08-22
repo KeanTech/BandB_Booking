@@ -174,7 +174,7 @@ namespace B_B_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DbLocationPicture");
+                    b.ToTable("LocationPictures");
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationRating", b =>
@@ -279,7 +279,29 @@ namespace B_B_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomAccessories");
+                    b.ToTable("RoomAccessory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Type = 4
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomPicture", b =>
@@ -299,7 +321,7 @@ namespace B_B_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DbRoomPicture");
+                    b.ToTable("RoomPictures");
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomRating", b =>
@@ -367,7 +389,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 1,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 21, 0, 22, 9, 35, DateTimeKind.Local).AddTicks(6877),
+                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9913),
                             Email = "ken1ander2@hotmail.com",
                             FirstName = "Kenneth",
                             LastName = "Andersen",
@@ -378,7 +400,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 2,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 21, 0, 22, 9, 35, DateTimeKind.Local).AddTicks(6922),
+                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9969),
                             Email = "mortvest5@gmail.com",
                             FirstName = "Morten",
                             LastName = "Vestergaard",
@@ -389,7 +411,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 3,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 21, 0, 22, 9, 35, DateTimeKind.Local).AddTicks(6924),
+                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9971),
                             Email = "buster@outlook.com",
                             FirstName = "Buster",
                             LastName = "Jørgensen",
