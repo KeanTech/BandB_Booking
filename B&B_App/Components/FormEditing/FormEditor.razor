@@ -18,7 +18,7 @@
             }
         }
     }
-    @if (Pictures.Any())
+    @if (Pictures != null)
     {
         <MudGrid>
             @foreach (var item in Pictures)
@@ -36,7 +36,7 @@
     public TModel? Model { get; set; }
 
     [Parameter]
-    public List<Picture> Pictures { get; set; }
+    public List<Picture> Pictures { get; set; } = new List<Picture>();
 
     private List<PropertyInfo> props = new List<PropertyInfo>();
     private void LoadPropertyNames()

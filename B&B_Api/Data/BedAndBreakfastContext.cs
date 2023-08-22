@@ -8,7 +8,7 @@ namespace B_B_api.Data
     {
         public BedAndBreakfastContext(DbContextOptions<BedAndBreakfastContext> options): base(options)
         {
-
+            
         }
         public DbSet<DbUser> Users { get; set; }
         public DbSet<DbLandlord> Landlords { get; set; }

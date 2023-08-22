@@ -32,6 +32,7 @@ namespace B_B_api.Controllers
         [Route("GetLocationPictures/{locationId}")]
         public IActionResult GetLocationPictures(int locationId)
         {
+            var test = _context.LocationPictures.ToList();
             var pictures = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
             if (pictures.Any())
                 return Ok(pictures);
@@ -46,10 +47,10 @@ namespace B_B_api.Controllers
             foreach (var picture in pictures)
             {
                 DbRoomPicture newPicture = new DbRoomPicture(picture);
-                _context.RoomPictures.AddAsync(newPicture);
+                _context.RoomPictures.Add(newPicture);
                 try
                 {
-                    _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (Exception e)
                 {

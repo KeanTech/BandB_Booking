@@ -6,44 +6,58 @@
 
 <FormEditor TModel="Room" Model="@_room" Pictures="_pictures"></FormEditor>
 
-<MudButton ButtonType="ButtonType.Button" , Color="Color.Info"></MudButton>
-<InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" class="btn btn-primary" />
+<MudPaper>
+    <MudGrid Style="margin:1px 4px 1px 1px">
+        <MudItem xs="12">
+            <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="background-color:darkgray" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudImage Style="border:solid 1px black;" Src="@_addedPicture.Base64"></MudImage>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Warning" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileUpload" @onclick="UploadPicture">Upload</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
 @code {
     [Parameter]
     public int Id { get; set; }
     private Room _room = new Room();
     private User? _user;
     private List<Picture>? _pictures { get; set; }
-    private List<Picture> _addedPictures;
+    private Picture _addedPicture = new Picture();
     private IBrowserFile? file;
 
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
-        _addedPictures = new List<Picture>();
 
-        if (loginManager.IsLandLord(_user.Id))
-            _room = await roomService.Get(Id);
+        //if (loginManager.IsLandLord(_user.Id))
+        _room = await roomService.Get(Id);
 
-        _pictures = await pictureService.GetRoomPictures(Id);
+        //_pictures = await pictureService.GetLocationPictures(Id);
 
 
     }
 
-    private void AddPicture(InputFileChangeEventArgs e)
+    private async void AddPicture(InputFileChangeEventArgs e)
     {
-        file = e.File;
+        Picture imageFile = await ImageHandling.GetImageFile(e.File, _room.Id);
+        if (string.IsNullOrEmpty(imageFile.Base64))
+            return;
+
+        _addedPicture = imageFile;
+        StateHasChanged();
     }
 
     private async void UploadPicture()
     {
-        
-        if (file != null)
+        if (_addedPicture != null)
         {
-            Picture imageFile = await ImageHandling.GetImageFile(file, _room.Id);
-            
+            await pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
         }
-
     }
 
 }

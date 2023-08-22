@@ -21,8 +21,7 @@ namespace B_B_App.Services
         public async Task<List<Picture>> AddRoomPictures(List<Picture> pictures)
         {
             var returnedPictures = await _httpClient.PostAsJsonAsync<List<Picture>>("Picture/AddRoomPictures", pictures);
-            var data = await returnedPictures.Content.ReadFromJsonAsync<List<Picture>>();
-            return data;
+            return null;
         }
 
         public async Task<HttpResponseMessage> DeleteLocationPictures(int locationId)
