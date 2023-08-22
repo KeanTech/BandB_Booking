@@ -26,7 +26,7 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetLocation")]
+        [Route("GetLocation/{id}")]
         public async Task<ActionResult<DbLocation>> GetLocation(int id)
         {
             var location = await _context.Locations.FindAsync(id);

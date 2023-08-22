@@ -67,10 +67,10 @@ namespace B_B_api.Controllers
             foreach (var picture in pictures)
             {
                 DbLocationPicture newPicture = new DbLocationPicture(picture);
-                _context.LocationPictures.AddAsync(newPicture);
+                _context.LocationPictures.Add(newPicture);
                 try
                 {
-                    _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (Exception e)
                 {
@@ -91,7 +91,7 @@ namespace B_B_api.Controllers
                 {
                     _context.RemoveRange(picsToRemove);
 
-                    _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (Exception e)
                 {
@@ -118,7 +118,7 @@ namespace B_B_api.Controllers
                 {
                     _context.RemoveRange(picsToRemove);
 
-                    _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (Exception e)
                 {

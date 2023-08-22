@@ -34,7 +34,7 @@ namespace B_B_App.Services
 
         public async Task<Location> Get(int id)
         {
-            var returnedLocation = await _httpClient.GetFromJsonAsync<Location>($"Location/GetLocation{id}");
+            var returnedLocation = await _httpClient.GetFromJsonAsync<Location>($"Location/GetLocation/{id}");
             return returnedLocation;
         }
 

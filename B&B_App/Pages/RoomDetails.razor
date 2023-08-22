@@ -1,13 +1,13 @@
 ﻿@page "/roomdetails"
 @page "/roomdetails/{roomId:int}"
+@inject IRoomService<Room> roomService
+@inject ILocationService<Location> locationService
 
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
         <MudText>Rum detalje</MudText>
         <MudRating SelectedValue="@Convert.ToInt16(_room.Rating)" ReadOnly="true">
-
         </MudRating>
-        
     </MudCardHeader>
     <MudCardContent>
 
@@ -38,7 +38,7 @@
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
         <MudText>Info om stedet</MudText>
-        <MudDivider DividerType="DividerType.Middle  "></MudDivider>
+        <MudDivider DividerType="DividerType.Middle"></MudDivider>
         <MudRating SelectedValue="@Convert.ToInt16(_location.Rating)" ReadOnly="true">
 
         </MudRating>
@@ -50,7 +50,7 @@
             Navn: @_location.Name
         </MudText>
         <MudText>
-           Område: @_location.Area
+            Område: @_location.Area
         </MudText>
         <MudText>
             By: @_location.City
@@ -92,16 +92,17 @@
     private List<string> pictures = new List<string>() { "images/vær1.jpg", "images/vær2.jpg", "images/vær3.jpg" };
 
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (roomId == null)
             return;
 
-        // Get room from service 
+        // Get room from service
         // Use roomId to get the selected room
-        _room = new Room() { Number = 102, NumberOfBeds = 3, PricePerNight = 240, Rating = 3.2 };
+        if (roomId != null)
+            _room = await roomService.Get(roomId.Value);
         // Get location for the room
-        _location = new Location() { Address = "Humlevej 2", AmountOfRooms = 4, Area = "Landet", City = "Lem", Country = "Denmark", Name = "Tisvillegård", Rating = 2.4, ZipCode = "1464" };
+        _location = await locationService.Get(_room.LocationId);
 
         base.OnInitialized();
     }

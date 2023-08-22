@@ -18,6 +18,11 @@ builder.Services.AddHttpClient<IRoomService<Room>, RoomService>(client =>
     client.BaseAddress = uri;
 });
 
+builder.Services.AddHttpClient<ILocationService<Location>, LocationService>(client =>
+{
+    client.BaseAddress = uri;
+});
+
 builder.Services.AddHttpClient<IUserService<User>, UserService>(client =>
 {
     client.BaseAddress = uri;
