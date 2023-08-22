@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace B_B_api.Migrations
 {
     [DbContext(typeof(BedAndBreakfastContext))]
-    [Migration("20230820220505_AccessoryAsEnum")]
-    partial class AccessoryAsEnum
+    [Migration("20230822083553_Db-Init")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,6 +160,26 @@ namespace B_B_api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationPicture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Base64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LocationPictures");
+                });
+
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationRating", b =>
                 {
                     b.Property<int>("Id")
@@ -262,7 +282,49 @@ namespace B_B_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomAccessories");
+                    b.ToTable("RoomAccessory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Type = 4
+                        });
+                });
+
+            modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomPicture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Base64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomPictures");
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomRating", b =>
@@ -330,7 +392,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 1,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 21, 0, 5, 5, 852, DateTimeKind.Local).AddTicks(5152),
+                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9913),
                             Email = "ken1ander2@hotmail.com",
                             FirstName = "Kenneth",
                             LastName = "Andersen",
@@ -341,7 +403,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 2,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 21, 0, 5, 5, 852, DateTimeKind.Local).AddTicks(5199),
+                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9969),
                             Email = "mortvest5@gmail.com",
                             FirstName = "Morten",
                             LastName = "Vestergaard",
@@ -352,13 +414,28 @@ namespace B_B_api.Migrations
                         {
                             Id = 3,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 21, 0, 5, 5, 852, DateTimeKind.Local).AddTicks(5202),
+                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9971),
                             Email = "buster@outlook.com",
                             FirstName = "Buster",
                             LastName = "Jørgensen",
                             Password = "12345",
                             PhoneNumber = "55005500"
                         });
+                });
+
+            modelBuilder.Entity("DbLocationDbLocationPicture", b =>
+                {
+                    b.Property<int>("LocationsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PicturesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LocationsId", "PicturesId");
+
+                    b.HasIndex("PicturesId");
+
+                    b.ToTable("DbLocationDbLocationPicture");
                 });
 
             modelBuilder.Entity("DbRoomDbRoomAccessory", b =>
@@ -374,6 +451,21 @@ namespace B_B_api.Migrations
                     b.HasIndex("RoomsId");
 
                     b.ToTable("DbRoomDbRoomAccessory");
+                });
+
+            modelBuilder.Entity("DbRoomDbRoomPicture", b =>
+                {
+                    b.Property<int>("PicturesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PicturesId", "RoomsId");
+
+                    b.HasIndex("RoomsId");
+
+                    b.ToTable("DbRoomDbRoomPicture");
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbContract", b =>
@@ -445,11 +537,41 @@ namespace B_B_api.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("DbLocationDbLocationPicture", b =>
+                {
+                    b.HasOne("B_B_ClassLibrary.Models.DbLocation", null)
+                        .WithMany()
+                        .HasForeignKey("LocationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("B_B_ClassLibrary.Models.DbLocationPicture", null)
+                        .WithMany()
+                        .HasForeignKey("PicturesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DbRoomDbRoomAccessory", b =>
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbRoomAccessory", null)
                         .WithMany()
                         .HasForeignKey("AccessoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("B_B_ClassLibrary.Models.DbRoom", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DbRoomDbRoomPicture", b =>
+                {
+                    b.HasOne("B_B_ClassLibrary.Models.DbRoomPicture", null)
+                        .WithMany()
+                        .HasForeignKey("PicturesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -3,25 +3,55 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace B_B_api.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInitialization : Migration
+    public partial class DbInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RoomAccessories",
+                name: "LocationPictures",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    LocationId = table.Column<int>(type: "int", nullable: false),
+                    Base64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomAccessories", x => x.Id);
+                    table.PrimaryKey("PK_LocationPictures", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomAccessory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomAccessory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomPictures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    Base64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomPictures", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -88,6 +118,30 @@ namespace B_B_api.Migrations
                         name: "FK_Locations_Landlords_LandlordId",
                         column: x => x.LandlordId,
                         principalTable: "Landlords",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DbLocationDbLocationPicture",
+                columns: table => new
+                {
+                    LocationsId = table.Column<int>(type: "int", nullable: false),
+                    PicturesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbLocationDbLocationPicture", x => new { x.LocationsId, x.PicturesId });
+                    table.ForeignKey(
+                        name: "FK_DbLocationDbLocationPicture_LocationPictures_PicturesId",
+                        column: x => x.PicturesId,
+                        principalTable: "LocationPictures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbLocationDbLocationPicture_Locations_LocationsId",
+                        column: x => x.LocationsId,
+                        principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -173,13 +227,37 @@ namespace B_B_api.Migrations
                 {
                     table.PrimaryKey("PK_DbRoomDbRoomAccessory", x => new { x.AccessoriesId, x.RoomsId });
                     table.ForeignKey(
-                        name: "FK_DbRoomDbRoomAccessory_RoomAccessories_AccessoriesId",
+                        name: "FK_DbRoomDbRoomAccessory_RoomAccessory_AccessoriesId",
                         column: x => x.AccessoriesId,
-                        principalTable: "RoomAccessories",
+                        principalTable: "RoomAccessory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DbRoomDbRoomAccessory_Rooms_RoomsId",
+                        column: x => x.RoomsId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DbRoomDbRoomPicture",
+                columns: table => new
+                {
+                    PicturesId = table.Column<int>(type: "int", nullable: false),
+                    RoomsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbRoomDbRoomPicture", x => new { x.PicturesId, x.RoomsId });
+                    table.ForeignKey(
+                        name: "FK_DbRoomDbRoomPicture_RoomPictures_PicturesId",
+                        column: x => x.PicturesId,
+                        principalTable: "RoomPictures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbRoomDbRoomPicture_Rooms_RoomsId",
                         column: x => x.RoomsId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -205,6 +283,48 @@ namespace B_B_api.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.InsertData(
+                table: "RoomAccessory",
+                columns: new[] { "Id", "Type" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 },
+                    { 3, 3 },
+                    { 4, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Country", "Created", "Email", "FirstName", "LastName", "Password", "PhoneNumber" },
+                values: new object[,]
+                {
+                    { 1, "Denmark", new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9913), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "12345", "12345678" },
+                    { 2, "Denmark", new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9969), "mortvest5@gmail.com", "Morten", "Vestergaard", "12345", "11223344" },
+                    { 3, "Denmark", new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9971), "buster@outlook.com", "Buster", "Jørgensen", "12345", "55005500" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Landlords",
+                columns: new[] { "Id", "AccountNumber", "CPRNumber", "RegistrationNumber", "UserId" },
+                values: new object[] { 1, "0000222244446666", "0101906673", "6789", 3 });
+
+            migrationBuilder.InsertData(
+                table: "Locations",
+                columns: new[] { "Id", "Address", "AmountOfRooms", "Area", "City", "Country", "LandlordId", "Name", "Rating", "ZipCode" },
+                values: new object[] { 1, "Havnevej 1", 4, "TestArea", "Skagen", "Denmark", 1, "Hansens fede Bed and Breakfast", 4.0999999999999996, "1000" });
+
+            migrationBuilder.InsertData(
+                table: "Rooms",
+                columns: new[] { "Id", "LocationId", "Number", "NumberOfBeds", "PricePerNight", "Rating" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 2, 500, 4.0 },
+                    { 2, 1, 2, 2, 200, 2.0 },
+                    { 3, 1, 3, 1, 1000, 5.0 },
+                    { 4, 1, 4, 3, 2000, 1.0 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Contracts_RoomId",
                 table: "Contracts",
@@ -216,8 +336,18 @@ namespace B_B_api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DbLocationDbLocationPicture_PicturesId",
+                table: "DbLocationDbLocationPicture",
+                column: "PicturesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DbRoomDbRoomAccessory_RoomsId",
                 table: "DbRoomDbRoomAccessory",
+                column: "RoomsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbRoomDbRoomPicture_RoomsId",
+                table: "DbRoomDbRoomPicture",
                 column: "RoomsId");
 
             migrationBuilder.CreateIndex(
@@ -254,7 +384,13 @@ namespace B_B_api.Migrations
                 name: "Contracts");
 
             migrationBuilder.DropTable(
+                name: "DbLocationDbLocationPicture");
+
+            migrationBuilder.DropTable(
                 name: "DbRoomDbRoomAccessory");
+
+            migrationBuilder.DropTable(
+                name: "DbRoomDbRoomPicture");
 
             migrationBuilder.DropTable(
                 name: "LocationRatings");
@@ -263,7 +399,13 @@ namespace B_B_api.Migrations
                 name: "RoomRatings");
 
             migrationBuilder.DropTable(
-                name: "RoomAccessories");
+                name: "LocationPictures");
+
+            migrationBuilder.DropTable(
+                name: "RoomAccessory");
+
+            migrationBuilder.DropTable(
+                name: "RoomPictures");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
