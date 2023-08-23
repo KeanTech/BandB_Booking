@@ -1,0 +1,101 @@
+﻿@page "/createuser"
+@using System.ComponentModel
+@using System.Reflection
+@using B_B_App.Services;
+@using B_B_ClassLibrary.BusinessModels;
+@inject IUserService<User> userService
+
+<MudCardHeader >
+    Opret ny bruger
+</MudCardHeader>
+
+<MudSelect @bind-Value="StringValue" Label="Vil du oprettes som lejer eller udlejer?" Placeholder="Vælg type af bruger">
+    <MudSelectItem Value="@("Lejer")">Lejer</MudSelectItem>
+    <MudSelectItem Value="@("Udlejer")">Udlejer</MudSelectItem>
+</MudSelect>
+<br />
+@if (StringValue != "")
+{
+    <MudItem xs="15" sm="10">
+        <MudForm @bind-IsValid="_formSuccess" @bind-Errors="@formErrors">
+
+            <MudTextField @bind-Value="_user.FirstName" Label="Indtast fornavn" Placeholder="Fornavn"></MudTextField>
+
+            <MudTextField @bind-Value="_user.LastName" Label="Indtast efternavn" Placeholder="Efternavn"></MudTextField>
+
+            <MudTextField @bind-Value="_user.Email" Label="Indtast email" Placeholder="Email"></MudTextField>
+
+            <MudTextField @bind-Value="_user.Password" Label="Indkast adgangskode" Placeholder="Adgangskode" Adornment="Adornment.End" InputType="@PasswordInput" OnAdornmentClick="OnPasswordVisibilityClick"></MudTextField>
+
+            <MudTextField @bind-Value="_user.PhoneNumber" Label="Indtast telefonnummer" Placeholder="Telefonnummer"></MudTextField>
+
+            <MudTextField @bind-Value="_user.Country" Label="Indtast land" Placeholder="Land"></MudTextField>
+
+            @if (StringValue == "Udlejer")
+            {
+
+                <MudTextField @bind-Value="_landlord.CPRNumber" Label="Indtast CPR-nummer" Placeholder="CPR-nummer" />
+
+
+                <MudTextField @bind-Value="_landlord.RegistrationNumber" Mask="@(new PatternMask("0000"))" Label="Registreringsnummer" Placeholder="Reg nr."></MudTextField>
+
+
+                <MudTextField @bind-Value="_landlord.AccountNumber" Mask="@(new PatternMask("0000 0000 0000 0000"))" Label="Kontonummer" Placeholder="Konto nr."></MudTextField>
+
+            }
+        </MudForm>
+    </MudItem>
+}
+<MudButton Disabled="@_processing" OnClick="OnSubmitUser" Variant="Variant.Filled" Color="Color.Primary">
+    @if (_processing)
+    {
+        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+        <MudText Class="ms-2">Reserverer..</MudText>
+    }
+    else
+    {
+        <MudText>Reserver</MudText>
+    }
+</MudButton>
+
+@code {
+    public string StringValue;
+    private User _user = new User();
+    private Landlord _landlord = new Landlord();
+    private bool isLandlord;
+    private bool PasswordShow;
+    private bool _processing;
+    private bool _formSuccess;
+    string[] formErrors = { };
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+
+    void OnPasswordVisibilityClick()
+    {
+        @if (PasswordShow)
+        {
+            PasswordShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    public async void OnSubmitUser()
+    {
+        _user.Created = DateTime.Now;
+        _user.Id = 1;
+        await userService.Create(_user);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

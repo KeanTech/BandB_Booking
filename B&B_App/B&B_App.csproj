@@ -8,10 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\UserEditor.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
@@ -41,18 +38,6 @@
   <ItemGroup>
     <Folder Include="Components\FormCreating\" />
     <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\UserEditor.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\UserEditor.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\UserEditor.razor" />
   </ItemGroup>
 
 </Project>
