@@ -8,14 +8,27 @@
     </MudCardHeader>
     @if (props.Any())
     {
-        @foreach (var item in props)
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="Model.Number" For="() => Model.Number" HelperText="Rum nummer" Placeholder="@GetDisplayName(nameof(Model.Number))"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="Model.NumberOfBeds" For="() => Model.NumberOfBeds" HelperText="Antal senge" Placeholder="@GetDisplayName(nameof(Model.NumberOfBeds))"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="Model.PricePerNight" For="() => Model.PricePerNight" HelperText="Pris per nat" Placeholder="@GetDisplayName(nameof(Model.PricePerNight))"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <MudTextField ReadOnly="true" @bind-Value="Model.Rating" For="() => Model.Rating" HelperText="Rating" Placeholder="@GetDisplayName(nameof(Model.Rating))"></MudTextField>
+            </MudItem>
+        </MudGrid>
+
+        @if (ShowEditButtons)
         {
-            @if (item.Name.Contains("Id") == false)
-            {
-                <MudCardContent>
-                    <MudTextField Placeholder="@item.Name" Value="item.GetValue(Model)" HelperText="@GetDisplayName(item.Name)"></MudTextField>
-                </MudCardContent>
-            }
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Warning" @onclick="() => ButtonClicked(1)">Gem ændringer</MudButton>
         }
     }
     @if (Pictures != null)
@@ -23,7 +36,7 @@
         <MudGrid>
             @foreach (var item in Pictures)
             {
-                <MudItem xs="3">
+                <MudItem xs="6">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300"></MudImage></MudPaper>
                 </MudItem>
             }
@@ -33,7 +46,13 @@
 
 @code {
     [Parameter]
-    public TModel? Model { get; set; }
+    public Room Model { get; set; }
+
+    [Parameter]
+    public bool ShowEditButtons { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyValuePair<string, KeyValuePair<bool, Room>>> OnClose { get; set; }
 
     [Parameter]
     public List<Picture> Pictures { get; set; } = new List<Picture>();
@@ -43,7 +62,23 @@
     {
         props = Model.GetType().GetProperties().ToList();
         StateHasChanged();
+    }
 
+    private void ButtonClicked(int input)
+    {
+        if (Model == null)
+            return;
+
+
+        switch (input)
+        {
+            case 1:
+                OnClose.InvokeAsync(new KeyValuePair<string, KeyValuePair<bool, Room>>("save", new KeyValuePair<bool, Room>(true, Model)));
+                break;
+
+            default:
+                break;
+        }
     }
 
     protected override void OnInitialized()

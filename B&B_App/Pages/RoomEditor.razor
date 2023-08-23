@@ -1,33 +1,72 @@
 ﻿@page "/roomEditor"
 @page "/roomEditor/{Id:int}"
+@using System.ComponentModel;
+@using System.Reflection;
 @inject IRoomService<Room> roomService
 @inject IPictureService pictureService
 @inject LoginManager loginManager
 
-<FormEditor TModel="Room" Model="@_room" Pictures="_pictures"></FormEditor>
-
-<MudPaper>
-    <MudGrid Style="margin:1px 4px 1px 1px">
-        <MudItem xs="12">
-            <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="background-color:darkgray" />
+<MudCard Style="margin:1px 4px 1px 1px">
+    <MudCardHeader>
+        Rediger information
+    </MudCardHeader>
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudTextField @bind-Value="_room.Number" For="() => _room.Number" HelperText="Rum nummer" Placeholder="@GetDisplayName(nameof(_room.Number))"></MudTextField>
         </MudItem>
 
-        <MudItem xs="6">
-            <MudImage Style="border:solid 1px black;" Src="@_addedPicture.Base64"></MudImage>
+        <MudItem xs="12" sm="6">
+            <MudTextField @bind-Value="_room.NumberOfBeds" For="() => _room.NumberOfBeds" HelperText="Antal senge" Placeholder="@GetDisplayName(nameof(_room.NumberOfBeds))"></MudTextField>
         </MudItem>
 
-        <MudItem xs="12">
-            <MudButton ButtonType="ButtonType.Submit" Color="Color.Warning" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileUpload" @onclick="UploadPicture">Upload</MudButton>
+        <MudItem xs="12" sm="6">
+            <MudTextField @bind-Value="_room.PricePerNight" For="() => _room.PricePerNight" HelperText="Pris per nat" Placeholder="@GetDisplayName(nameof(_room.PricePerNight))"></MudTextField>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <MudTextField ReadOnly="true" @bind-Value="_room.Rating" For="() => _room.Rating" HelperText="Rating" Placeholder="@GetDisplayName(nameof(_room.Rating))"></MudTextField>
         </MudItem>
     </MudGrid>
-</MudPaper>
+
+    <MudButton Style="margin:2px 2px 2px 2px" ButtonType="ButtonType.Button" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Surface" Color="Color.Warning" @onclick="() => SaveChanges()">Gem ændringer</MudButton>
+
+
+    @if (_pictures.Any())
+    {
+        <MudGrid>
+            @foreach (var item in _pictures)
+            {
+                <MudItem xs="6">
+
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300" /><MudCheckBox Checked="false" onclick="@(() => SelectPicture(item.Id))" /></MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+</MudCard>
+<MudGrid Style="background-color:lightgray; padding:2px 2px 2px 2px;">
+    <MudItem xs="12">
+        <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="background-color:darkgray; margin:2px 2px 2px 2px"/>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudImage Style="border:solid 1px black;" Src="@_addedPicture.Base64"></MudImage>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Warning" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileUpload" @onclick="UploadPicture">Upload</MudButton>
+    </MudItem>
+</MudGrid>
+
+
 @code {
     [Parameter]
     public int Id { get; set; }
     private Room _room = new Room();
     private User? _user;
-    private List<Picture>? _pictures { get; set; }
+    private List<Picture> _pictures = new List<Picture>();
     private Picture _addedPicture = new Picture();
+    private List<Picture> _picturesToDelete = new List<Picture>();
     private IBrowserFile? file;
 
     protected override async Task OnInitializedAsync()
@@ -37,9 +76,46 @@
         //if (loginManager.IsLandLord(_user.Id))
         _room = await roomService.Get(Id);
 
-        //_pictures = await pictureService.GetLocationPictures(Id);
+        _pictures = await pictureService.GetRoomPictures(Id);
+    }
 
+    private async void SaveChanges()
+    {
+        await roomService.Update(_room);
+    }
 
+    private void SelectPicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        _picturesToDelete.Add(selectedPicture);
+    }
+
+    private void DeletePictures()
+    {
+            
+    }
+
+    private string GetDisplayName(string name)
+    {
+        MemberInfo? property = typeof(Room).GetProperty(name);
+        if (property == null)
+            return "";
+        try
+        {
+            var attribute = property
+            .GetCustomAttributes(typeof(DisplayNameAttribute), true);
+            if (attribute.Length > 0)
+                return attribute.Cast<DisplayNameAttribute>().Single().DisplayName;
+        }
+        catch (Exception ex)
+        {
+            var test = ex;
+        }
+
+        return "";
     }
 
     private async void AddPicture(InputFileChangeEventArgs e)

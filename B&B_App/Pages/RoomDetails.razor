@@ -2,13 +2,17 @@
 @page "/roomdetails/{roomId:int}"
 @inject IRoomService<Room> roomService
 @inject ILocationService<Location> locationService
+@inject IPictureService pictureService
 
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
         <MudText>Rum detalje</MudText>
-        <MudRating SelectedValue="@Convert.ToInt16(_room.Rating)" ReadOnly="true">
-        </MudRating>
     </MudCardHeader>
+
+    <MudCardContent>
+        <MudRating SelectedValue="@Convert.ToInt16(_room.Rating)" ReadOnly="true"/>
+    </MudCardContent>
+        
     <MudCardContent>
 
         <MudText>
@@ -25,10 +29,10 @@
 
     <MudCardContent>
         <MudGrid>
-            @foreach (var item in pictures)
+            @foreach (var item in roomPictures)
             {
                 <MudItem xs="3">
-                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item" Height="250" Width="300"></MudImage></MudPaper>
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300"></MudImage></MudPaper>
                 </MudItem>
             }
         </MudGrid>
@@ -38,12 +42,12 @@
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
         <MudText>Info om stedet</MudText>
-        <MudDivider DividerType="DividerType.Middle"></MudDivider>
-        <MudRating SelectedValue="@Convert.ToInt16(_location.Rating)" ReadOnly="true">
-
-        </MudRating>
-
     </MudCardHeader>
+
+    <MudCardContent>
+        <MudRating SelectedValue="@Convert.ToInt16(_location.Rating)" ReadOnly="true"/>
+    </MudCardContent>
+       
     <MudCardContent>
 
         <MudText>
@@ -72,10 +76,10 @@
     <MudDivider DividerType="DividerType.Middle" Light="false"></MudDivider>
     <MudCardContent>
         <MudGrid>
-            @foreach (var item in pictures)
+            @foreach (var item in locationPictures)
             {
                 <MudItem xs="3">
-                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item" Height="250" Width="300"></MudImage></MudPaper>
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300"></MudImage></MudPaper>
                 </MudItem>
             }
         </MudGrid>
@@ -87,10 +91,10 @@
     [Parameter]
     public int? roomId { get; set; }
 
-    private Room? _room;
-    private Location? _location;
-    private List<string> pictures = new List<string>() { "images/vær1.jpg", "images/vær2.jpg", "images/vær3.jpg" };
-
+    private Room _room = new Room();
+    private Location _location = new Location();
+    private List<Picture> roomPictures = new List<Picture>();
+    private List<Picture> locationPictures = new List<Picture>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,10 +103,22 @@
 
         // Get room from service
         // Use roomId to get the selected room
-        if (roomId != null)
-            _room = await roomService.Get(roomId.Value);
-        // Get location for the room
-        _location = await locationService.Get(_room.LocationId);
+        try
+        {
+            if (roomId != null)
+                _room = await roomService.Get(roomId.Value);
+            // Get location for the room
+            _location = await locationService.Get(_room.LocationId);
+
+            roomPictures = await pictureService.GetRoomPictures(_room.Id);
+            locationPictures = await pictureService.GetLocationPictures(_location.Id);
+        }
+        catch (Exception ex)
+        {
+            // should be an errorlog
+            var error = ex;
+        }
+
 
         base.OnInitialized();
     }

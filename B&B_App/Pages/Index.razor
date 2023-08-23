@@ -1,10 +1,8 @@
 ﻿@page "/"
 @inject NavigationManager navi
 @inject IRoomService<Room> roomService
-@using B_B_App.Components.FormEditing
-@using B_B_ClassLibrary.BusinessModels;
-
-<PageTitle>Home Page</PageTitle>
+@inject IPictureService pictureService
+<PageTitle>BB.EU</PageTitle>
 <div>
     <div>
 
@@ -36,11 +34,14 @@
                             <!-- #region Carousel -->
                             <div style="padding-left:250px; flex-basis:60%">
                                 <MudCarousel Class="mud-width-full" Style="height:220px;" ShowArrows="false" ShowBullets="false" AutoCycle="@autocycle" TData="object">
-                                    @foreach (var item in pictures)
+                                    @if (_pictures.ContainsKey(room.Id))
                                     {
-                                        <MudCarouselItem Transition="transition" Style="align-items:center">
-                                            <MudImage Width="400" Height="220" ObjectFit="ObjectFit.Cover" Src="@item" Alt="True shit"></MudImage>
-                                        </MudCarouselItem>
+                                        @foreach (var item in _pictures[room.Id])
+                                        {
+                                            <MudCarouselItem Transition="transition" Style="align-items:center">
+                                                <MudImage Width="400" Height="220" ObjectFit="ObjectFit.Cover" Src="@item.Base64" Alt="True shit"></MudImage>
+                                            </MudCarouselItem>
+                                        }
                                     }
 
                                 </MudCarousel>
@@ -72,12 +73,23 @@
     private bool enableSwipeGesture = true;
     private bool autocycle = true;
     private Transition transition = Transition.Fade;
-    private List<string> pictures = new List<string>() { "images/vær1.jpg", "images/vær2.jpg", "images/vær3.jpg" };
+    private Dictionary<int, List<Picture>> _pictures = new Dictionary<int, List<Picture>>();
+    private PictureManager _pictureManager;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load data here
-        _rooms = await roomService.GetAllRooms();
+        if (_pictureManager == null)
+            _pictureManager = new PictureManager(roomService, pictureService);
+
+        try
+        {
+            _rooms = await roomService.GetAllRooms();
+            _pictures = await _pictureManager.GetPictureList();
+        }
+        catch (Exception ex)
+        {
+            var error = ex;
+        }
 
         base.OnInitialized();
     }
