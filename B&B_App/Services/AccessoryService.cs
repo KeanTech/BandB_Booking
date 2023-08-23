@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace B_B_App.Services
 {
-    public class AccessoryService : IAccessoryService<RoomAccessory>
+    public class AccessoryService : IAccessoryService
     {
         private static HttpClient _httpClient;
         public AccessoryService(HttpClient client)
@@ -31,11 +31,6 @@ namespace B_B_App.Services
         {
             var allAccessories = await _httpClient.GetFromJsonAsync<List<RoomAccessory>>($"Accessory/GetAllAccessories");
             return allAccessories;
-        }
-
-        public Task<RoomAccessory> Update(RoomAccessory type)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace B_B_Api.Controllers
         {
             try
             {
-                var allRooms = await _context.Rooms.ToListAsync();
+                var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(i => i.Pictures).ToListAsync();
                 return allRooms;
             }
             catch (Exception e)
@@ -46,7 +46,7 @@ namespace B_B_Api.Controllers
         [Route("GetRooms")]
         public async Task<ActionResult<IEnumerable<DbRoom>>> GetRooms(int locationId)
         {
-            var allRooms = await _context.Rooms.Where(x => x.LocationId == locationId).ToListAsync();
+            var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(y => y.Pictures).Where(x => x.LocationId == locationId).ToListAsync();
             return allRooms;
         }
 

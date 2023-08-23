@@ -35,8 +35,8 @@ namespace B_B_ClassLibrary.Models
         }
 
         public DbLandlord ?Landlord { get; set; }
-        public ICollection<DbRoom> ?Rooms { get; set; }
-        public ICollection<DbLocationRating> ?Ratings { get; set; }
-        public ICollection<DbLocationPicture> ?Pictures { get; set; }
+        public virtual ICollection<DbRoom> ?Rooms { get; set; }
+        public virtual ICollection<DbLocationRating> ?Ratings { get; set; }
+        public virtual ICollection<DbLocationPicture> ?Pictures { get; set; }
     }
 }

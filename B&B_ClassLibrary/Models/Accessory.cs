@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace B_B_ClassLibrary.Models
 {
-    public enum RoomAccessory
+    public enum Accessory
     {
         Desk = 1,
         TV = 2,

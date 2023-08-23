@@ -17,7 +17,7 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetUser")]
+        [Route("GetUser/{id}")]
         public async Task<ActionResult<DbUser>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

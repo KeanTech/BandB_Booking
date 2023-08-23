@@ -14,44 +14,16 @@ namespace B_B_api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "LocationPictures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LocationId = table.Column<int>(type: "int", nullable: false),
-                    Base64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LocationPictures", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RoomAccessory",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RoomAccessory", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoomPictures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    Base64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoomPictures", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,24 +95,20 @@ namespace B_B_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DbLocationDbLocationPicture",
+                name: "LocationPictures",
                 columns: table => new
                 {
-                    LocationsId = table.Column<int>(type: "int", nullable: false),
-                    PicturesId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LocationId = table.Column<int>(type: "int", nullable: false),
+                    Base64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbLocationDbLocationPicture", x => new { x.LocationsId, x.PicturesId });
+                    table.PrimaryKey("PK_LocationPictures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DbLocationDbLocationPicture_LocationPictures_PicturesId",
-                        column: x => x.PicturesId,
-                        principalTable: "LocationPictures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DbLocationDbLocationPicture_Locations_LocationsId",
-                        column: x => x.LocationsId,
+                        name: "FK_LocationPictures_Locations_LocationId",
+                        column: x => x.LocationId,
                         principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -217,7 +185,7 @@ namespace B_B_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DbRoomDbRoomAccessory",
+                name: "RoomAccessories",
                 columns: table => new
                 {
                     AccessoriesId = table.Column<int>(type: "int", nullable: false),
@@ -225,15 +193,15 @@ namespace B_B_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbRoomDbRoomAccessory", x => new { x.AccessoriesId, x.RoomsId });
+                    table.PrimaryKey("PK_RoomAccessories", x => new { x.AccessoriesId, x.RoomsId });
                     table.ForeignKey(
-                        name: "FK_DbRoomDbRoomAccessory_RoomAccessory_AccessoriesId",
+                        name: "FK_RoomAccessories_RoomAccessory_AccessoriesId",
                         column: x => x.AccessoriesId,
                         principalTable: "RoomAccessory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DbRoomDbRoomAccessory_Rooms_RoomsId",
+                        name: "FK_RoomAccessories_Rooms_RoomsId",
                         column: x => x.RoomsId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -241,24 +209,20 @@ namespace B_B_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DbRoomDbRoomPicture",
+                name: "RoomPictures",
                 columns: table => new
                 {
-                    PicturesId = table.Column<int>(type: "int", nullable: false),
-                    RoomsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    Base64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbRoomDbRoomPicture", x => new { x.PicturesId, x.RoomsId });
+                    table.PrimaryKey("PK_RoomPictures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DbRoomDbRoomPicture_RoomPictures_PicturesId",
-                        column: x => x.PicturesId,
-                        principalTable: "RoomPictures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DbRoomDbRoomPicture_Rooms_RoomsId",
-                        column: x => x.RoomsId,
+                        name: "FK_RoomPictures_Rooms_RoomId",
+                        column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -288,10 +252,10 @@ namespace B_B_api.Migrations
                 columns: new[] { "Id", "Type" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 2, 2 },
-                    { 3, 3 },
-                    { 4, 4 }
+                    { 1, "Desk" },
+                    { 2, "TV" },
+                    { 3, "Wifi" },
+                    { 4, "Balcony" }
                 });
 
             migrationBuilder.InsertData(
@@ -299,9 +263,9 @@ namespace B_B_api.Migrations
                 columns: new[] { "Id", "Country", "Created", "Email", "FirstName", "LastName", "Password", "PhoneNumber" },
                 values: new object[,]
                 {
-                    { 1, "Denmark", new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9913), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "12345", "12345678" },
-                    { 2, "Denmark", new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9969), "mortvest5@gmail.com", "Morten", "Vestergaard", "12345", "11223344" },
-                    { 3, "Denmark", new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9971), "buster@outlook.com", "Buster", "Jørgensen", "12345", "55005500" }
+                    { 1, "Denmark", new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6533), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "12345", "12345678" },
+                    { 2, "Denmark", new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6586), "mortvest5@gmail.com", "Morten", "Vestergaard", "12345", "11223344" },
+                    { 3, "Denmark", new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6588), "buster@outlook.com", "Buster", "Jørgensen", "12345", "55005500" }
                 });
 
             migrationBuilder.InsertData(
@@ -336,25 +300,15 @@ namespace B_B_api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DbLocationDbLocationPicture_PicturesId",
-                table: "DbLocationDbLocationPicture",
-                column: "PicturesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DbRoomDbRoomAccessory_RoomsId",
-                table: "DbRoomDbRoomAccessory",
-                column: "RoomsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DbRoomDbRoomPicture_RoomsId",
-                table: "DbRoomDbRoomPicture",
-                column: "RoomsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Landlords_UserId",
                 table: "Landlords",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationPictures_LocationId",
+                table: "LocationPictures",
+                column: "LocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LocationRatings_LocationId",
@@ -365,6 +319,16 @@ namespace B_B_api.Migrations
                 name: "IX_Locations_LandlordId",
                 table: "Locations",
                 column: "LandlordId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomAccessories_RoomsId",
+                table: "RoomAccessories",
+                column: "RoomsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomPictures_RoomId",
+                table: "RoomPictures",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomRatings_RoomId",
@@ -384,28 +348,22 @@ namespace B_B_api.Migrations
                 name: "Contracts");
 
             migrationBuilder.DropTable(
-                name: "DbLocationDbLocationPicture");
-
-            migrationBuilder.DropTable(
-                name: "DbRoomDbRoomAccessory");
-
-            migrationBuilder.DropTable(
-                name: "DbRoomDbRoomPicture");
+                name: "LocationPictures");
 
             migrationBuilder.DropTable(
                 name: "LocationRatings");
 
             migrationBuilder.DropTable(
-                name: "RoomRatings");
-
-            migrationBuilder.DropTable(
-                name: "LocationPictures");
-
-            migrationBuilder.DropTable(
-                name: "RoomAccessory");
+                name: "RoomAccessories");
 
             migrationBuilder.DropTable(
                 name: "RoomPictures");
+
+            migrationBuilder.DropTable(
+                name: "RoomRatings");
+
+            migrationBuilder.DropTable(
+                name: "RoomAccessory");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

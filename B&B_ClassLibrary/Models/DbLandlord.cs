@@ -35,6 +35,6 @@ namespace B_B_ClassLibrary.Models
         }
 
         public DbUser ?User { get; set; }
-        public ICollection<DbLocation> ?Locations { get; set; }
+        public virtual ICollection<DbLocation> ?Locations { get; set; }
     }
 }

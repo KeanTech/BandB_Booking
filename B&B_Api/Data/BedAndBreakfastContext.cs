@@ -122,27 +122,24 @@ namespace B_B_api.Data
                 });
 
             modelBuilder.Entity<DbRoomAccessory>().HasData(
-                new DbRoomAccessory
-                {
-                    Id = 1,
-                    Type = RoomAccessory.Desk
-                },
-                new DbRoomAccessory
-                {
-                    Id = 2,
-                    Type = RoomAccessory.TV
-                },
-                new DbRoomAccessory
-                {
-                    Id = 3,
-                    Type = RoomAccessory.Wifi
-                },
-                new DbRoomAccessory
-                {
-                    Id = 4,
-                    Type = RoomAccessory.Balcony
-                });
+                new DbRoomAccessory { Id = 1, Type = Accessory.Desk },
+                new DbRoomAccessory { Id = 2, Type = Accessory.TV },
+                new DbRoomAccessory { Id = 3, Type = Accessory.Wifi },
+                new DbRoomAccessory { Id = 4, Type = Accessory.Balcony });
 
+            modelBuilder.Entity<DbRoomRating>().HasData(
+                new DbRoomRating { Id = 1, Rating = 1, RoomId = 1 },
+                new DbRoomRating { Id = 2, Rating = 5, RoomId = 2 },
+                new DbRoomRating { Id = 3, Rating = 3, RoomId = 4 });
+
+            modelBuilder.Entity<DbLocationRating>().HasData(
+                new DbLocationRating { Id = 1, Rating = 4, LocationId = 1},
+                new DbLocationRating { Id = 2, Rating = 5, LocationId = 1});
+
+            modelBuilder.Entity<DbRoomAccessory>()
+                .Property(x => x.Type)
+                .HasConversion<string>()
+                .HasMaxLength(20);
 
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Pictures);
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Ratings);
@@ -154,6 +151,11 @@ namespace B_B_api.Data
                 .WithMany(y => y.Contracts)
                 .HasForeignKey(j => j.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<DbRoom>()
+                .HasMany(x => x.Accessories)
+                .WithMany(y => y.Rooms)
+                .UsingEntity("RoomAccessories");
         }
     }
 }

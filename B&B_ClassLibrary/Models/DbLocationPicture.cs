@@ -28,7 +28,7 @@ namespace B_B_ClassLibrary.Models
         {
             
         }
-        public ICollection<DbLocation> ?Locations { get; set; }
+        public DbLocation? Location { get; set; }
 
     }
 }
