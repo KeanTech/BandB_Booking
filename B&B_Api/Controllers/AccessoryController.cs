@@ -27,26 +27,5 @@ namespace B_B_Api.Controllers
             }
             return accessories;
         }
-
-        [HttpPost]
-        [Route("AddAccessory")]
-        public async Task<ActionResult<DbRoomAccessory>> AddAccessory(List<DbRoomAccessory> accessories)
-        {
-            return NotFound();
-        }
-
-        [HttpPost]
-        [Route("Delete")]
-        public IActionResult Delete(string id)
-        {
-            return NotFound();
-        }
-
-        [HttpPost]
-        [Route("Update")]
-        public IActionResult Update(string id)
-        {
-            return NotFound();
-        }
     }
 }

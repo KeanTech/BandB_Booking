@@ -13,8 +13,8 @@ namespace B_B_ClassLibrary.Models
     {
         [Key]
         public int Id { get; set; }
-        public RoomAccessory Type { get; set; }
+        public Accessory Type { get; set; }
 
-        public ICollection<DbRoom> ?Rooms { get; set; }
+        public virtual ICollection<DbRoom> ?Rooms { get; set; }
     }
 }

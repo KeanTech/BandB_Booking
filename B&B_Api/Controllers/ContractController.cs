@@ -17,7 +17,7 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetContract")]
+        [Route("GetContract/{id}")]
         public async Task<ActionResult<DbContract>> GetContract(int id)
         {
             var contract = await _context.Contracts.FindAsync(id);

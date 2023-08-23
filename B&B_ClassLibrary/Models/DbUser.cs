@@ -32,7 +32,7 @@ namespace B_B_ClassLibrary.Models
             Created = user.Created; 
         }
 
-        public ICollection<DbContract> ?Contracts { get; set; }
+        public virtual ICollection<DbContract> ?Contracts { get; set; }
         public DbLandlord ?Landlord { get; set; }
     }
 }

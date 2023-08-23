@@ -174,6 +174,8 @@ namespace B_B_api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId");
+
                     b.ToTable("LocationPictures");
                 });
 
@@ -274,8 +276,10 @@ namespace B_B_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -285,22 +289,22 @@ namespace B_B_api.Migrations
                         new
                         {
                             Id = 1,
-                            Type = 1
+                            Type = "Desk"
                         },
                         new
                         {
                             Id = 2,
-                            Type = 2
+                            Type = "TV"
                         },
                         new
                         {
                             Id = 3,
-                            Type = 3
+                            Type = "Wifi"
                         },
                         new
                         {
                             Id = 4,
-                            Type = 4
+                            Type = "Balcony"
                         });
                 });
 
@@ -320,6 +324,8 @@ namespace B_B_api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("RoomPictures");
                 });
@@ -389,7 +395,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 1,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9913),
+                            Created = new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6533),
                             Email = "ken1ander2@hotmail.com",
                             FirstName = "Kenneth",
                             LastName = "Andersen",
@@ -400,7 +406,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 2,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9969),
+                            Created = new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6586),
                             Email = "mortvest5@gmail.com",
                             FirstName = "Morten",
                             LastName = "Vestergaard",
@@ -411,7 +417,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 3,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 22, 10, 35, 53, 879, DateTimeKind.Local).AddTicks(9971),
+                            Created = new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6588),
                             Email = "buster@outlook.com",
                             FirstName = "Buster",
                             LastName = "Jørgensen",
@@ -420,22 +426,7 @@ namespace B_B_api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DbLocationDbLocationPicture", b =>
-                {
-                    b.Property<int>("LocationsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PicturesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsId", "PicturesId");
-
-                    b.HasIndex("PicturesId");
-
-                    b.ToTable("DbLocationDbLocationPicture");
-                });
-
-            modelBuilder.Entity("DbRoomDbRoomAccessory", b =>
+            modelBuilder.Entity("RoomAccessories", b =>
                 {
                     b.Property<int>("AccessoriesId")
                         .HasColumnType("int");
@@ -447,22 +438,7 @@ namespace B_B_api.Migrations
 
                     b.HasIndex("RoomsId");
 
-                    b.ToTable("DbRoomDbRoomAccessory");
-                });
-
-            modelBuilder.Entity("DbRoomDbRoomPicture", b =>
-                {
-                    b.Property<int>("PicturesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PicturesId", "RoomsId");
-
-                    b.HasIndex("RoomsId");
-
-                    b.ToTable("DbRoomDbRoomPicture");
+                    b.ToTable("RoomAccessories");
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbContract", b =>
@@ -505,6 +481,17 @@ namespace B_B_api.Migrations
                     b.Navigation("Landlord");
                 });
 
+            modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationPicture", b =>
+                {
+                    b.HasOne("B_B_ClassLibrary.Models.DbLocation", "Location")
+                        .WithMany("Pictures")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocationRating", b =>
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbLocation", "Location")
@@ -525,6 +512,17 @@ namespace B_B_api.Migrations
                     b.Navigation("Location");
                 });
 
+            modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomPicture", b =>
+                {
+                    b.HasOne("B_B_ClassLibrary.Models.DbRoom", "Room")
+                        .WithMany("Pictures")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoomRating", b =>
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbRoom", "Room")
@@ -534,41 +532,11 @@ namespace B_B_api.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("DbLocationDbLocationPicture", b =>
-                {
-                    b.HasOne("B_B_ClassLibrary.Models.DbLocation", null)
-                        .WithMany()
-                        .HasForeignKey("LocationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("B_B_ClassLibrary.Models.DbLocationPicture", null)
-                        .WithMany()
-                        .HasForeignKey("PicturesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DbRoomDbRoomAccessory", b =>
+            modelBuilder.Entity("RoomAccessories", b =>
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbRoomAccessory", null)
                         .WithMany()
                         .HasForeignKey("AccessoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("B_B_ClassLibrary.Models.DbRoom", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DbRoomDbRoomPicture", b =>
-                {
-                    b.HasOne("B_B_ClassLibrary.Models.DbRoomPicture", null)
-                        .WithMany()
-                        .HasForeignKey("PicturesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -586,6 +554,8 @@ namespace B_B_api.Migrations
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLocation", b =>
                 {
+                    b.Navigation("Pictures");
+
                     b.Navigation("Ratings");
 
                     b.Navigation("Rooms");
@@ -593,6 +563,8 @@ namespace B_B_api.Migrations
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoom", b =>
                 {
+                    b.Navigation("Pictures");
+
                     b.Navigation("Ratings");
                 });
 

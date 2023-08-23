@@ -28,6 +28,6 @@ namespace B_B_ClassLibrary.Models
             
         }
 
-        public ICollection<DbRoom> ?Rooms { get; set; }
+        public DbRoom ?Room { get; set; }
     }
 }

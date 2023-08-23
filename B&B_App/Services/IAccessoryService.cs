@@ -2,7 +2,7 @@
 
 namespace B_B_App.Services
 {
-    public interface IAccessoryService<T> : IDataService<T>
+    public interface IAccessoryService
     {
         public Task<List<RoomAccessory>> GetAllAccessories();
     }
