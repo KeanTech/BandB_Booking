@@ -87,7 +87,7 @@ namespace B_B_api.Controllers
             if (pictures == null)
                 return NotFound();
 
-            if (pictures.Any() == false)
+            if (pictures.Any())
             {
                 
                 try
@@ -116,7 +116,7 @@ namespace B_B_api.Controllers
             if(pictures == null)
                 return NotFound();
 
-            if (pictures.Any() == false)
+            if (pictures.Any())
             {
                 
                 try
