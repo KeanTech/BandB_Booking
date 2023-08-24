@@ -33,7 +33,7 @@ namespace B_B_Api.Controllers
 
         [HttpPost]
         [Route("CreateUser")]
-        public async Task<ActionResult<DbUser>> CreateUser(User user)
+        public async Task<ActionResult<DbUser>> CreateUser([FromBody]User user)
         {
             var userCheck = _context.Users.Where(x => x.Id == user.Id).SingleOrDefault();
 

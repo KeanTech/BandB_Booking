@@ -33,13 +33,13 @@ namespace B_B_Api.Controllers
 
         [HttpPost]
         [Route("CreateLandlord")]
-        public async Task<ActionResult<DbLandlord>> CreateLandlord(Landlord landlord)
+        public async Task<ActionResult<DbLandlord>> CreateLandlord([FromBody] Landlord landlord)
         {
-            var landlordCheck = _context.Landlords.Where(x => x.Id == landlord.Id).FirstOrDefault();
-            if (landlordCheck != null)
+            var landlordExists = _context.Landlords.Where(x => x.Id == landlord.Id).FirstOrDefault();
+            if (landlordExists == null)
             {
-                DbLandlord newLandlord = new DbLandlord(landlord);
-                await _context.AddAsync(newLandlord);
+                DbUser userForLandlord = new DbUser(landlord);
+                await _context.Users.AddAsync(userForLandlord);
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -48,7 +48,20 @@ namespace B_B_Api.Controllers
                 {
                     return BadRequest(e);
                 }
-            return Ok();
+
+                DbLandlord newLandlord = new DbLandlord(landlord);
+                newLandlord.UserId = userForLandlord.Id;
+                await _context.Landlords.AddAsync(newLandlord);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+
+                return Ok();
             }
             else
             {
