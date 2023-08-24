@@ -24,16 +24,22 @@ namespace B_B_App.Services
             return null;
         }
 
-        public async Task<HttpResponseMessage> DeleteLocationPictures(int locationId)
+        public async Task<bool> DeleteLocationPictures(List<Picture> pictures)
         {
-            var response = await _httpClient.PostAsJsonAsync<int>("Picture/DeleteLocationPictures", locationId);
-            return response;
+            var response = await _httpClient.PostAsJsonAsync("Picture/DeleteLocationPictures", pictures);
+            if(response.IsSuccessStatusCode)
+                return true;
+
+            return false;
         }
 
-        public async Task<HttpResponseMessage> DeleteRoomPictures(int roomId)
+        public async Task<bool> DeleteRoomPictures(List<Picture> pictures)
         {
-            var response = await _httpClient.PostAsJsonAsync<int>("Picture/DeleteRoomPictures", roomId);
-            return response;
+            var response = await _httpClient.PostAsJsonAsync("Picture/DeleteRoomPictures", pictures);
+            if (response.IsSuccessStatusCode)
+                return true;
+
+            return false;
         }
 
         public async Task<List<Picture>> GetLocationPictures(int locationId)

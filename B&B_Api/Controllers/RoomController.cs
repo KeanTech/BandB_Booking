@@ -4,6 +4,7 @@ using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace B_B_Api.Controllers
 {
@@ -28,8 +29,23 @@ namespace B_B_Api.Controllers
         {
             try
             {
-                var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(i => i.Pictures).ToListAsync();
+                var allRooms = await _context.Rooms.ToListAsync();
                 return allRooms;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllRoomsAndPictures")]
+        public IActionResult GetAllRoomsAndPictures()
+        {
+            try
+            {
+                var allRooms = _context.Rooms.Include(i => i.Pictures).ToList();
+                return Ok(JsonSerializer.Serialize(allRooms));
             }
             catch (Exception e)
             {

@@ -9,7 +9,7 @@ namespace B_B_App.Services
         public Task<List<Picture>> AddLocationPictures(List<Picture> pictures);
         public Task<List<Picture>> GetRoomPictures(int roomId);
         public Task<List<Picture>> GetLocationPictures(int locationId);
-        public Task<HttpResponseMessage> DeleteRoomPictures(int roomId);
-        public Task<HttpResponseMessage> DeleteLocationPictures(int locationId);
+        public Task<bool> DeleteRoomPictures(List<Picture> pictures);
+        public Task<bool> DeleteLocationPictures(List<Picture> pictures);
     }
 }
