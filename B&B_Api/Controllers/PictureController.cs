@@ -81,15 +81,18 @@ namespace B_B_api.Controllers
         }
 
         [HttpPost]
-        [Route("DeleteRoomPictures/{Id}")]
-        public IActionResult DeleteRoomPictures(int roomId)
+        [Route("DeleteRoomPictures")]
+        public IActionResult DeleteRoomPictures(List<Picture> pictures)
         {
-            var picsToRemove = _context.RoomPictures.Where(x => x.RoomId == roomId).ToList();
-            if (picsToRemove != null)
+            if (pictures == null)
+                return NotFound();
+
+            if (pictures.Any() == false)
             {
+                
                 try
                 {
-                    _context.RemoveRange(picsToRemove);
+                    _context.RemoveRange(pictures.ConvertToRoomPictures());
 
                     _context.SaveChanges();
                 }
@@ -107,16 +110,18 @@ namespace B_B_api.Controllers
         }
 
         [HttpPost]
-        [Route("DeleteLocationPictures/{Id}")]
-        public IActionResult DeleteLocationPictures(int locationId)
+        [Route("DeleteLocationPictures")]
+        public IActionResult DeleteLocationPictures(List<Picture> pictures)
         {
-            var picsToRemove = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
-            if (picsToRemove != null)
+            if(pictures == null)
+                return NotFound();
+
+            if (pictures.Any() == false)
             {
                 
                 try
                 {
-                    _context.RemoveRange(picsToRemove);
+                    _context.RemoveRange(pictures.ConvertToLocationPictures());
 
                     _context.SaveChanges();
                 }

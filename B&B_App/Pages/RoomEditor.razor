@@ -5,48 +5,71 @@
 @inject IRoomService<Room> roomService
 @inject IPictureService pictureService
 @inject LoginManager loginManager
+@inject ISnackbar snackbar
 
-<MudCard Style="margin:1px 4px 1px 1px">
+<MudCard>
     <MudCardHeader>
-        Rediger information
+        <CardHeaderContent>
+            <MudText Typo="Typo.button">Rediger information</MudText>
+        </CardHeaderContent>
     </MudCardHeader>
-    <MudGrid>
-        <MudItem xs="12" sm="6">
-            <MudTextField @bind-Value="_room.Number" For="() => _room.Number" HelperText="Rum nummer" Placeholder="@GetDisplayName(nameof(_room.Number))"></MudTextField>
-        </MudItem>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="_room.Number" For="() => _room.Number" Variant="Variant.Filled" HelperText="Rum nummer" Placeholder="@GetDisplayName(nameof(_room.Number))"></MudTextField>
+            </MudItem>
 
-        <MudItem xs="12" sm="6">
-            <MudTextField @bind-Value="_room.NumberOfBeds" For="() => _room.NumberOfBeds" HelperText="Antal senge" Placeholder="@GetDisplayName(nameof(_room.NumberOfBeds))"></MudTextField>
-        </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="_room.NumberOfBeds" For="() => _room.NumberOfBeds" Variant="Variant.Filled" HelperText="Antal senge" Placeholder="@GetDisplayName(nameof(_room.NumberOfBeds))"></MudTextField>
+            </MudItem>
 
-        <MudItem xs="12" sm="6">
-            <MudTextField @bind-Value="_room.PricePerNight" For="() => _room.PricePerNight" HelperText="Pris per nat" Placeholder="@GetDisplayName(nameof(_room.PricePerNight))"></MudTextField>
-        </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="_room.PricePerNight" For="() => _room.PricePerNight" Variant="Variant.Filled" HelperText="Pris per nat" Placeholder="@GetDisplayName(nameof(_room.PricePerNight))"></MudTextField>
+            </MudItem>
 
-        <MudItem xs="12" sm="6">
-            <MudTextField ReadOnly="true" @bind-Value="_room.Rating" For="() => _room.Rating" HelperText="Rating" Placeholder="@GetDisplayName(nameof(_room.Rating))"></MudTextField>
-        </MudItem>
-    </MudGrid>
+            <MudItem xs="6">
+                <MudTextField ReadOnly="true" @bind-Value="_room.Rating" For="() => _room.Rating" Variant="Variant.Text" HelperText="Rating" Placeholder="@GetDisplayName(nameof(_room.Rating))"></MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Surface" Color="Color.Warning" @onclick="() => SaveChanges()">Gem ændringer</MudButton>
+            </MudItem>
+        </MudGrid>
 
-    <MudButton Style="margin:2px 2px 2px 2px" ButtonType="ButtonType.Button" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Surface" Color="Color.Warning" @onclick="() => SaveChanges()">Gem ændringer</MudButton>
+    </MudCardContent>
+
+
 
 
     @if (_pictures.Any())
     {
-        <MudGrid>
-            @foreach (var item in _pictures)
-            {
-                <MudItem xs="6">
+        <MudCardContent>
 
-                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300" /><MudCheckBox Checked="false" onclick="@(() => SelectPicture(item.Id))" /></MudPaper>
-                </MudItem>
-            }
-        </MudGrid>
+            <MudGrid>
+                @foreach (var item in _pictures)
+                {
+                    <MudItem xs="6">
+
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300" /></MudPaper>
+                        <MudGrid>
+                            <MudItem xs="4">
+
+                                <MudIconButton Style="margin:1px 10px 1px 1px" Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                            </MudItem>
+                            <MudItem xs="4">
+
+                                <MudIconButton Size="Size.Small" Color="Color.Warning" Icon="@Icons.Material.Filled.CheckBox"  OnClick="@(() => SelectPicture(item.Id))" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+
+                }
+            </MudGrid>
+        </MudCardContent>
     }
 </MudCard>
-<MudGrid Style="background-color:lightgray; padding:2px 2px 2px 2px;">
+<MudGrid Style="padding:2px 2px 2px 2px; margin:0px 12px 0px 0px">
     <MudItem xs="12">
-        <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="background-color:darkgray; margin:2px 2px 2px 2px"/>
+        <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="margin:2px 2px 2px 2px" />
     </MudItem>
 
     <MudItem xs="12">
@@ -68,15 +91,24 @@
     private Picture _addedPicture = new Picture();
     private List<Picture> _picturesToDelete = new List<Picture>();
     private IBrowserFile? file;
+    private ErrorManager _errorManager;
 
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
+        _errorManager = new ErrorManager(snackbar);
 
-        //if (loginManager.IsLandLord(_user.Id))
-        _room = await roomService.Get(Id);
+        try
+        {
+            //if (loginManager.IsLandLord(_user.Id))
+            _room = await roomService.Get(Id);
 
-        _pictures = await pictureService.GetRoomPictures(Id);
+            _pictures = await pictureService.GetRoomPictures(Id);
+        }
+        catch (Exception)
+        {
+            _errorManager.InfoBar("Error while loading data", Variant.Text, Severity.Error);
+        }
     }
 
     private async void SaveChanges()
@@ -93,9 +125,10 @@
         _picturesToDelete.Add(selectedPicture);
     }
 
-    private void DeletePictures()
+    private async void DeletePictures()
     {
-            
+        if (_picturesToDelete.Any())
+            await pictureService.DeleteRoomPictures(_picturesToDelete);
     }
 
     private string GetDisplayName(string name)
@@ -134,6 +167,9 @@
         {
             await pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
         }
+        _pictures = await pictureService.GetRoomPictures(Id);
+
+        StateHasChanged();
     }
 
 }

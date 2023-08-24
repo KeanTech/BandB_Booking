@@ -22,5 +22,19 @@ namespace B_B_ClassLibrary.BusinessModels
         [DisplayName("Score")]
         public double? Rating { get; set; }
 
+        public Room()
+        {
+            
+        }
+
+        public Room(DbRoom dbRoom)
+        {
+            Id = dbRoom.Id;
+            LocationId = dbRoom.LocationId;
+            Number = dbRoom.Number;
+            NumberOfBeds = dbRoom.NumberOfBeds;
+            PricePerNight = dbRoom.PricePerNight;
+            Rating = dbRoom.Rating;
+        }
     }
 }

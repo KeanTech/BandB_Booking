@@ -2,6 +2,8 @@
 @inject NavigationManager navi
 @inject IRoomService<Room> roomService
 @inject IPictureService pictureService
+@inject ISnackbar snackbar
+
 <PageTitle>BB.EU</PageTitle>
 <div>
     <div>
@@ -26,7 +28,7 @@
 
                                     </MudCardContent>
                                     <MudCardActions Style="align-content:center">
-                                        <MudButton @onclick="() => test(room)" Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                                        <MudButton @onclick="() => Redirect(room)" Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
 
                                     </MudCardActions>
                                 </MudCard>
@@ -74,12 +76,17 @@
     private bool autocycle = true;
     private Transition transition = Transition.Fade;
     private Dictionary<int, List<Picture>> _pictures = new Dictionary<int, List<Picture>>();
+   
     private PictureManager _pictureManager;
+    private ErrorManager _errorManager;
 
     protected override async Task OnInitializedAsync()
     {
         if (_pictureManager == null)
             _pictureManager = new PictureManager(roomService, pictureService);
+
+        if (_errorManager == null)
+            _errorManager = new ErrorManager(snackbar);
 
         try
         {
@@ -89,11 +96,12 @@
         catch (Exception ex)
         {
             var error = ex;
+            _errorManager.InfoBar("Error while loading data..", Variant.Text, Severity.Error);
         }
 
         base.OnInitialized();
     }
-    private void test(Room room)
+    private void Redirect(Room room)
     {
         navi.NavigateTo($"/roomdetails/{room.Id}");
     }

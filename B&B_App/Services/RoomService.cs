@@ -1,7 +1,9 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Models;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace B_B_App.Services
 {
@@ -20,12 +22,38 @@ namespace B_B_App.Services
             var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
             return data;
         }
-        
+
+        public async Task<Dictionary<Room, List<Picture>>> GetAllRoomsAndPictures()
+        {
+            Dictionary<Room, List<Picture>> roomWithPictures = new Dictionary<Room, List<Picture>>();
+
+            try
+            {
+                var response = await _httpClient.GetAsync("Room/GetAllRoomsAndPictures");
+                var content = await response.Content.ReadAsStringAsync();
+                var allRooms = JsonSerializer.Deserialize<List<DbRoom>>(content);
+                
+                if (allRooms != null)
+                    foreach (var item in allRooms)
+                    {
+                        roomWithPictures.Add(new Room(item), item.Pictures != null ? item.Pictures.ToList().ConvertToPictures() : new List<Picture>());
+                    }
+
+            }
+            catch (Exception ex)
+            {
+
+                var message = ex.Message;
+            }
+
+            return roomWithPictures;
+        }
+
         public async Task<List<Room>> GetAllRooms()
         {
             var allRooms = await _httpClient.GetFromJsonAsync<List<Room>>("Room/GetAllRooms");
             return allRooms;
-            
+
         }
 
         public async Task<List<Room>> GetRooms(int locationId)
