@@ -37,9 +37,6 @@
 
     </MudCardContent>
 
-
-
-
     @if (_pictures.Any())
     {
         <MudCardContent>
@@ -53,15 +50,14 @@
                         <MudGrid>
                             <MudItem xs="4">
 
-                                <MudIconButton Style="margin:1px 10px 1px 1px" Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                                <MudIconButton @onclick="() => DeletePicture(item.Id)" Style="margin:1px 10px 1px 1px" Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                                @*<MudToggleIconButton Icon="@Icons.Material.Filled.CheckBoxOutlineBlank" Size="Size.Small" Color="@Color.Error" Title="Off" ToggledIcon="@Icons.Material.Filled.CheckBox" ToggledColor="@Color.Success" ToggledTitle="Off" @onclick="() => SelectPicture(item.Id)"/>*@
                             </MudItem>
                             <MudItem xs="4">
 
-                                <MudIconButton Size="Size.Small" Color="Color.Warning" Icon="@Icons.Material.Filled.CheckBox"  OnClick="@(() => SelectPicture(item.Id))" />
                             </MudItem>
                         </MudGrid>
                     </MudItem>
-
                 }
             </MudGrid>
         </MudCardContent>
@@ -123,6 +119,18 @@
             return;
 
         _picturesToDelete.Add(selectedPicture);
+    }
+
+    private async void DeletePicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        await pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
+        _pictures.Remove(selectedPicture);
+
+        StateHasChanged();
     }
 
     private async void DeletePictures()
