@@ -61,7 +61,7 @@ namespace B_B_Api.Controllers
                     return BadRequest(e);
                 }
 
-                return Ok();
+                return CreatedAtAction("CreateLandlord", new { id = landlord.Id}, landlord);
             }
             else
             {

@@ -54,7 +54,7 @@ namespace B_B_Api.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
+            return CreatedAtAction("CreateUser", new { id = user.Id}, user);
         }
 
         [HttpPost]

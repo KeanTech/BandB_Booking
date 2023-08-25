@@ -1,8 +1,9 @@
 ﻿@using B_B_App.Components.Dialogs;
 @using B_B_ClassLibrary.BusinessModels;
+@inject NavigationManager navi
 <div class="top-row ps-3 navbar navbar-light" style="height:15%;">
     <div class="container-fluid">
-        @if (logedIn)
+        @if (loggedIn)
         {
             <MudText Color="Color.Info">Welcome @_user.FirstName</MudText>
             <MudButton ButtonType="ButtonType.Button" @onclick="LogOut" Color="Color.Warning">LogOut</MudButton>
@@ -16,6 +17,7 @@
             <MudText Color="Color.Info">Welcome please login</MudText>
 
             <MudButton ButtonType="ButtonType.Button" @onclick="Login"  Color="Color.Success">LogIn</MudButton>
+            <MudButton  Disabled="@loggedIn" ButtonType="ButtonType.Button" @onclick="CreateUserRedirect"></MudButton>
         }
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -29,7 +31,7 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
-            @if (logedIn)
+            @if (loggedIn)
             {
                 <NavLink class="nav-link" href="/reservations" Match="NavLinkMatch.All">
                     <span class="oi oi-home" aria-hidden="true"></span> Bookings
@@ -45,7 +47,7 @@
     private bool loginDialogOpen = false;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private bool logedIn = false;
+    private bool loggedIn = false;
     private User? _user;
 
     protected override void OnInitialized()
@@ -69,7 +71,7 @@
 
     private async Task LogOut()
     {
-        logedIn = false;
+        loggedIn = false;
         _user = null;
         this.StateHasChanged();
         return;
@@ -78,12 +80,17 @@
     private void loginDialogClose(KeyValuePair<bool, User> pair)
     {
         loginDialogOpen = false;
-        
+
         if (pair.Key)
         {
-            logedIn = true;    
+            loggedIn = true;    
         }
 
+    }
+
+    private void CreateUserRedirect()
+    {
+        navi.NavigateTo("/createuser");
     }
 
     private void ToggleNavMenu()

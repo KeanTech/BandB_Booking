@@ -2,7 +2,7 @@
 @using System.ComponentModel
 @using System.Reflection
 @using B_B_App.Services;
-@using B_B_ClassLibrary.BusinessModels;
+@inject NavigationManager navi
 @inject IUserService<User> userService
 @inject ILandlordService<Landlord> landlordService
 
@@ -69,14 +69,16 @@
     }
 </MudButton>
 
+<MudButton OnClick="Redirect" Variant="Variant.Filled" Color="Color.Secondary">Fortryd</MudButton>
+
 @code {
-    public string UserType;
+    public string? UserType;
     public string[] UserTypes = { "Lejer", "Udlejer" };
     private User _user = new User();
     private Landlord _landlord = new Landlord();
     private bool isLandlord;
     private bool PasswordShow;
-    private bool _processing;
+    private bool _processing = false;
     private bool _formSuccess;
     string[] formErrors = { };
     InputType PasswordInput = InputType.Password;
@@ -106,13 +108,16 @@
 
     public async void OnSubmitUser()
     {
+        _processing = true;
         if (UserType == "Lejer")
         {
             _user.Created = DateTime.Now;
             await userService.Create(_user);
+            _processing = false;
         }
         else if (UserType == "Udlejer")
         {
+            _landlord.Created = DateTime.Now;
             _landlord.FirstName = _user.FirstName;
             _landlord.LastName = _user.LastName;
             _landlord.Email = _user.Email;
@@ -120,7 +125,13 @@
             _landlord.PhoneNumber = _user.PhoneNumber;
             _landlord.Country = _user.Country;
             await landlordService.Create(_landlord);
+            _processing = false;
         }
+    }
+
+    private void Redirect()
+    {
+        navi.NavigateTo($"/");
     }
 
     protected override void OnInitialized()

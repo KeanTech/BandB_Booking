@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\FormCreating\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
