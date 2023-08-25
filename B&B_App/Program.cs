@@ -11,7 +11,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 LoginManager.Login(new B_B_ClassLibrary.BusinessModels.User() { FirstName = "Kenneth" });
 
-Uri uri = new Uri("http://10.108.137.196:5188");
+Uri uri = new Uri("http://192.168.1.101:5188");
 
 builder.Services.AddHttpClient<IRoomService<Room>, RoomService>(client =>
 {

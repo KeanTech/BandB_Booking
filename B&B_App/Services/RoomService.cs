@@ -72,9 +72,10 @@ namespace B_B_App.Services
 
         public async Task<Room> Update(Room room)
         {
-            var returnedRoom = await _httpClient.PostAsJsonAsync<Room>("Room/UpdateRoom", room);
-            var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
-            return data;
+            var returnedRoom = await _httpClient.PostAsJsonAsync("Room/UpdateRoom", room);
+            var data = await returnedRoom.Content.ReadAsStringAsync();
+            var updatedRoom = JsonSerializer.Deserialize<Room>(data);
+            return updatedRoom;
         }
         public async Task<bool> Delete(Room room)
         {

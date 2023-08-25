@@ -110,6 +110,7 @@
     private async void SaveChanges()
     {
         await roomService.Update(_room);
+        StateHasChanged();
     }
 
     private void SelectPicture(int id)

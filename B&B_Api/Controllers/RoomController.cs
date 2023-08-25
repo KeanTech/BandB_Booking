@@ -141,7 +141,7 @@ namespace B_B_Api.Controllers
                 {
                     return BadRequest(e);
                 }
-                return Ok();
+                return Ok(room);
             }
         }
 
