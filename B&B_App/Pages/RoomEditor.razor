@@ -1,5 +1,4 @@
-﻿@page "/roomEditor"
-@page "/roomEditor/{Id:int}"
+﻿@page "/roomEditor/{RoomId:int}"
 @using System.ComponentModel;
 @using System.Reflection;
 @inject IRoomService<Room> roomService
@@ -80,8 +79,11 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public int RoomId { get; set; }
+
+    #region Fields
     private Room _room = new Room();
+   
     private User? _user;
     private List<Picture> _pictures = new List<Picture>();
     private Picture _addedPicture = new Picture();
@@ -89,17 +91,22 @@
     private IBrowserFile? file;
     private ErrorManager _errorManager;
 
+    #endregion
+
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
         _errorManager = new ErrorManager(snackbar);
 
+        if (RoomId == 0)
+            return;
+
         try
         {
             //if (loginManager.IsLandLord(_user.Id))
-            _room = await roomService.Get(Id);
+            _room = await roomService.Get(RoomId);
 
-            _pictures = await pictureService.GetRoomPictures(Id);
+            _pictures = await pictureService.GetRoomPictures(RoomId);
         }
         catch (Exception)
         {
@@ -109,35 +116,12 @@
 
     private async void SaveChanges()
     {
-        await roomService.Update(_room);
-        StateHasChanged();
-    }
-
-    private void SelectPicture(int id)
-    {
-        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
-        if (selectedPicture == null)
-            return;
-
-        _picturesToDelete.Add(selectedPicture);
-    }
-
-    private async void DeletePicture(int id)
-    {
-        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
-        if (selectedPicture == null)
-            return;
-
-        await pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
-        _pictures.Remove(selectedPicture);
+        if (_room.Id == 0)
+            await roomService.Create(_room);
+        else
+            await roomService.Update(_room);
 
         StateHasChanged();
-    }
-
-    private async void DeletePictures()
-    {
-        if (_picturesToDelete.Any())
-            await pictureService.DeleteRoomPictures(_picturesToDelete);
     }
 
     private string GetDisplayName(string name)
@@ -159,7 +143,31 @@
 
         return "";
     }
+    #region Picture functions
+    private void SelectPicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
 
+        _picturesToDelete.Add(selectedPicture);
+    }
+    private async void DeletePicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        await pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
+        _pictures.Remove(selectedPicture);
+
+        StateHasChanged();
+    }
+    private async void DeletePictures()
+    {
+        if (_picturesToDelete.Any())
+            await pictureService.DeleteRoomPictures(_picturesToDelete);
+    }
     private async void AddPicture(InputFileChangeEventArgs e)
     {
         Picture imageFile = await ImageHandling.GetImageFile(e.File, _room.Id);
@@ -169,16 +177,17 @@
         _addedPicture = imageFile;
         StateHasChanged();
     }
-
     private async void UploadPicture()
     {
         if (_addedPicture != null)
         {
             await pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
         }
-        _pictures = await pictureService.GetRoomPictures(Id);
+        _pictures = await pictureService.GetRoomPictures(RoomId);
 
         StateHasChanged();
     }
+    #endregion
+
 
 }

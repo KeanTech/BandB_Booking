@@ -1,0 +1,274 @@
+﻿@page "/BnBCreator"
+@using System.ComponentModel;
+@using System.Reflection;
+@inject IRoomService<Room> _roomService
+@inject ILocationService<Location> _locationService
+@inject IPictureService _pictureService
+@inject LoginManager _loginManager
+@inject ISnackbar _snackbar
+
+@if (_location.Id == 0)
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <MudGrid>
+
+                @if (_ownedLocations.Any())
+                {
+                    <MudItem xs="3">
+                        <DropDown TItem="string" OnSelected="LocationSelected">
+                            <InitialTip>Select location</InitialTip>
+                            <ChildContent>
+
+                                @foreach (var item in _ownedLocations)
+                                {
+                                    <DropDownItem Item="item">@item.Name</DropDownItem>
+                                }
+                            </ChildContent>
+                        </DropDown>
+                    </MudItem>
+                }
+
+                <MudItem xs="3">
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="CreateLocation">Create Location</MudButton>
+                </MudItem>
+
+            </MudGrid>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudGrid>
+
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.Name" For="() => _location.Name" Variant="Variant.Filled" HelperText="Location name" Placeholder="Name" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.AmountOfRooms" For="() => _location.AmountOfRooms" InputType="InputType.Number" Variant="Variant.Filled" HelperText="How many rooms are available for rent ?" Placeholder="Number of rooms" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.Address" For="() => _location.Address" Variant="Variant.Filled" HelperText="Location Address" Placeholder="Address" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.City" For="() => _location.City" Variant="Variant.Filled" HelperText="Location City" Placeholder="City" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.ZipCode" For="() => _location.ZipCode" Variant="Variant.Filled" HelperText="Location Zipcode" Placeholder="Zipcode" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.Country" For="() => _location.Country" Variant="Variant.Filled" HelperText="Location Country" Placeholder="Country" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_location.Area" For="() => _location.Area" Variant="Variant.Filled" HelperText="Location Area such as City, Suburban or Countryside" Placeholder="Area" />
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+
+    </MudGrid>
+
+
+}
+else
+{
+    <!-- Room -->
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.button">Room Information</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_room.Number" For="() => _room.Number" Variant="Variant.Filled" HelperText="Rum nummer" Placeholder="@GetDisplayName(nameof(_room.Number))"></MudTextField>
+                </MudItem>
+
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_room.NumberOfBeds" For="() => _room.NumberOfBeds" Variant="Variant.Filled" HelperText="Antal senge" Placeholder="@GetDisplayName(nameof(_room.NumberOfBeds))"></MudTextField>
+                </MudItem>
+
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_room.PricePerNight" For="() => _room.PricePerNight" Variant="Variant.Filled" HelperText="Pris per nat" Placeholder="@GetDisplayName(nameof(_room.PricePerNight))"></MudTextField>
+                </MudItem>
+
+                <MudItem xs="6">
+                    <MudTextField ReadOnly="true" @bind-Value="_room.Rating" For="() => _room.Rating" Variant="Variant.Text" HelperText="Rating" Placeholder="@GetDisplayName(nameof(_room.Rating))"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Surface" Color="Color.Warning" @onclick="() => SaveChanges()">Gem ændringer</MudButton>
+                </MudItem>
+            </MudGrid>
+
+        </MudCardContent>
+
+        <!-- Picture grid -->
+        @if (_pictures.Any())
+        {
+            <MudCardContent>
+
+                <MudGrid>
+                    @foreach (var item in _pictures)
+                    {
+                        <MudItem xs="6">
+
+                            <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300" /></MudPaper>
+                            <MudGrid>
+                                <MudItem xs="4">
+
+                                    <MudIconButton @onclick="() => DeletePicture(item.Id)" Style="margin:1px 10px 1px 1px" Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                                    @*<MudToggleIconButton Icon="@Icons.Material.Filled.CheckBoxOutlineBlank" Size="Size.Small" Color="@Color.Error" Title="Off" ToggledIcon="@Icons.Material.Filled.CheckBox" ToggledColor="@Color.Success" ToggledTitle="Off" @onclick="() => SelectPicture(item.Id)"/>*@
+                                </MudItem>
+                                <MudItem xs="4">
+
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudCardContent>
+        }
+    </MudCard>
+
+    <!-- Picture upload -->
+    <MudGrid Style="padding:2px 2px 2px 2px; margin:0px 12px 0px 0px">
+        <MudItem xs="12">
+            <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="margin:2px 2px 2px 2px" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudImage Style="border:solid 1px black;" Src="@_addedPicture.Base64"></MudImage>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Warning" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileUpload" @onclick="UploadPicture">Upload</MudButton>
+        </MudItem>
+    </MudGrid>
+}
+
+
+@code {
+    [Parameter]
+    public int RoomId { get; set; }
+
+    #region Fields
+    private Room _room = new Room();
+    private Location _location = new Location();
+    private List<Location> _ownedLocations = new List<Location>();
+    private List<RoomAccessory> _roomAccessories = new List<RoomAccessory>();
+    private User? _user;
+    private List<Picture> _pictures = new List<Picture>();
+    private Picture _addedPicture = new Picture();
+    private List<Picture> _picturesToDelete = new List<Picture>();
+    private IBrowserFile? file;
+    private ErrorManager _errorManager;
+
+    #endregion
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _user = LoginManager.User;
+        _errorManager = new ErrorManager(_snackbar);
+    }
+
+    private async void SaveChanges()
+    {
+        if (_room.Id == 0)
+            await _roomService.Create(_room);
+
+        StateHasChanged();
+    }
+
+    private string GetDisplayName(string name)
+    {
+        MemberInfo? property = typeof(Room).GetProperty(name);
+        if (property == null)
+            return "";
+        try
+        {
+            var attribute = property
+            .GetCustomAttributes(typeof(DisplayNameAttribute), true);
+            if (attribute.Length > 0)
+                return attribute.Cast<DisplayNameAttribute>().Single().DisplayName;
+        }
+        catch (Exception ex)
+        {
+            var test = ex;
+        }
+
+        return "";
+    }
+
+    private void LocationSelected(string location)
+    {
+
+    }
+
+    private async void CreateLocation()
+    {
+        if (string.IsNullOrEmpty(_location.Name))
+            _errorManager.InfoBar("You need to enter a name", Variant.Text, Severity.Error);
+        else if (_location.AmountOfRooms == 0 || _location.AmountOfRooms > 10)
+            _errorManager.InfoBar("You have to select a number between 1 and 10", Variant.Text, Severity.Error);
+        else if (string.IsNullOrEmpty(_location.Address))
+            _errorManager.InfoBar("You have to enter an address", Variant.Text, Severity.Error);
+        else if (string.IsNullOrEmpty(_location.City))
+            _errorManager.InfoBar("City cant be empty", Variant.Text, Severity.Error);
+        else if (string.IsNullOrEmpty(_location.ZipCode))
+            _errorManager.InfoBar("Zipcode cant be empty", Variant.Text, Severity.Error);
+        else if (string.IsNullOrEmpty(_location.Country))
+            _errorManager.InfoBar("Country cant be empty", Variant.Text, Severity.Error);
+        else if (string.IsNullOrEmpty(_location.Area))
+            _errorManager.InfoBar("Area cant be empty", Variant.Text, Severity.Error);
+        else
+            await _locationService.Create(_location);
+
+    }
+
+    #region Picture functions
+    private void SelectPicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        _picturesToDelete.Add(selectedPicture);
+    }
+    private async void DeletePicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        await _pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
+        _pictures.Remove(selectedPicture);
+
+        StateHasChanged();
+    }
+    private async void DeletePictures()
+    {
+        if (_picturesToDelete.Any())
+            await _pictureService.DeleteRoomPictures(_picturesToDelete);
+    }
+    private async void AddPicture(InputFileChangeEventArgs e)
+    {
+        Picture imageFile = await ImageHandling.GetImageFile(e.File, _room.Id);
+        if (string.IsNullOrEmpty(imageFile.Base64))
+            return;
+
+        _addedPicture = imageFile;
+        StateHasChanged();
+    }
+    private async void UploadPicture()
+    {
+        if (_addedPicture != null)
+        {
+            await _pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
+        }
+        _pictures = await _pictureService.GetRoomPictures(RoomId);
+
+        StateHasChanged();
+    }
+    #endregion
+
+
+}
