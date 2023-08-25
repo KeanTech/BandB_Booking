@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\FormCreating\**" />
+    <Content Remove="Components\FormCreating\**" />
+    <EmbeddedResource Remove="Components\FormCreating\**" />
+    <None Remove="Components\FormCreating\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Pages\UserEditor.razor" />
   </ItemGroup>
 
@@ -39,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\FormCreating\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
