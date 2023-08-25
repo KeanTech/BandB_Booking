@@ -97,23 +97,46 @@ namespace B_B_Api.Controllers
         [Route("DeleteRoomRating/{id}")]
         public async Task<ActionResult<DbRoomRating>> DeleteRoomRatings(int id)
         {
-            
-            try
+            var ratingsToDelete = await _context.RoomRatings.Where(x => x.RoomId == id).ToListAsync();
+            if (ratingsToDelete.Count == 0)
             {
                 return NotFound();
             }
-            catch (Exception)
+            try
             {
+                _context.RoomRatings.RemoveRange(ratingsToDelete);
+                await _context.SaveChangesAsync();
 
-                throw;
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
             }
         }
 
         [HttpPost]
-        [Route("Update")]
-        public IActionResult Update()
+        [Route("DeleteLocationRating/{id}")]
+        public async Task<ActionResult<DbLocationRating>> DeleteLocationRatings(int id)
         {
-            return NotFound();
+            var ratingsToDelete = await _context.LocationRatings.Where(x => x.LocationId == id).ToListAsync();
+            if (ratingsToDelete.Count == 0)
+            {
+                return NotFound();
+            }
+            try
+            {
+                _context.LocationRatings.RemoveRange(ratingsToDelete);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
+
+
     }
 }

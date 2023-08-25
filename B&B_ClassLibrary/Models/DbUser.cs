@@ -32,6 +32,18 @@ namespace B_B_ClassLibrary.Models
             Created = user.Created; 
         }
 
+        public DbUser(Landlord landlord)
+        {
+            Id = landlord.UserId;
+            FirstName = landlord.FirstName;
+            LastName= landlord.LastName;
+            Email = landlord.Email;
+            Country = landlord.Country;
+            Password = landlord.Password;
+            PhoneNumber = landlord.PhoneNumber;
+            Created = landlord.Created;
+        }
+
         public virtual ICollection<DbContract> ?Contracts { get; set; }
         public DbLandlord ?Landlord { get; set; }
     }
