@@ -38,6 +38,13 @@ namespace B_B_App.Services
             return returnedLocation;
         }
 
+        public async Task<List<Location>> GetLocationsByLandlordId(int landlordId)
+        {
+            var returnedLocation = await _httpClient.GetFromJsonAsync<List<Location>>($"Location/GetLocationByLandlordId/{landlordId}");
+            return returnedLocation;
+        }
+        
+
         public async Task<Location> Update(Location location)
         {
             var updatedLocation = await _httpClient.PostAsJsonAsync<Location>("Location/UpdateLocation", location);

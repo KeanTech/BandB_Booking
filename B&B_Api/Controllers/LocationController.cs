@@ -38,6 +38,19 @@ namespace B_B_Api.Controllers
 
         }
 
+        [HttpGet]
+        [Route("GetLocationByLandlordId/{landlordId}")]
+        public async Task<ActionResult<IEnumerable<DbLocation>>> GetLocationByLandlordId(int landlordId)
+        {
+            var location = (await _context.Locations.ToListAsync()).Where(x => x.LandlordId == landlordId);
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(location);
+        }
+
         [HttpPost]
         [Route("CreateLocation")]
         public async Task<ActionResult<DbLocation>> CreateLocation(Location location)

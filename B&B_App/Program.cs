@@ -9,7 +9,6 @@ using MudBlazor.Services;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-LoginManager.Login(new B_B_ClassLibrary.BusinessModels.User() { FirstName = "Kenneth" });
 
 Uri uri = new Uri("http://192.168.1.101:5188");
 

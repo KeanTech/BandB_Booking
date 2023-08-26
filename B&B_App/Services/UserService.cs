@@ -39,6 +39,13 @@ namespace B_B_App.Services
             return data;
         }
 
+        public async Task<List<User>> Get()
+        {
+            var returnedUser = await _httpClient.GetAsync("User/GetUsers");
+            var data = await returnedUser.Content.ReadFromJsonAsync<List<User>>();
+            return data;
+        }
+
         public async Task<User> Update(User user)
         {
             var updatedUser = await _httpClient.PostAsJsonAsync<User>("User/UpdateUser", user);

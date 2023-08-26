@@ -2,6 +2,7 @@
 using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace B_B_Api.Controllers
 {
@@ -27,13 +28,25 @@ namespace B_B_Api.Controllers
             }
             else
             {
-                return user;
+                return Ok(user);
             }
+        }
+
+        [HttpGet]
+        [Route("GetUsers")]
+        public async Task<ActionResult<List<DbUser>>> GetUsers()
+        {
+            var user = await _context.Users.ToListAsync();
+
+            if (user == null)
+                return NotFound();
+            else
+                return Ok(user);
         }
 
         [HttpPost]
         [Route("CreateUser")]
-        public async Task<ActionResult<DbUser>> CreateUser([FromBody]User user)
+        public async Task<ActionResult<DbUser>> CreateUser([FromBody] User user)
         {
             var userCheck = _context.Users.Where(x => x.Id == user.Id).SingleOrDefault();
 
@@ -54,7 +67,7 @@ namespace B_B_Api.Controllers
             {
                 return BadRequest();
             }
-            return CreatedAtAction("CreateUser", new { id = user.Id}, user);
+            return CreatedAtAction("CreateUser", new { id = user.Id }, user);
         }
 
         [HttpPost]

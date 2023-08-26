@@ -15,10 +15,9 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
-
         public async Task<Room> Create(Room room)
         {
-            var returnedRoom = await _httpClient.PostAsJsonAsync<Room>("Room/CreateRoom", room);
+            var returnedRoom = await _httpClient.PostAsJsonAsync("Room/CreateRoom", room);
             var data = await returnedRoom.Content.ReadFromJsonAsync<Room>();
             return data;
         }

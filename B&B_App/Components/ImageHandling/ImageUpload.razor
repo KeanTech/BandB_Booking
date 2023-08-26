@@ -1,0 +1,58 @@
+﻿<MudGrid Style="padding:2px 2px 2px 2px; margin:0px 12px 0px 0px">
+    <MudItem xs="12">
+        <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="margin:2px 2px 2px 2px" />
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudImage Style="border:solid 1px black;" Src="@(_addedPicture?.Base64 ?? "")"></MudImage>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Warning" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileUpload" @onclick="@(() => UploadPicture())">Upload</MudButton>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public string PictureType { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyValuePair<string, Picture>> OnUpload { get; set; }
+
+    private Picture? _addedPicture;
+
+    #region Picture functions
+
+    private async void AddPicture(InputFileChangeEventArgs e)
+    {
+        Picture imageFile = await ImageHandling.GetImageFile(e.File, Id);
+        if (string.IsNullOrEmpty(imageFile.Base64))
+            return;
+
+        _addedPicture = imageFile;
+        StateHasChanged();
+    }
+
+    private async void UploadPicture()
+    {
+        if (_addedPicture != null)
+        {
+            if (PictureType == "Room")
+            {
+                await OnUpload.InvokeAsync(new KeyValuePair<string, Picture>(PictureType, _addedPicture));
+            }
+            else if (PictureType == "Location")
+            {
+                await OnUpload.InvokeAsync(new KeyValuePair<string, Picture>(PictureType, _addedPicture));
+            }
+
+            _addedPicture = null;
+
+            StateHasChanged();
+        }
+    }
+    #endregion
+}

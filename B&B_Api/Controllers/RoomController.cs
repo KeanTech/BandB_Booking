@@ -83,15 +83,16 @@ namespace B_B_Api.Controllers
 
         [HttpPost]
         [Route("CreateRoom")]
-        public async Task<ActionResult<DbRoom>> CreateRoom(Room room)
+        public async Task<ActionResult<Room>> CreateRoom(Room room)
         {
             var checkForRoom = _context.Rooms.Where(x => x.Id == room.Id).FirstOrDefault();
-            if (checkForRoom != null)
+            if (checkForRoom == null)
             {
                 DbRoom newRoom = new DbRoom(room);
                 _context.Rooms.Add(newRoom);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("CreateRoom", new { id = room.Id }, room);
+                room.Id = newRoom.Id;
+                return Ok(room);
             }
             else
             {
