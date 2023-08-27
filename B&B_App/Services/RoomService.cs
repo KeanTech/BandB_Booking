@@ -31,7 +31,7 @@ namespace B_B_App.Services
                 var response = await _httpClient.GetAsync("Room/GetAllRoomsAndPictures");
                 var content = await response.Content.ReadAsStringAsync();
                 var allRooms = JsonSerializer.Deserialize<List<DbRoom>>(content);
-                
+
                 if (allRooms != null)
                     foreach (var item in allRooms)
                     {
@@ -57,9 +57,11 @@ namespace B_B_App.Services
 
         public async Task<List<Room>> GetRooms(int locationId)
         {
-            var locationRooms = await _httpClient.PostAsJsonAsync<int>("Room/GetRooms", locationId);
-            var returnedLocRooms = await locationRooms.Content.ReadFromJsonAsync<List<Room>>();
-            return returnedLocRooms;
+            List<Room> rooms;
+            var locationRooms = await _httpClient.GetAsync($"Room/GetRooms/{locationId}");
+            rooms = (await locationRooms.Content.ReadFromJsonAsync<List<Room>>()) ?? new List<Room>();
+            
+            return rooms;
         }
 
         public async Task<Room> Get(int id)

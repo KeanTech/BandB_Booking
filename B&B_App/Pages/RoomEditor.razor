@@ -1,10 +1,11 @@
 ﻿@page "/roomEditor/{RoomId:int}"
 @using System.ComponentModel;
 @using System.Reflection;
-@inject IRoomService<Room> roomService
-@inject IPictureService pictureService
-@inject LoginManager loginManager
-@inject ISnackbar snackbar
+@inject IRoomService<Room> _roomService
+@inject IPictureService _pictureService
+@inject IAccessoryService _accessoryService
+@inject LoginManager _loginManager
+@inject ISnackbar _snackbar
 
 <MudCard>
     <MudCardHeader>
@@ -36,6 +37,14 @@
 
     </MudCardContent>
 
+    <MudCardContent>
+        <MudGrid>
+            <MudItem>
+                <AccessoryCreatorDisplay RoomAccessories="_accessories"></AccessoryCreatorDisplay>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+
     @if (_pictures.Any())
     {
         <MudCardContent>
@@ -62,6 +71,7 @@
         </MudCardContent>
     }
 </MudCard>
+
 <MudGrid Style="padding:2px 2px 2px 2px; margin:0px 12px 0px 0px">
     <MudItem xs="12">
         <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="margin:2px 2px 2px 2px" />
@@ -83,11 +93,12 @@
 
     #region Fields
     private Room _room = new Room();
-   
+
     private User? _user;
     private List<Picture> _pictures = new List<Picture>();
     private Picture _addedPicture = new Picture();
     private List<Picture> _picturesToDelete = new List<Picture>();
+    private List<RoomAccessory> _accessories = new List<RoomAccessory>();
     private IBrowserFile? file;
     private ErrorManager _errorManager;
 
@@ -96,7 +107,7 @@
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
-        _errorManager = new ErrorManager(snackbar);
+        _errorManager = new ErrorManager(_snackbar);
 
         if (RoomId == 0)
             return;
@@ -104,9 +115,9 @@
         try
         {
             //if (loginManager.IsLandLord(_user.Id))
-            _room = await roomService.Get(RoomId);
+            _room = await _roomService.Get(RoomId);
 
-            _pictures = await pictureService.GetRoomPictures(RoomId);
+            _pictures = await _pictureService.GetRoomPictures(RoomId);
         }
         catch (Exception)
         {
@@ -117,9 +128,9 @@
     private async void SaveChanges()
     {
         if (_room.Id == 0)
-            await roomService.Create(_room);
+            await _roomService.Create(_room);
         else
-            await roomService.Update(_room);
+            await _roomService.Update(_room);
 
         StateHasChanged();
     }
@@ -143,6 +154,7 @@
 
         return "";
     }
+    
     #region Picture functions
     private void SelectPicture(int id)
     {
@@ -158,7 +170,7 @@
         if (selectedPicture == null)
             return;
 
-        await pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
+        await _pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
         _pictures.Remove(selectedPicture);
 
         StateHasChanged();
@@ -166,7 +178,7 @@
     private async void DeletePictures()
     {
         if (_picturesToDelete.Any())
-            await pictureService.DeleteRoomPictures(_picturesToDelete);
+            await _pictureService.DeleteRoomPictures(_picturesToDelete);
     }
     private async void AddPicture(InputFileChangeEventArgs e)
     {
@@ -181,9 +193,9 @@
     {
         if (_addedPicture != null)
         {
-            await pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
+            await _pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
         }
-        _pictures = await pictureService.GetRoomPictures(RoomId);
+        _pictures = await _pictureService.GetRoomPictures(RoomId);
 
         StateHasChanged();
     }

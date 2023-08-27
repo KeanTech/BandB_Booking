@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace B_B_Api.Controllers
+namespace B_B_api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -59,11 +59,11 @@ namespace B_B_Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetRooms")]
-        public async Task<ActionResult<IEnumerable<DbRoom>>> GetRooms(int locationId)
+        [Route("GetRooms/{locationId}")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetRooms(int locationId)
         {
-            var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(y => y.Pictures).Where(x => x.LocationId == locationId).ToListAsync();
-            return allRooms;
+            var allRooms = await _context.Rooms.Where(x => x.LocationId == locationId).ToListAsync();
+            return allRooms.ConvertToRooms();
         }
 
         [HttpGet]
@@ -161,5 +161,42 @@ namespace B_B_Api.Controllers
                 return false;
             }
         }
+
+        [HttpPost]
+        [Route("AddAccessoriesToRoom")]
+        public async Task<ActionResult<bool>> AddAccessoriesToRoom(Room room, List<RoomAccessory> roomAccessories) 
+        {
+            if (room == null)
+                return NotFound(false);
+
+            if (roomAccessories.Any() == false)
+                return NotFound(false);
+            
+            DbRoom dbRoom = new DbRoom(room);
+
+
+            roomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+
+            _context.Rooms.Update(dbRoom);
+            await _context.SaveChangesAsync();
+
+            return Ok(true);
+        }
+
+        [HttpGet]
+        [Route("GetRoomAccessories/{roomId}")]
+        public ActionResult<List<RoomAccessory>> GetRoomAccessories(int roomId) 
+        {
+            if (roomId == 0)
+                return NotFound();
+
+            var roomAccessories = _context.Rooms.FirstOrDefault(x => x.Id == roomId)?.Accessories?.ToList().RoomAccessories();
+            
+            if(roomAccessories == null)
+                return NotFound(new List<RoomAccessory>());
+
+            return roomAccessories;
+        }
+
     }
 }

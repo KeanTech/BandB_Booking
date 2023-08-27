@@ -1,6 +1,7 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace B_B_App.Services
 {
@@ -34,8 +35,14 @@ namespace B_B_App.Services
 
         public async Task<Location> Get(int id)
         {
-            var returnedLocation = await _httpClient.GetFromJsonAsync<Location>($"Location/GetLocation/{id}");
-            return returnedLocation;
+            Location? location = new Location();
+            var response = await _httpClient.GetAsync($"Location/GetLocation/{id}");
+            var content = await response.Content.ReadFromJsonAsync<Location>();
+            
+            if (content == null)
+                return new Location();
+            
+            return content;
         }
 
         public async Task<List<Location>> GetLocationsByLandlordId(int landlordId)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -29,6 +30,18 @@ namespace B_B_ClassLibrary.BusinessModels
         public Location()
         {
 
+        }
+
+        public Location(DbLocation dbLocation)
+        {
+            Id = dbLocation.Id;
+            LandlordId = dbLocation.LandlordId;
+            Name = dbLocation.Name;
+            Address = dbLocation.Address;
+            City = dbLocation.City;
+            ZipCode = dbLocation.ZipCode;
+            Country = dbLocation.Country;
+            AmountOfRooms = dbLocation.AmountOfRooms;
         }
     }
 }

@@ -3,7 +3,7 @@ using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace B_B_Api.Controllers
+namespace B_B_api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

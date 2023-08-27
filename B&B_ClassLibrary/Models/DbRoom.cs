@@ -40,4 +40,18 @@ namespace B_B_ClassLibrary.Models
         public virtual ICollection<DbRoomRating> ?Ratings { get; set; }
         public virtual ICollection<DbRoomPicture> ?Pictures { get; set; }
     }
+
+    public static class RoomExtensions 
+    {
+        public static List<Room> ConvertToRooms(this List<DbRoom> dbRooms) 
+        {
+            List<Room> rooms = new List<Room>();
+            foreach (var item in dbRooms)
+            {
+                rooms.Add(new Room(item));
+            }
+
+            return rooms;
+        }
+    }
 }

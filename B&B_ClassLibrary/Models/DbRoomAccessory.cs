@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using B_B_ClassLibrary.BusinessModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace B_B_ClassLibrary.Models
 {
@@ -16,5 +12,42 @@ namespace B_B_ClassLibrary.Models
         public Accessory Type { get; set; }
 
         public virtual ICollection<DbRoom> ?Rooms { get; set; }
+
+        public DbRoomAccessory()
+        {
+                
+        }
+
+        public DbRoomAccessory(RoomAccessory accessory)
+        {
+            Id = accessory.Id;
+            Type = accessory.Type;
+        }
+    }
+
+    public static class DbRoomAccessoryExtensions
+    {
+        public static List<DbRoomAccessory> DbRoomAccessories(this List<RoomAccessory> roomAccessories)
+        {
+            List<DbRoomAccessory> dbRoomAccessories = new List<DbRoomAccessory>();
+            foreach (var item in roomAccessories)
+            {
+                dbRoomAccessories.Add(new DbRoomAccessory(item));
+            }
+
+            return dbRoomAccessories;
+        }
+
+        public static List<RoomAccessory> RoomAccessories(this List<DbRoomAccessory> dbRoomAccessories)
+        { 
+            List<RoomAccessory> roomAccessories = new List<RoomAccessory>();
+            foreach(var item in dbRoomAccessories) 
+            {
+                roomAccessories.Add(new RoomAccessory(item));
+            }
+
+            return roomAccessories;
+        }
+
     }
 }

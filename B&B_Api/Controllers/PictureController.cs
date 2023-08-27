@@ -23,7 +23,7 @@ namespace B_B_api.Controllers
         {
             var pictures = _context.RoomPictures.Where(x => x.RoomId == roomId).ToList();
             if (pictures.Any())
-                return Ok(pictures);
+                return Ok(pictures.ConvertToPictures());
             else
                 return NotFound();
         }
@@ -32,7 +32,6 @@ namespace B_B_api.Controllers
         [Route("GetLocationPictures/{locationId}")]
         public IActionResult GetLocationPictures(int locationId)
         {
-            var test = _context.LocationPictures.ToList();
             var pictures = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
             if (pictures.Any())
                 return Ok(pictures);

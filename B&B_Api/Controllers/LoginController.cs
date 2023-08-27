@@ -1,7 +1,7 @@
 ﻿using B_B_api.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace B_B_Api.Controllers
+namespace B_B_api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

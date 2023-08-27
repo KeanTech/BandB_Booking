@@ -32,6 +32,11 @@ builder.Services.AddHttpClient<ILandlordService<Landlord>, LandlordService>(clie
     client.BaseAddress = uri;
 });
 
+builder.Services.AddHttpClient<IAccessoryService, AccessoryService>(client =>
+{
+    client.BaseAddress = uri;
+});
+
 builder.Services.AddHttpClient<IPictureService, PictureService>(client =>
 {
     client.BaseAddress = uri;

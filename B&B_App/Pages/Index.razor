@@ -41,7 +41,7 @@
                                         @foreach (var item in _pictures[room.Id])
                                         {
                                             <MudCarouselItem Transition="transition" Style="align-items:center">
-                                                <MudImage Width="400" Height="220" ObjectFit="ObjectFit.Cover" Src="@item.Base64" Alt="True shit"></MudImage>
+                                                <MudImage Width="400" Height="220" ObjectFit="ObjectFit.Cover" Src="@item.Base64" Alt="@( $"picRoom_{room.Id}")"></MudImage>
                                             </MudCarouselItem>
                                         }
                                     }
@@ -91,7 +91,7 @@
         try
         {
             _rooms = await roomService.GetAllRooms();
-            _pictures = await _pictureManager.GetPictureList();
+            _pictures = await _pictureManager.GetPictureList(_rooms);
         }
         catch (Exception ex)
         {
@@ -103,7 +103,7 @@
     }
     private void Redirect(Room room)
     {
-        navi.NavigateTo($"/roomdetails/{room.Id}");
+        navi.NavigateTo($"/details/{room.LocationId}");
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
 using NPOI.OpenXmlFormats;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace B_B_App.Services
@@ -12,9 +13,15 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
-        public Task<RoomAccessory> Create(RoomAccessory type)
+        public async Task<RoomAccessory> Create(RoomAccessory type)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync("Accessory/Create", type);
+            if(response.StatusCode != HttpStatusCode.OK)
+                return new RoomAccessory();
+
+            var content = await response.Content.ReadFromJsonAsync<RoomAccessory>();
+            
+            return content ?? new RoomAccessory();
         }
 
         public Task<bool> Delete(RoomAccessory type)

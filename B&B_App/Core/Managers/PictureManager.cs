@@ -14,11 +14,11 @@ namespace B_B_App.Core.Managers
             _pictureService = pictureService;
         }
 
-        public async Task<Dictionary<int, List<Picture>>> GetPictureList()
+        public async Task<Dictionary<int, List<Picture>>> GetPictureList(List<Room> rooms)
         {
             Dictionary<int, List<Picture>> pictureList = new Dictionary<int, List<Picture>>();
-
-            var rooms = await _roomService.GetAllRooms();
+            if(rooms.Any() == false)
+                rooms = await _roomService.GetAllRooms();
 
             foreach (var room in rooms)
             {
@@ -33,7 +33,7 @@ namespace B_B_App.Core.Managers
                 }
                 catch (Exception ex)
                 {
-
+                    throw new Exception("Was not able to load pictures");
                 }
             }
 
