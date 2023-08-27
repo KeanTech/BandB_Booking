@@ -11,7 +11,9 @@ namespace B_B_ClassLibrary.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Country { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
+        public string PasswordSalt { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime Created { get; set; }
 
@@ -27,7 +29,7 @@ namespace B_B_ClassLibrary.Models
             LastName = user.LastName;
             Email = user.Email;
             Country = user.Country;
-            Password = user.Password;
+            Username = user.Username;
             PhoneNumber = user.PhoneNumber;
             Created = user.Created; 
         }
@@ -39,7 +41,7 @@ namespace B_B_ClassLibrary.Models
             LastName= landlord.LastName;
             Email = landlord.Email;
             Country = landlord.Country;
-            Password = landlord.Password;
+            Username= landlord.Username;
             PhoneNumber = landlord.PhoneNumber;
             Created = landlord.Created;
         }

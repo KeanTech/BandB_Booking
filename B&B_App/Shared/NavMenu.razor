@@ -1,6 +1,8 @@
 ﻿@using B_B_App.Components.Dialogs;
 @using B_B_ClassLibrary.BusinessModels;
 @inject NavigationManager navi
+@inject ILoginService loginService
+
 <div class="top-row ps-3 navbar navbar-light" style="height:15%;">
     <div class="container-fluid">
         @if (loggedIn)
@@ -16,8 +18,8 @@
             }
             <MudText Color="Color.Info">Welcome please login</MudText>
 
-            <MudButton ButtonType="ButtonType.Button" @onclick="Login"  Color="Color.Success">LogIn</MudButton>
-            <MudButton  Disabled="@loggedIn" ButtonType="ButtonType.Button" @onclick="CreateUserRedirect"></MudButton>
+            <MudButton ButtonType="ButtonType.Button" @onclick="Login" Color="Color.Success">LogIn</MudButton>
+            <MudButton hidden="@loggedIn" ButtonType="ButtonType.Button" Color="Color.Primary" @onclick="CreateUserRedirect">Opret</MudButton>
         }
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -83,7 +85,9 @@
 
         if (pair.Key)
         {
-            loggedIn = true;    
+            var response = loginService.Login(_user.Username, _user.Password);
+            loggedIn = true;
+
         }
 
     }

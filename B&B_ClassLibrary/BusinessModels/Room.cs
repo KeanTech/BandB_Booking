@@ -21,7 +21,9 @@ namespace B_B_ClassLibrary.BusinessModels
         public int PricePerNight { get; set; }
         [DisplayName("Score")]
         public double? Rating { get; set; }
-
+        public List<RoomAccessory> Accessories { get; set; }
+        public List<Picture> Pictures { get; set; }
+        public List<Rating> Ratings{ get; set; }
         public Room()
         {
             

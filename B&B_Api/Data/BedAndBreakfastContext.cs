@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace B_B_api.Data
 {
-    public class BedAndBreakfastContext :DbContext 
+    public class BedAndBreakfastContext : DbContext
     {
-        public BedAndBreakfastContext(DbContextOptions<BedAndBreakfastContext> options): base(options)
+        public BedAndBreakfastContext(DbContextOptions<BedAndBreakfastContext> options) : base(options)
         {
-            
+
         }
         public DbSet<DbUser> Users { get; set; }
         public DbSet<DbLandlord> Landlords { get; set; }
         public DbSet<DbContract> Contracts { get; set; }
         public DbSet<DbLocation> Locations { get; set; }
         public DbSet<DbRoom> Rooms { get; set; }
-        public DbSet<DbRoomAccessory> RoomAccessories { get; set; }
+        public DbSet<DbRoomAccessory> RoomAccessory { get; set; }
         public DbSet<DbLocationRating> LocationRatings { get; set; }
         public DbSet<DbRoomRating> RoomRatings { get; set; }
         public DbSet<DbRoomPicture> RoomPictures { get; set; }
@@ -32,7 +32,9 @@ namespace B_B_api.Data
                     Email = "ken1ander2@hotmail.com",
                     Country = "Denmark",
                     Created = DateTime.Now,
+                    Username = "Kenneth123",
                     Password = "12345",
+                    PasswordSalt = "NotRealSalt",
                     PhoneNumber = "12345678",
                 },
                 new DbUser
@@ -43,7 +45,9 @@ namespace B_B_api.Data
                     Email = "mortvest5@gmail.com",
                     Country = "Denmark",
                     Created = DateTime.Now,
+                    Username = "Morten123",
                     Password = "12345",
+                    PasswordSalt = "NotRealSalt",
                     PhoneNumber = "11223344",
                 },
                 new DbUser
@@ -54,7 +58,9 @@ namespace B_B_api.Data
                     Email = "buster@outlook.com",
                     Country = "Denmark",
                     Created = DateTime.Now,
+                    Username = "Buster123",
                     Password = "12345",
+                    PasswordSalt = "NotRealSalt",
                     PhoneNumber = "55005500",
                 });
 
@@ -133,13 +139,14 @@ namespace B_B_api.Data
                 new DbRoomRating { Id = 3, Rating = 3, RoomId = 4 });
 
             modelBuilder.Entity<DbLocationRating>().HasData(
-                new DbLocationRating { Id = 1, Rating = 4, LocationId = 1},
-                new DbLocationRating { Id = 2, Rating = 5, LocationId = 1});
+                new DbLocationRating { Id = 1, Rating = 4, LocationId = 1 },
+                new DbLocationRating { Id = 2, Rating = 5, LocationId = 1 });
 
             modelBuilder.Entity<DbRoomAccessory>()
                 .Property(x => x.Type)
-                .HasConversion<string>()
-                .HasMaxLength(20);
+                .HasConversion(
+                    y => y.ToString(),
+                    y => (Accessory)Enum.Parse(typeof(Accessory), y));
 
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Pictures);
             modelBuilder.Entity<DbRoom>().HasMany(x => x.Ratings);
@@ -152,6 +159,7 @@ namespace B_B_api.Data
                 .HasForeignKey(j => j.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
+
             modelBuilder.Entity<DbRoom>()
                 .HasMany(x => x.Accessories)
                 .WithMany(y => y.Rooms)
@@ -159,4 +167,3 @@ namespace B_B_api.Data
         }
     }
 }
- 

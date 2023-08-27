@@ -3,6 +3,7 @@
 @inject IRoomService<Room> roomService
 @inject ILocationService<Location> locationService
 @inject IPictureService pictureService
+@inject IDialogService DialogService
 
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
@@ -10,9 +11,9 @@
     </MudCardHeader>
 
     <MudCardContent>
-        <MudRating SelectedValue="@Convert.ToInt16(_room.Rating)" ReadOnly="true"/>
+        <MudRating SelectedValue="@Convert.ToInt16(_room.Rating)" ReadOnly="true" />
     </MudCardContent>
-        
+
     <MudCardContent>
 
         <MudText>
@@ -24,7 +25,8 @@
         <MudText>
             Antal senge: @_room.NumberOfBeds
         </MudText>
-
+        <br />
+        <MudButton  OnClick="@(() => OnNewBooking(_room, _location))">Reserver</MudButton>
     </MudCardContent>
 
     <MudCardContent>
@@ -45,9 +47,9 @@
     </MudCardHeader>
 
     <MudCardContent>
-        <MudRating SelectedValue="@Convert.ToInt16(_location.Rating)" ReadOnly="true"/>
+        <MudRating SelectedValue="@Convert.ToInt16(_location.Rating)" ReadOnly="true" />
     </MudCardContent>
-       
+
     <MudCardContent>
 
         <MudText>
@@ -95,6 +97,17 @@
     private Location _location = new Location();
     private List<Picture> roomPictures = new List<Picture>();
     private List<Picture> locationPictures = new List<Picture>();
+
+
+    private void OnNewBooking(Room room, Location location)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Room", room);
+        parameters.Add("Location", location);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium };
+        var result = DialogService.Show<NewBookingDialog>("Ny reservation", parameters, options);
+    }
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,4 +1,5 @@
 ﻿using B_B_api.Data;
+using B_B_api.Managers;
 using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace B_B_Api.Controllers
     public class LandLordController : Controller
     {
         private readonly BedAndBreakfastContext _context;
+        private LoginManager _loginManager = new LoginManager();
 
         public LandLordController(BedAndBreakfastContext context)
         {
@@ -35,10 +37,17 @@ namespace B_B_Api.Controllers
         [Route("CreateLandlord")]
         public async Task<ActionResult<DbLandlord>> CreateLandlord([FromBody] Landlord landlord)
         {
-            var landlordExists = _context.Landlords.Where(x => x.Id == landlord.Id).FirstOrDefault();
-            if (landlordExists == null)
+            if (landlord == null)
             {
+                //Checks to see if the username already exists in DB
+                if (_loginManager.CheckUsername(landlord.Username, _context))
+                {
+                    return Conflict("Username already exists");
+                }
+
                 DbUser userForLandlord = new DbUser(landlord);
+                userForLandlord.PasswordSalt = _loginManager.GenerateSalt();
+                userForLandlord.Password = _loginManager.CreateHashedPassword(landlord.Password, userForLandlord.PasswordSalt);
                 await _context.Users.AddAsync(userForLandlord);
                 try
                 {

@@ -4,6 +4,7 @@ using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 
 namespace B_B_Api.Controllers
@@ -29,7 +30,7 @@ namespace B_B_Api.Controllers
         {
             try
             {
-                var allRooms = await _context.Rooms.ToListAsync();
+                var allRooms = await _context.Rooms.Include(x => x.Ratings).Include(y => y.Pictures).Include(i => i.Accessories).ToListAsync();
                 return allRooms;
             }
             catch (Exception e)
@@ -62,7 +63,7 @@ namespace B_B_Api.Controllers
         [Route("GetRooms")]
         public async Task<ActionResult<IEnumerable<DbRoom>>> GetRooms(int locationId)
         {
-            var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(y => y.Pictures).Where(x => x.LocationId == locationId).ToListAsync();
+            var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(y => y.Pictures).Include(i => i.Ratings).Where(x => x.LocationId == locationId).ToListAsync();
             return allRooms;
         }
 
@@ -70,7 +71,7 @@ namespace B_B_Api.Controllers
         [Route("GetRoom/{id}")]
         public async Task<ActionResult<DbRoom>> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms.Include(x => x.Accessories).Where(y => y.Id == id).FirstOrDefaultAsync();
             if (room != null)
             {
                 return room;
@@ -83,12 +84,26 @@ namespace B_B_Api.Controllers
 
         [HttpPost]
         [Route("CreateRoom")]
-        public async Task<ActionResult<DbRoom>> CreateRoom(Room room)
+        public async Task<ActionResult<DbRoom>> CreateRoom([FromBody]Room room)
         {
             var checkForRoom = _context.Rooms.Where(x => x.Id == room.Id).FirstOrDefault();
-            if (checkForRoom != null)
+            List<DbRoomAccessory> newAccList = new List<DbRoomAccessory>();
+            foreach (var accessory in room.Accessories) 
+            {
+                DbRoomAccessory newAcc = new DbRoomAccessory(accessory);
+                newAccList.Add(newAcc);
+            }
+
+            //var accessoryCheck = _context.RoomAccessory.Where(x => room.Accessories.Contains(x.Type));
+            //var accessoryCheck = await _context.RoomAccessory.Where(x => room.Accessories.Any(y => y.Type == x.Type)).ToListAsync();
+            var allAccessories = _context.RoomAccessory.ToList();
+            var accessoryCheck = allAccessories.Where(x => room.Accessories.Any(y => y.Type == x.Type)).ToList();
+
+            if (checkForRoom == null)
             {
                 DbRoom newRoom = new DbRoom(room);
+                newRoom.Accessories = accessoryCheck;
+                
                 _context.Rooms.Add(newRoom);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("CreateRoom", new { id = room.Id }, room);

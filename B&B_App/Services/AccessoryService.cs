@@ -12,21 +12,6 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
-        public Task<RoomAccessory> Create(RoomAccessory type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Delete(RoomAccessory type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RoomAccessory> Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<RoomAccessory>> GetAllAccessories()
         {
             var allAccessories = await _httpClient.GetFromJsonAsync<List<RoomAccessory>>($"Accessory/GetAllAccessories");

@@ -1,5 +1,8 @@
 ﻿using B_B_api.Data;
+using B_B_api.Managers;
+using B_B_ClassLibrary.BusinessModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace B_B_Api.Controllers
 {
@@ -8,6 +11,7 @@ namespace B_B_Api.Controllers
     public class LoginController : Controller
     {
         private readonly BedAndBreakfastContext _context;
+        private LoginManager _loginManager;
 
         public LoginController(BedAndBreakfastContext context)
         {
@@ -15,31 +19,25 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public IActionResult Get()
+        public IActionResult Login([FromBody]User user)
         {
-            return NotFound();
-        }
+            if (String.IsNullOrEmpty(user.Username) || String.IsNullOrEmpty(user.Password))
+            {
+                return Unauthorized("Login denied, password or username missing");
+            }
 
-        [HttpPost]
-        [Route("Create")]
-        public IActionResult Post()
-        {
-            return NotFound();
-        }
+            if (_loginManager.CheckUsername(user.Username, _context))
+            {
+                var salt = _loginManager.GetSaltFromDB(user.Username, _context);
 
-        [HttpPost]
-        [Route("Delete")]
-        public IActionResult Delete()
-        {
-            return NotFound();
-        }
+                var hashedPassword = _loginManager.GetHashedPasswordFromDB(user.Password, _context);
 
-        [HttpPost]
-        [Route("Update")]
-        public IActionResult Update()
-        {
-            return NotFound();
+                if (_loginManager.ValidatePassword(user.Password, user.Username, salt, hashedPassword)) 
+                {
+                    return Ok(true);
+                }
+            }
+            return BadRequest();
         }
     }
 }

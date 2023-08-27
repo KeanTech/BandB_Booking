@@ -20,7 +20,7 @@ namespace B_B_Api.Controllers
         [Route("GetAllAccessories")]
         public async Task<ActionResult<IEnumerable<DbRoomAccessory>>> GetAllAccessories()
         {
-            var accessories = await _context.RoomAccessories.ToListAsync();
+            var accessories = await _context.RoomAccessory.ToListAsync();
             if (accessories == null)
             {
                 return NotFound();

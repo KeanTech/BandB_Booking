@@ -1,4 +1,5 @@
 ﻿using B_B_api.Data;
+using B_B_api.Managers;
 using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace B_B_Api.Controllers
     public class UserController : Controller
     {
         private readonly BedAndBreakfastContext _context;
+        private LoginManager _loginManager = new LoginManager();
 
         public UserController(BedAndBreakfastContext context)
         {
@@ -35,11 +37,17 @@ namespace B_B_Api.Controllers
         [Route("CreateUser")]
         public async Task<ActionResult<DbUser>> CreateUser([FromBody]User user)
         {
-            var userCheck = _context.Users.Where(x => x.Id == user.Id).SingleOrDefault();
-
-            if (userCheck == null)
+            if (user != null)
             {
+                //Checks if username already exists in DB
+                if (_loginManager.CheckUsername(user.Username, _context))
+                {
+                    return Conflict("Username already exists");
+                }
+
                 DbUser newUser = new DbUser(user);
+                newUser.PasswordSalt = _loginManager.GenerateSalt();
+                newUser.Password = _loginManager.CreateHashedPassword(user.Password, newUser.PasswordSalt);
                 await _context.Users.AddAsync(newUser);
                 try
                 {
@@ -49,10 +57,6 @@ namespace B_B_Api.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-            }
-            else
-            {
-                return BadRequest();
             }
             return CreatedAtAction("CreateUser", new { id = user.Id}, user);
         }

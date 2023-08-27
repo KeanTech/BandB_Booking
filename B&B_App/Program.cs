@@ -38,6 +38,11 @@ builder.Services.AddHttpClient<IPictureService, PictureService>(client =>
     client.BaseAddress = uri;
 });
 
+builder.Services.AddHttpClient<ILoginService, LoginService>(client =>
+{
+    client.BaseAddress = uri;
+});
+
 
 builder.Services.AddSingleton<LoginManager>();
 

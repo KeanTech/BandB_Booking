@@ -187,7 +187,7 @@ namespace B_B_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("LocationId")
+                    b.Property<int>("LocationId")
                         .HasColumnType("int");
 
                     b.Property<double?>("Rating")
@@ -198,6 +198,20 @@ namespace B_B_api.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("LocationRatings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            LocationId = 1,
+                            Rating = 4.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            LocationId = 1,
+                            Rating = 5.0
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbRoom", b =>
@@ -278,8 +292,7 @@ namespace B_B_api.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -341,7 +354,7 @@ namespace B_B_api.Migrations
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
 
-                    b.Property<int?>("RoomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -349,6 +362,26 @@ namespace B_B_api.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomRatings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Rating = 1.0,
+                            RoomId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Rating = 5.0,
+                            RoomId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Rating = 3.0,
+                            RoomId = 4
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbUser", b =>
@@ -382,7 +415,15 @@ namespace B_B_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -395,34 +436,40 @@ namespace B_B_api.Migrations
                         {
                             Id = 1,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6533),
+                            Created = new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2679),
                             Email = "ken1ander2@hotmail.com",
                             FirstName = "Kenneth",
                             LastName = "Andersen",
                             Password = "12345",
-                            PhoneNumber = "12345678"
+                            PasswordSalt = "NotRealSalt",
+                            PhoneNumber = "12345678",
+                            Username = "Kenneth123"
                         },
                         new
                         {
                             Id = 2,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6586),
+                            Created = new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2724),
                             Email = "mortvest5@gmail.com",
                             FirstName = "Morten",
                             LastName = "Vestergaard",
                             Password = "12345",
-                            PhoneNumber = "11223344"
+                            PasswordSalt = "NotRealSalt",
+                            PhoneNumber = "11223344",
+                            Username = "Morten123"
                         },
                         new
                         {
                             Id = 3,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6588),
+                            Created = new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2726),
                             Email = "buster@outlook.com",
                             FirstName = "Buster",
                             LastName = "Jørgensen",
                             Password = "12345",
-                            PhoneNumber = "55005500"
+                            PasswordSalt = "NotRealSalt",
+                            PhoneNumber = "55005500",
+                            Username = "Buster123"
                         });
                 });
 
@@ -496,7 +543,9 @@ namespace B_B_api.Migrations
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbLocation", "Location")
                         .WithMany("Ratings")
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Location");
                 });
@@ -527,7 +576,9 @@ namespace B_B_api.Migrations
                 {
                     b.HasOne("B_B_ClassLibrary.Models.DbRoom", "Room")
                         .WithMany("Ratings")
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Room");
                 });
