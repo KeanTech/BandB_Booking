@@ -36,7 +36,7 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("CreateLandlord")]
-        public async Task<ActionResult<DbLandlord>> CreateLandlord([FromBody] Landlord landlord)
+        public async Task<ActionResult<DbLandlord>> CreateLandlord(Landlord landlord)
         {
             if (landlord == null)
             {

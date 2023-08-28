@@ -83,26 +83,19 @@
         return;
     }
 
-    private void loginDialogClose(KeyValuePair<bool, User> pair)
+    private async void loginDialogClose(KeyValuePair<bool, User> pair)
     {
         loginDialogOpen = false;
 
         if (pair.Key)
         {
-            loggedIn = true;
-        }
-        TryLogin();
+            await _loginManager.UserLogin(pair.Value.Username, pair.Value.Password);
 
-    }
-
-    private async void TryLogin()
-    {
-        var response = await loginService.Login(_user.Username, _user.Password);
-        if (!String.IsNullOrEmpty(response.Username))
-        {
-            _user = response;
             loggedIn = true;
+            _user = pair.Value;
         }
+        
+
     }
 
     private void CreateUserRedirect()

@@ -10,11 +10,13 @@ namespace B_B_App.Core.Managers
     {
         private readonly IUserService<User> _userService;
         private readonly ILandlordService<Landlord> _landlordService;
+        private readonly ILoginService _loginService;
 
-        public LoginManager(IUserService<User> userService, ILandlordService<Landlord> landlordService)
+        public LoginManager(IUserService<User> userService, ILandlordService<Landlord> landlordService, ILoginService loginService)
         {
             _userService = userService;
             _landlordService = landlordService;
+            _loginService = loginService;
         }
         public static User? User { get; private set; }
         private Landlord? _landlord = null;
@@ -28,13 +30,13 @@ namespace B_B_App.Core.Managers
                 throw new Exception("Email or Password cant be null");
         }
 
-        public async Task UserLogin()
+        public async Task UserLogin(string username, string password)
         {
-            var users = await _userService.Get();
-            User = users.FirstOrDefault(x => x.Id == 3);
+            var user = await _loginService.Login(username, password);
+            if (string.IsNullOrEmpty(user.FirstName))
+                User = user;
 
             Login();
-            
             var landLord = await _landlordService.Get(User.Id);
             
             if (landLord == null)
@@ -43,7 +45,7 @@ namespace B_B_App.Core.Managers
             _landlord = landLord;
         }
 
-        public Landlord? LandLord() => _landlord != null ? _landlord : new Landlord() ;
+        public Landlord? LandLord() => _landlord != null ? _landlord : new Landlord();
         public bool IsLandLord() => _landlord != null ? true : false;
 
     }
