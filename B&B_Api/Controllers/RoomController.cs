@@ -3,6 +3,7 @@ using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -164,20 +165,43 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("AddAccessoriesToRoom")]
-        public async Task<ActionResult<bool>> AddAccessoriesToRoom(Room room, List<RoomAccessory> roomAccessories) 
+        public async Task<ActionResult<bool>> AddAccessoriesToRoom(Room room) 
         {
             if (room == null)
                 return NotFound(false);
 
-            if (roomAccessories.Any() == false)
+            if (room.RoomAccessories.Any() == false)
                 return NotFound(false);
             
             DbRoom dbRoom = new DbRoom(room);
+            dbRoom.Accessories = new List<DbRoomAccessory>();
 
+            room.RoomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
 
-            roomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+            _context.Set<DbRoomAccessory>().Remove(dbRoom.Accessories.First());
 
             _context.Rooms.Update(dbRoom);
+            await _context.SaveChangesAsync();
+
+            return Ok(true);
+        }
+
+        [HttpPost]
+        [Route("RemoveAccessoryFromRoom")]
+        public async Task<ActionResult<bool>> RemoveAccessoryFromRoom(Room room)
+        {
+            if(room == null || room.RoomAccessories == null)
+                return NotFound(false);
+
+            if (room.RoomAccessories.Any() == false)
+                return NotFound(false);
+
+            DbRoom dbRoom = new DbRoom(room);
+            dbRoom.Accessories = new List<DbRoomAccessory>();
+
+            room.RoomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+
+            _context.Set<DbRoomAccessory>().RemoveRange(dbRoom.Accessories);
             await _context.SaveChangesAsync();
 
             return Ok(true);
@@ -190,12 +214,12 @@ namespace B_B_api.Controllers
             if (roomId == 0)
                 return NotFound();
 
-            var roomAccessories = _context.Rooms.FirstOrDefault(x => x.Id == roomId)?.Accessories?.ToList().RoomAccessories();
+            var roomAccessories = _context.Rooms.Include(a => a.Accessories).ToList().FirstOrDefault(x => x.Id == roomId);
             
-            if(roomAccessories == null)
+            if(roomAccessories == null || roomAccessories.Accessories.Any() == false)
                 return NotFound(new List<RoomAccessory>());
 
-            return roomAccessories;
+            return roomAccessories.Accessories.ToList().RoomAccessories();
         }
 
     }

@@ -58,10 +58,44 @@ namespace B_B_App.Services
         public async Task<List<Room>> GetRooms(int locationId)
         {
             List<Room> rooms;
-            var locationRooms = await _httpClient.GetAsync($"Room/GetRooms/{locationId}");
-            rooms = (await locationRooms.Content.ReadFromJsonAsync<List<Room>>()) ?? new List<Room>();
+            var response = await _httpClient.GetAsync($"Room/GetRooms/{locationId}");
+            rooms = (await response.Content.ReadFromJsonAsync<List<Room>>()) ?? new List<Room>();
             
             return rooms;
+        }
+
+        public async Task<List<RoomAccessory>> GetRoomAccessories(int roomId) 
+        {
+            List<RoomAccessory>? roomAccessory;
+            var response = await _httpClient.GetAsync($"Room/GetRoomAccessories/{roomId}");
+            if (response.StatusCode != HttpStatusCode.OK)
+                return new List<RoomAccessory>();
+
+            roomAccessory = await response.Content.ReadFromJsonAsync<List<RoomAccessory>>();
+
+            if (roomAccessory == null)
+                return new List<RoomAccessory>();
+
+            return roomAccessory;
+        }
+
+        public async Task<bool> RemoveAccessoryFromRoom(Room room) 
+        {
+            var response = await _httpClient.PostAsJsonAsync<Room>("Room/RemoveAccessoryFromRoom", room);
+
+            if(response.StatusCode != HttpStatusCode.OK)
+                return false;
+
+            return true;
+        }
+
+        public async Task<bool> AddAccessoriesToRoom(Room room)
+        {
+            var response = await _httpClient.PostAsJsonAsync("Room/AddAccessoriesToRoom", room);
+            if(response.StatusCode != HttpStatusCode.OK)
+                return false;
+
+            return true;
         }
 
         public async Task<Room> Get(int id)

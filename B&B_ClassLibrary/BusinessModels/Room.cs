@@ -21,7 +21,7 @@ namespace B_B_ClassLibrary.BusinessModels
         public int PricePerNight { get; set; }
         [DisplayName("Score")]
         public double? Rating { get; set; }
-
+        public List<RoomAccessory> RoomAccessories { get; set; }
         public Room()
         {
             
@@ -35,6 +35,11 @@ namespace B_B_ClassLibrary.BusinessModels
             NumberOfBeds = dbRoom.NumberOfBeds;
             PricePerNight = dbRoom.PricePerNight;
             Rating = dbRoom.Rating;
+
+            if (dbRoom.Accessories != null)
+                RoomAccessories = dbRoom.Accessories.ToList().RoomAccessories();
+            else
+                RoomAccessories = new List<RoomAccessory>();
         }
     }
 }

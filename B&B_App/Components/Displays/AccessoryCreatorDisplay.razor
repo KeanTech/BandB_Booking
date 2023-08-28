@@ -1,5 +1,5 @@
 ﻿
-<MudGrid>
+<MudGrid >
     <MudItem xs="12">
         <MudText>
             Room Accessories
@@ -7,10 +7,8 @@
     </MudItem>
     @foreach (var item in RoomAccessories)
     {
-        <MudItem sm="1">
-            <MudText>
-                @item.Type
-            </MudText>
+        <MudItem xs="2">
+                <MudButton ButtonType="ButtonType.Button" Size="Size.Small" Variant="Variant.Filled" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" @onclick="() => DeleteAccessory(item.Id)">@item.Type.ToString()</MudButton>
         </MudItem>
     }
 </MudGrid>
@@ -20,4 +18,16 @@
     [Parameter]
     public List<RoomAccessory> RoomAccessories { get; set; } = new List<RoomAccessory>();
 
+    [Parameter]
+    public EventCallback<RoomAccessory> ItemDeleted { get; set; }
+
+    private void DeleteAccessory(int id)
+    {
+        var selectedAccessory = RoomAccessories.FirstOrDefault(x => x.Id == id);
+        if (selectedAccessory == null)
+            return;
+            
+        ItemDeleted.InvokeAsync(selectedAccessory);
+        RoomAccessories.Remove(selectedAccessory);
+    }
 }
