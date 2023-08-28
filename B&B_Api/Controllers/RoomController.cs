@@ -94,8 +94,6 @@ namespace B_B_Api.Controllers
                 newAccList.Add(newAcc);
             }
 
-            //var accessoryCheck = _context.RoomAccessory.Where(x => room.Accessories.Contains(x.Type));
-            //var accessoryCheck = await _context.RoomAccessory.Where(x => room.Accessories.Any(y => y.Type == x.Type)).ToListAsync();
             var allAccessories = _context.RoomAccessory.ToList();
             var accessoryCheck = allAccessories.Where(x => room.Accessories.Any(y => y.Type == x.Type)).ToList();
 
@@ -106,7 +104,7 @@ namespace B_B_Api.Controllers
                 
                 _context.Rooms.Add(newRoom);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("CreateRoom", new { id = room.Id }, room);
+                return CreatedAtAction("CreateRoom", room);
             }
             else
             {

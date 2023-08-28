@@ -4,6 +4,6 @@ namespace B_B_App.Services
 {
     public interface ILoginService
     {
-        public Task<User> Login(User user);
+        public Task<User> Login(string username, string password);
     }
 }

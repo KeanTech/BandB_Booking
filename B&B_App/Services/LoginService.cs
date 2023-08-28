@@ -15,17 +15,18 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
-        public async Task<User> Login(User user)
+        public async Task<User> Login(string username, string password)
         {
-            var response = await _httpClient.PostAsJsonAsync<User>("Login/ValidateUser", user);
+            Credentials credentials = new Credentials(username, password);
+            var response = await _httpClient.PostAsJsonAsync<Credentials>("Login/ValidateUser", credentials);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                return user;
+                return new User();
             }
             var returnedUser = await response.Content.ReadFromJsonAsync<User>();
             if (returnedUser == null)
             {
-                return user;
+                return new User();
             }
             return returnedUser;
         }
