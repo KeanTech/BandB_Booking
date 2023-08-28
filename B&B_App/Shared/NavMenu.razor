@@ -1,8 +1,8 @@
 ﻿@using B_B_App.Components.Dialogs;
 @using B_B_ClassLibrary.BusinessModels;
 @inject NavigationManager navi
-@inject ILoginService loginService
-
+@inject ILoginService _loginService
+@inject LoginManager _loginManager
 <div class="top-row ps-3 navbar navbar-light" style="height:15%;">
     <div class="container-fluid">
         @if (loggedIn)
@@ -38,7 +38,12 @@
                 <NavLink class="nav-link" href="/bookings" Match="NavLinkMatch.All">
                     <span class="oi oi-calendar" aria-hidden="true"></span> Bookings
                 </NavLink>
-
+                if (_loginManager.IsLandLord())
+                {
+                    <NavLink class="nav-link" href="/bnbcreator" Match="NavLinkMatch.All">
+                        <span class="oi oi-calendar" aria-hidden="true"></span> Bookings
+                    </NavLink>
+                }
             }
         </div>
     </nav>
@@ -78,26 +83,19 @@
         return;
     }
 
-    private void loginDialogClose(KeyValuePair<bool, User> pair)
+    private async void loginDialogClose(KeyValuePair<bool, User> pair)
     {
         loginDialogOpen = false;
 
         if (pair.Key)
         {
-            loggedIn = true;
-        }
-        TryLogin();
+            await _loginManager.UserLogin(pair.Value.Username, pair.Value.Password);
 
-    }
-
-    private async void TryLogin()
-    {
-        var response = await loginService.Login(_user.Username, _user.Password);
-        if (!String.IsNullOrEmpty(response.Username))
-        {
-            //LoginManager.User
             loggedIn = true;
+            _user = pair.Value;
         }
+        
+
     }
 
     private void CreateUserRedirect()

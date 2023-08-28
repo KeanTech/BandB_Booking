@@ -260,7 +260,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await _loginManager.UserLogin();
         _user = LoginManager.User;
         if (_user == null)
             navi.NavigateTo("/");
