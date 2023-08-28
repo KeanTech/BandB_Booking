@@ -20,6 +20,7 @@ namespace B_B_ClassLibrary.Models
         public DateTime? SignedDate { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public ContractState State { get; set; }
 
         public DbContract()
         {
@@ -34,6 +35,7 @@ namespace B_B_ClassLibrary.Models
             SignedDate = contract.SignedDate;
             FromDate = contract.FromDate;
             ToDate = contract.ToDate;
+            State = contract.State;
         }
 
         public DbUser ?User { get; set; }

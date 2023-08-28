@@ -16,28 +16,46 @@ namespace B_B_api.Controllers
             _context = context;
         }
 
-        //[HttpGet]
-        //[Route("GetUserContracts")]
-        //public async Task<ActionResult<Contract>> GetUserContracts(Contract contract)
-        //{
-            
-        //}
+        [HttpGet]
+        [Route("GetUserContracts")]
+        public ActionResult<List<Contract>> GetUserContracts(int id)
+        {
+            var contractsFromDb = _context.Contracts.Where(x => x.UserId == id).ToList();
+            if (contractsFromDb != null)
+            {
+                List<Contract> contractsForFrontend = new List<Contract>();
+                foreach (var contract in contractsFromDb)
+                {
+                    Contract contractConv = new Contract(contract);
+                    contractsForFrontend.Add(contractConv);
+                }
+                return Ok(contractsForFrontend);
+            }
+            return NotFound("No contracts found");
+        }
 
         [HttpGet]
-        [Route("GetContract/{id}")]
-        public async Task<ActionResult<DbContract>> GetContract(int id)
+        [Route("GetPendingContracts")]
+        public async Task<ActionResult<List<Contract>>> GetPendingContracts(int id)
         {
-            var contract = await _context.Contracts.FindAsync(id);
-            if (contract == null)
+            var pendingContracts = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Pending)).ToList();
+            if (pendingContracts != null)
             {
-                return NotFound();
+                List<Contract> frontendConctacts = new List<Contract>();
+                foreach (var contract in pendingContracts)
+                {
+                    Contract frontendContract = new Contract(contract);
+                    frontendConctacts.Add(frontendContract);
+                }
+                return frontendConctacts;
             }
-            return contract;
+            return NotFound("No pending contracts");
         }
+
 
         [HttpPost]
         [Route("CreateContracts")]
-        public async Task<ActionResult<DbContract>> CreateContracts(List<Contract> contracts)
+        public async Task<ActionResult> CreateContracts(List<Contract> contracts)
         {
             if (contracts == null)
             {
@@ -45,6 +63,7 @@ namespace B_B_api.Controllers
             }
             else
             {
+                
                 foreach (var contract in contracts)
                 {
                     DbContract newContract = new DbContract(contract);
@@ -57,10 +76,21 @@ namespace B_B_api.Controllers
                 catch (Exception e)
                 {
                     return BadRequest(e);
-                    throw;
                 }
-                return Ok();
+                return Ok("Contracts created");
             }
+        }
+
+        [HttpGet]
+        [Route("GetContract/{id}")]
+        public async Task<ActionResult<DbContract>> GetContract(int id)
+        {
+            var contract = await _context.Contracts.FindAsync(id);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            return contract;
         }
 
         [HttpPost]

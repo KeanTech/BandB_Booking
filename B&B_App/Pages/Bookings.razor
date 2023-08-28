@@ -4,7 +4,7 @@
 @inject IContractService<Contract> contractService
 
 <MudCard>
-    <MudCardHeader>Pending bookings</MudCardHeader>
+    <MudCardHeader>Rooms you have selected to book</MudCardHeader>
     <MudCardContent>
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
@@ -13,34 +13,45 @@
             <MudText>From: @booking.FromDate</MudText>
             <MudText>To: @booking.ToDate</MudText>
             <MudText>Signed on: @booking.</MudText>
-            <MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit booking</MudButton>
-            <MudButton @onclick="OnCancelPendingBooking" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
+            <MudButton @onclick="() => OnCancelSelectedBooking(booking)" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
         }
+    </MudCardContent>
+</MudCard>
+<MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit your bookings</MudButton>
+
+<MudCard>
+    <MudCardHeader>Pending bookings</MudCardHeader>
+    <MudCardContent>
+
     </MudCardContent>
 </MudCard>
 
 <MudCard>
     <MudCardHeader>Your bookings</MudCardHeader>
     <MudCardContent>
-        
+        @foreach(var booking in _userContracts)
+        {
+            
+        }
     </MudCardContent>
 </MudCard>
 
 
 @code {
     private List<Contract> _userContracts = new List<Contract>();
+    private User _user = LoginManager.User;
 
     protected override async void OnInitialized()
     {
-        //_userContracts = await contractService.
+        _userContracts = await contractService.GetContracts(_user.Id);
 
         NewBookingsContainer.OnChange += StateHasChanged;
         base.OnInitialized();
     }
 
-    public void OnCancelPendingBooking()
+    public void OnCancelSelectedBooking(Contract contract)
     {
-        
+        NewBookingsContainer.newBookings.Remove(contract);
     }
 
     public async void OnSubmitBooking()

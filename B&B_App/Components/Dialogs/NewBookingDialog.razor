@@ -1,6 +1,7 @@
 ﻿@using System.ComponentModel
 @using System.Reflection
 @using B_B_App.Services;
+@using B_B_ClassLibrary.Models;
 @implements IDisposable
 @inject IContractService<Contract> contractService
 @inject NewBookingsContainer NewBookingsContainer
@@ -80,7 +81,7 @@
         Contract.RoomId = Room.Id;
         Contract.FromDate = DateTime.Now;
         Contract.ToDate = DateTime.Now;
-
+        Contract.State = ContractState.Pending;
         if (LoginManager.User != null)
         {
             Contract.UserId = LoginManager.User.Id;

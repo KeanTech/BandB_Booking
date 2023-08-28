@@ -39,6 +39,13 @@ namespace B_B_App.Services
             }
         }
 
+
+        public async Task<List<Contract>> GetUserContracts(int id)
+        {
+            var returnedContracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetUserContracts{id}");
+            return returnedContracts;
+        }
+
         public async Task<Contract> Get(int id)
         {
             var returnedContract = await _httpClient.GetFromJsonAsync<Contract>($"Contract/GetConract{id}");

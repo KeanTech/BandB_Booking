@@ -1,6 +1,7 @@
 ﻿using B_B_ClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Diagnostics.Contracts;
 
 namespace B_B_api.Data
 {
@@ -141,6 +142,12 @@ namespace B_B_api.Data
             modelBuilder.Entity<DbLocationRating>().HasData(
                 new DbLocationRating { Id = 1, Rating = 4, LocationId = 1 },
                 new DbLocationRating { Id = 2, Rating = 5, LocationId = 1 });
+
+            modelBuilder.Entity<DbContract>()
+                .Property(x => x.State)
+                .HasConversion(
+                y => y.ToString(),
+                y => (ContractState)Enum.Parse(typeof(ContractState), y));
 
             modelBuilder.Entity<DbRoomAccessory>()
                 .Property(x => x.Type)

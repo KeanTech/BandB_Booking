@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,21 @@ namespace B_B_ClassLibrary.BusinessModels
         public DateTime? SignedDate { get; set; } = DateTime.Now;
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public ContractState State{ get; set; }
+
         public Contract()
         {
             
+        }
+        public Contract(DbContract contract)
+        {
+            Id = contract.Id;
+            UserId = contract.UserId;
+            RoomId = contract.RoomId;
+            SignedDate = contract.SignedDate;
+            FromDate = contract.FromDate;
+            ToDate = contract.ToDate;
+            State = contract.State;
         }
     }
 }
