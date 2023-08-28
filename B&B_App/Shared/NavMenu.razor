@@ -93,7 +93,7 @@
     private async void TryLogin()
     {
         var response = await loginService.Login(_user.Username, _user.Password);
-        if (response.FirstName != "" && response.FirstName != null)
+        if (!String.IsNullOrEmpty(response.Username))
         {
             loggedIn = true;
         }

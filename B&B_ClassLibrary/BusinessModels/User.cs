@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,5 +27,22 @@ namespace B_B_ClassLibrary.BusinessModels
         public string PhoneNumber { get; set; }
         [Required]
         public string Country { get; set; }
+
+        public User()
+        {
+            
+        }
+        public User(DbUser dbUser)
+        {
+            Id = dbUser.Id;
+            Created = dbUser.Created;
+            FirstName = dbUser.FirstName;
+            LastName = dbUser.LastName;
+            Email = dbUser.Email;
+            Username = dbUser.Username;
+            Password = dbUser.Password;
+            PhoneNumber = dbUser.PhoneNumber;
+            Country = dbUser.Country;
+        }
     }
 }

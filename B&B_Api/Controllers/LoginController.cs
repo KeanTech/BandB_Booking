@@ -36,7 +36,8 @@ namespace B_B_api.Controllers
 
                 if (_loginManager.ValidatePassword(credentials.Password, credentials.Username, salt, hashedPassword)) 
                 {
-                    var userToReturn = _context.Users.Where(x => x.Username == credentials.Username);
+                    var userFromDb = _context.Users.FirstOrDefault(x => x.Username == credentials.Username);
+                    User userToReturn = new User(userFromDb);
                     return Ok(userToReturn);
                 }
             }

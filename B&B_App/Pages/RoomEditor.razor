@@ -151,7 +151,7 @@
             //if (loginManager.IsLandLord(_user.Id))
             _room = await _roomService.Get(RoomId);
             _accessories = await _accessoryService.GetAllAccessories();
-            _roomAccessories = (await _roomService.GetRoomAccessories(RoomId)).RoomAccessories;
+            _roomAccessories = (await _roomService.GetRoomAccessories(RoomId)).Accessories;
             _pictures = await _pictureService.GetRoomPictures(RoomId);
         }
         catch (Exception)
@@ -179,12 +179,12 @@
         else
             await _roomService.Update(_room);
 
-        _room.RoomAccessories = _roomAccessories;
+        _room.Accessories = _roomAccessories;
         await _roomService.AddAccessoriesToRoom(_room);
 
         if (_accessoriesToBeRemoved.Any())
         {
-            _room.RoomAccessories = _accessoriesToBeRemoved;
+            _room.Accessories = _accessoriesToBeRemoved;
             await _roomService.RemoveAccessoryFromRoom(_room);
         }
 

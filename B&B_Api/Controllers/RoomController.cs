@@ -182,13 +182,13 @@ namespace B_B_api.Controllers
             if (room == null)
                 return NotFound(false);
 
-            if (room.RoomAccessories.Any() == false)
+            if (room.Accessories.Any() == false)
                 return NotFound(false);
             
             DbRoom dbRoom = new DbRoom(room);
             dbRoom.Accessories = new List<DbRoomAccessory>();
 
-            room.RoomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+            room.Accessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
 
             _context.Set<DbRoomAccessory>().Remove(dbRoom.Accessories.First());
 
@@ -202,16 +202,16 @@ namespace B_B_api.Controllers
         [Route("RemoveAccessoryFromRoom")]
         public async Task<ActionResult<bool>> RemoveAccessoryFromRoom(Room room)
         {
-            if(room == null || room.RoomAccessories == null)
+            if(room == null || room.Accessories == null)
                 return NotFound(false);
 
-            if (room.RoomAccessories.Any() == false)
+            if (room.Accessories.Any() == false)
                 return NotFound(false);
 
             DbRoom dbRoom = new DbRoom(room);
             dbRoom.Accessories = new List<DbRoomAccessory>();
 
-            room.RoomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+            room.Accessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
 
             _context.Set<DbRoomAccessory>().RemoveRange(dbRoom.Accessories);
             await _context.SaveChangesAsync();

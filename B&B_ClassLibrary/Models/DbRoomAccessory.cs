@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.BusinessModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,17 +25,6 @@ namespace B_B_ClassLibrary.Models
         }
 
         public virtual ICollection<DbRoom> ?Rooms { get; set; }
-
-        public DbRoomAccessory()
-        {
-                
-        }
-
-        public DbRoomAccessory(RoomAccessory accessory)
-        {
-            Id = accessory.Id;
-            Type = accessory.Type;
-        }
     }
 
     public static class DbRoomAccessoryExtensions

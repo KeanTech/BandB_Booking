@@ -21,8 +21,6 @@
         <MudText>Adresse: @Location.Address</MudText>
         <MudText>Post nummer: @Location.ZipCode</MudText>
         <MudText>Fra dato:</MudText>
-        <MudDatePicker @bind-Date="@contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
-        <MudDatePicker @bind-Date="@contract.ToDate" Label="Til:" DisableToolbar="true"></MudDatePicker>
         <MudButton @onclick="Book" Color="Color.Primary">Reserver</MudButton>
         <MudButton @onclick="CancelBooking" Color="Color.Secondary">Fortryd</MudButton>
 
@@ -33,12 +31,12 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    [Parameter] public Contract Contract { get; set; }
     [Parameter] public Room Room { get; set; }
     [Parameter] public Location Location { get; set; }
 
     DateTime? from = DateTime.Today;
 
-    public Contract contract = new Contract();
 
     protected override void OnInitialized()
     {
@@ -54,13 +52,13 @@
 
     private void ChangePropertyValue()
     {
-        NewBookingsContainer.AddContract(contract);
+        NewBookingsContainer.AddContract(Contract);
     }
 
     void Book()
     {
-        contract.RoomId = Room.Id;
-        contract.UserId = LoginManager.User.Id;
+        Contract.RoomId = Room.Id;
+        Contract.UserId = LoginManager.User.Id;
         ChangePropertyValue();
 
         MudDialog.Close(DialogResult.Ok(true));
