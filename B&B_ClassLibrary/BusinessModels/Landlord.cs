@@ -13,5 +13,17 @@ namespace B_B_ClassLibrary.BusinessModels
         public string CPRNumber { get; set; }
         public string AccountNumber { get; set; }
         public string RegistrationNumber { get; set; }
+
+        public Landlord()
+        {
+            
+        }
+
+        public Landlord( User user, Landlord landlord) : base(user)
+        {
+            CPRNumber = landlord.CPRNumber;
+            AccountNumber = landlord.AccountNumber;
+            RegistrationNumber = landlord.RegistrationNumber;
+        }
     }
 }

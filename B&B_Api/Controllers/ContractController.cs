@@ -16,12 +16,12 @@ namespace B_B_api.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        []
-        public async Task<ActionResult<Contract>> GetUserContracts()
-        {
-
-        }
+        //[HttpGet]
+        //[Route("GetUserContracts")]
+        //public async Task<ActionResult<Contract>> GetUserContracts(Contract contract)
+        //{
+            
+        //}
 
         [HttpGet]
         [Route("GetContract/{id}")]

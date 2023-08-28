@@ -12,7 +12,7 @@ namespace B_B_ClassLibrary.BusinessModels
     public class User
     {
         public int Id { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -31,6 +31,17 @@ namespace B_B_ClassLibrary.BusinessModels
         public User()
         {
             
+        }
+        public User(User user)
+        {
+            Id = user.Id;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            Email = user.Email;
+            Username = user.Username;
+            Password = user.Password;
+            PhoneNumber = user.PhoneNumber;
+            Country = user.Country;
         }
         public User(DbUser dbUser)
         {

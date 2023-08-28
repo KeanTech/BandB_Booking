@@ -38,7 +38,7 @@ namespace B_B_api.Controllers
         [Route("CreateLandlord")]
         public async Task<ActionResult<DbLandlord>> CreateLandlord(Landlord landlord)
         {
-            if (landlord == null)
+            if (landlord != null)
             {
                 //Checks to see if the username already exists in DB
                 if (_loginManager.CheckUsername(landlord.Username, _context))

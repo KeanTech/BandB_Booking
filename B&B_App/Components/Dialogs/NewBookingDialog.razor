@@ -64,11 +64,10 @@
         Contract.RoomId = Room.Id;
         Contract.FromDate = DateTime.Now;
         Contract.ToDate = DateTime.Now;
-        //CHANGE TO CHECK IF USER INSTANCE OF LOGINMANAGER IS NOT NULL
-        if (true)
+
+        if (LoginManager.User != null)
         {
-            //Contract.UserId = LoginManager.User.Id;
-            Contract.UserId = 4;
+            Contract.UserId = LoginManager.User.Id;
         }
         ChangePropertyValue();
 
@@ -81,11 +80,10 @@
         Contract.RoomId = Room.Id;
         Contract.FromDate = DateTime.Now;
         Contract.ToDate = DateTime.Now;
-        //CHANGE TO CHECK IF USER INSTANCE OF LOGINMANAGER IS NOT NULL
-        if (true)
+
+        if (LoginManager.User != null)
         {
-            //Contract.UserId = LoginManager.User.Id;
-            Contract.UserId = 4;
+            Contract.UserId = LoginManager.User.Id;
         }
         ChangePropertyValue();
 

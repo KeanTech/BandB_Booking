@@ -59,17 +59,7 @@
         </MudForm>
     </MudItem>
 }
-<MudButton Disabled="@_processing" OnClick="OnSubmitUser" Variant="Variant.Filled" Color="Color.Primary">
-    @if (_processing)
-    {
-        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-        <MudText Class="ms-2">Reserverer..</MudText>
-    }
-    else
-    {
-        <MudText>Reserver</MudText>
-    }
-</MudButton>
+<MudButton OnClick="OnSubmitUser" Variant="Variant.Filled" Color="Color.Primary">Opret</MudButton>
 
 <MudButton OnClick="Redirect" Variant="Variant.Filled" Color="Color.Secondary">Fortryd</MudButton>
 
@@ -113,20 +103,13 @@
         _processing = true;
         if (UserType == "Lejer")
         {
-            _user.Created = DateTime.Now;
             await userService.Create(_user);
             navi.NavigateTo("/");
         }
         else if (UserType == "Udlejer")
         {
-            _landlord.Created = DateTime.Now;
-            _landlord.FirstName = _user.FirstName;
-            _landlord.LastName = _user.LastName;
-            _landlord.Email = _user.Email;
-            _landlord.Password = _user.Password;
-            _landlord.PhoneNumber = _user.PhoneNumber;
-            _landlord.Country = _user.Country;
-            await landlordService.Create(_landlord);
+            Landlord newLandlord = new Landlord(_user, _landlord);
+            await landlordService.Create(newLandlord);
             navi.NavigateTo("/");
         }
         _processing = false;
