@@ -62,7 +62,7 @@
                     </MudItem>
 
                     <MudItem xs="12">
-                        <AccessoryCreatorDisplay ItemDeleted="AccessoryDeleted" RoomAccessories="_roomAccessories"></AccessoryCreatorDisplay>
+                        <AccessoryCreatorDisplay ItemDeleted="AccessoryDeleted" AbleToDelete="true" RoomAccessories="_roomAccessories"></AccessoryCreatorDisplay>
 
                     </MudItem>
                 </MudGrid>
@@ -151,7 +151,7 @@
             //if (loginManager.IsLandLord(_user.Id))
             _room = await _roomService.Get(RoomId);
             _accessories = await _accessoryService.GetAllAccessories();
-            _roomAccessories = await _roomService.GetRoomAccessories(RoomId);
+            _roomAccessories = (await _roomService.GetRoomAccessories(RoomId)).RoomAccessories;
             _pictures = await _pictureService.GetRoomPictures(RoomId);
         }
         catch (Exception)
@@ -220,6 +220,7 @@
 
         _picturesToDelete.Add(selectedPicture);
     }
+
     private async void DeletePicture(int id)
     {
         var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
@@ -231,11 +232,13 @@
 
         StateHasChanged();
     }
+
     private async void DeletePictures()
     {
         if (_picturesToDelete.Any())
             await _pictureService.DeleteRoomPictures(_picturesToDelete);
     }
+
     private async void AddPicture(InputFileChangeEventArgs e)
     {
         Picture imageFile = await ImageHandling.GetImageFile(e.File, _room.Id);
@@ -245,6 +248,7 @@
         _addedPicture = imageFile;
         StateHasChanged();
     }
+
     private async void UploadPicture()
     {
         if (_addedPicture != null)

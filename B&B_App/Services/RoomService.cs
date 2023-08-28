@@ -64,17 +64,17 @@ namespace B_B_App.Services
             return rooms;
         }
 
-        public async Task<List<RoomAccessory>> GetRoomAccessories(int roomId) 
+        public async Task<Room> GetRoomAccessories(int roomId) 
         {
-            List<RoomAccessory>? roomAccessory;
+            Room? roomAccessory;
             var response = await _httpClient.GetAsync($"Room/GetRoomAccessories/{roomId}");
             if (response.StatusCode != HttpStatusCode.OK)
-                return new List<RoomAccessory>();
+                return new Room();
 
-            roomAccessory = await response.Content.ReadFromJsonAsync<List<RoomAccessory>>();
+            roomAccessory = await response.Content.ReadFromJsonAsync<Room>();
 
             if (roomAccessory == null)
-                return new List<RoomAccessory>();
+                return new Room();
 
             return roomAccessory;
         }

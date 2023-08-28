@@ -7,7 +7,7 @@ namespace B_B_App.Services
         Task<List<T>> GetRooms(int id);
         Task<Dictionary<Room, List<Picture>>> GetAllRoomsAndPictures();
         Task<List<T>> GetAllRooms();
-        Task<List<RoomAccessory>> GetRoomAccessories(int roomId);
+        Task<Room> GetRoomAccessories(int roomId);
         Task<bool> AddAccessoriesToRoom(Room room);
         Task<bool> RemoveAccessoryFromRoom(Room room);
     }

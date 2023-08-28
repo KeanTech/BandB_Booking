@@ -63,7 +63,7 @@ namespace B_B_api.Controllers
         [Route("GetRooms/{locationId}")]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms(int locationId)
         {
-            var allRooms = await _context.Rooms.Where(x => x.LocationId == locationId).ToListAsync();
+            var allRooms = await _context.Rooms.Include(z => z.Accessories).Where(x => x.LocationId == locationId).ToListAsync();
             return allRooms.ConvertToRooms();
         }
 
@@ -209,17 +209,19 @@ namespace B_B_api.Controllers
 
         [HttpGet]
         [Route("GetRoomAccessories/{roomId}")]
-        public ActionResult<List<RoomAccessory>> GetRoomAccessories(int roomId) 
+        public ActionResult<Room> GetRoomAccessories(int roomId) 
         {
             if (roomId == 0)
                 return NotFound();
 
             var roomAccessories = _context.Rooms.Include(a => a.Accessories).ToList().FirstOrDefault(x => x.Id == roomId);
-            
+
             if(roomAccessories == null || roomAccessories.Accessories.Any() == false)
                 return NotFound(new List<RoomAccessory>());
 
-            return roomAccessories.Accessories.ToList().RoomAccessories();
+            Room room = new Room(roomAccessories);
+            
+            return room;
         }
 
     }

@@ -90,11 +90,13 @@
                         </MudItem>
                     </MudGrid>
                 </MudItem>
-                
-
 
                 <MudItem xs="12">
-                    <MudGrid Class="grey lighten-1" >
+                    <AccessoryCreatorDisplay AbleToDelete="false" RoomAccessories="room.RoomAccessories"></AccessoryCreatorDisplay>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudGrid Class="grey lighten-1">
                         @if (roomPictures.ContainsKey(room.Id))
                         {
                             @foreach (var item in roomPictures[room.Id])
@@ -140,7 +142,7 @@
             _location = await _locationService.Get(locationId ?? 0);
 
             roomPictures = await _pictureManager.GetPictureList(_rooms);
-            var test = roomPictures.First();
+            
             locationPictures = await _pictureService.GetLocationPictures(_location.Id);
         }
         catch (Exception ex)
