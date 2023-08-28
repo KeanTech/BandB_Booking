@@ -1,11 +1,11 @@
-﻿@page "/roomEditor"
-@page "/roomEditor/{Id:int}"
+﻿@page "/roomEditor/{RoomId:int}"
 @using System.ComponentModel;
 @using System.Reflection;
-@inject IRoomService<Room> roomService
-@inject IPictureService pictureService
-@inject LoginManager loginManager
-@inject ISnackbar snackbar
+@inject IRoomService<Room> _roomService
+@inject IPictureService _pictureService
+@inject IAccessoryService _accessoryService
+@inject LoginManager _loginManager
+@inject ISnackbar _snackbar
 
 <MudCard>
     <MudCardHeader>
@@ -37,6 +37,45 @@
 
     </MudCardContent>
 
+</MudCard>
+
+<MudDivider DividerType="DividerType.FullWidth"></MudDivider>
+
+<MudCard>
+    <MudCardContent>
+        <MudGrid>
+
+            <MudItem>
+                <MudGrid>
+                    <MudItem xs="4">
+                        <DropDown TItem="RoomAccessory" OnSelected="AccessorySelected">
+                            <InitialTip>Select Accessory</InitialTip>
+                            <ChildContent>
+
+                                @foreach (var item in _accessories)
+                                {
+                                    <DropDownItem Item="item">@item.Type</DropDownItem>
+                                }
+
+                            </ChildContent>
+                        </DropDown>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <AccessoryCreatorDisplay ItemDeleted="AccessoryDeleted" AbleToDelete="true" RoomAccessories="_roomAccessories"></AccessoryCreatorDisplay>
+
+                    </MudItem>
+                </MudGrid>
+
+
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+<MudDivider DividerType="DividerType.FullWidth" Absolute="true" Light="true"></MudDivider>
+
+<MudCard>
     @if (_pictures.Any())
     {
         <MudCardContent>
@@ -63,6 +102,7 @@
         </MudCardContent>
     }
 </MudCard>
+
 <MudGrid Style="padding:2px 2px 2px 2px; margin:0px 12px 0px 0px">
     <MudItem xs="12">
         <InputFile OnChange="@AddPicture" single accept=".jpg,.jpeg,.png,.PNG" style="margin:2px 2px 2px 2px" />
@@ -80,26 +120,39 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public int RoomId { get; set; }
+
+    #region Fields
     private Room _room = new Room();
+
     private User? _user;
     private List<Picture> _pictures = new List<Picture>();
     private Picture _addedPicture = new Picture();
     private List<Picture> _picturesToDelete = new List<Picture>();
+    private List<RoomAccessory> _roomAccessories = new List<RoomAccessory>();
+    private List<RoomAccessory> _accessories = new List<RoomAccessory>();
+    private List<RoomAccessory> _accessoriesToBeRemoved = new List<RoomAccessory>();
+    private RoomAccessory _selectedAccessory;
     private IBrowserFile? file;
     private ErrorManager _errorManager;
+
+    #endregion
 
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
-        _errorManager = new ErrorManager(snackbar);
+        _errorManager = new ErrorManager(_snackbar);
+
+        if (RoomId == 0)
+            return;
 
         try
         {
             //if (loginManager.IsLandLord(_user.Id))
-            _room = await roomService.Get(Id);
-
-            _pictures = await pictureService.GetRoomPictures(Id);
+            _room = await _roomService.Get(RoomId);
+            _accessories = await _accessoryService.GetAllAccessories();
+            _roomAccessories = (await _roomService.GetRoomAccessories(RoomId)).RoomAccessories;
+            _pictures = await _pictureService.GetRoomPictures(RoomId);
         }
         catch (Exception)
         {
@@ -107,36 +160,35 @@
         }
     }
 
+    private void AccessorySelected(RoomAccessory roomAccessory)
+    {
+        _selectedAccessory = roomAccessory;
+        if (_roomAccessories.Contains(roomAccessory) == false)
+            _roomAccessories.Add(roomAccessory);
+    }
+
+    private void AccessoryDeleted(RoomAccessory roomAccessory)
+    {
+        _accessoriesToBeRemoved.Add(roomAccessory);
+    }
+
     private async void SaveChanges()
     {
-        await roomService.Update(_room);
-    }
+        if (_room.Id == 0)
+            await _roomService.Create(_room);
+        else
+            await _roomService.Update(_room);
 
-    private void SelectPicture(int id)
-    {
-        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
-        if (selectedPicture == null)
-            return;
+        _room.RoomAccessories = _roomAccessories;
+        await _roomService.AddAccessoriesToRoom(_room);
 
-        _picturesToDelete.Add(selectedPicture);
-    }
-
-    private async void DeletePicture(int id)
-    {
-        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
-        if (selectedPicture == null)
-            return;
-
-        await pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
-        _pictures.Remove(selectedPicture);
+        if (_accessoriesToBeRemoved.Any())
+        {
+            _room.RoomAccessories = _accessoriesToBeRemoved;
+            await _roomService.RemoveAccessoryFromRoom(_room);
+        }
 
         StateHasChanged();
-    }
-
-    private async void DeletePictures()
-    {
-        if (_picturesToDelete.Any())
-            await pictureService.DeleteRoomPictures(_picturesToDelete);
     }
 
     private string GetDisplayName(string name)
@@ -159,6 +211,34 @@
         return "";
     }
 
+    #region Picture functions
+    private void SelectPicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        _picturesToDelete.Add(selectedPicture);
+    }
+
+    private async void DeletePicture(int id)
+    {
+        var selectedPicture = _pictures.FirstOrDefault(x => x.Id == id);
+        if (selectedPicture == null)
+            return;
+
+        await _pictureService.DeleteRoomPictures(new List<Picture>() { selectedPicture });
+        _pictures.Remove(selectedPicture);
+
+        StateHasChanged();
+    }
+
+    private async void DeletePictures()
+    {
+        if (_picturesToDelete.Any())
+            await _pictureService.DeleteRoomPictures(_picturesToDelete);
+    }
+
     private async void AddPicture(InputFileChangeEventArgs e)
     {
         Picture imageFile = await ImageHandling.GetImageFile(e.File, _room.Id);
@@ -173,11 +253,13 @@
     {
         if (_addedPicture != null)
         {
-            await pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
+            await _pictureService.AddRoomPictures(new List<Picture>() { _addedPicture });
         }
-        _pictures = await pictureService.GetRoomPictures(Id);
+        _pictures = await _pictureService.GetRoomPictures(RoomId);
 
         StateHasChanged();
     }
+    #endregion
+
 
 }

@@ -1,0 +1,155 @@
+﻿@page "/details/{locationId:int}"
+@inject IRoomService<Room> _roomService
+@inject ILocationService<Location> _locationService
+@inject IPictureService _pictureService
+@inject ISnackbar _snackbar
+
+
+<MudCard Class="indigo lighten-5">
+    <MudCardHeader>
+        <MudText>Info om stedet</MudText>
+    </MudCardHeader>
+
+    <MudCardContent>
+        <MudRating SelectedValue="@Convert.ToInt16(_location.Rating)" ReadOnly="true" />
+    </MudCardContent>
+
+    <MudCardContent>
+
+        <MudText>
+            Navn: @_location.Name
+        </MudText>
+        <MudText>
+            Område: @_location.Area
+        </MudText>
+        <MudText>
+            By: @_location.City
+        </MudText>
+        <MudText>
+            Adresse: @_location.Address
+        </MudText>
+        <MudText>
+            Postnr.: @_location.ZipCode
+        </MudText>
+        <MudText>
+            Land: @_location.Country
+        </MudText>
+        <MudText>
+            Antal værelser: @_location.AmountOfRooms
+        </MudText>
+
+    </MudCardContent>
+    <MudDivider DividerType="DividerType.Middle" Light="false"></MudDivider>
+    <MudCardContent>
+        <MudGrid>
+            @foreach (var item in locationPictures)
+            {
+                <MudItem xs="3">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300"></MudImage></MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+<MudCard Class="indigo lighten-5">
+    <MudCardHeader>
+        <MudText>Rum detalje</MudText>
+    </MudCardHeader>
+
+
+    <MudCardContent>
+        <MudGrid>
+
+            @foreach (var room in _rooms)
+            {
+                <MudItem xs="12">
+                    <MudGrid Class="indigo lighten-4">
+                        <MudItem xs="12">
+                            <MudRating SelectedValue="@Convert.ToInt16(room.Rating)" ReadOnly="true" />
+                        </MudItem>
+
+                        <MudItem xs="2">
+                            <MudText>
+                                Rum Nr.: @room.Number
+                            </MudText>
+
+                        </MudItem>
+
+                        <MudItem xs="2">
+                            <MudText>
+                                Pris per nat: @room.PricePerNight kr.
+                            </MudText>
+
+                        </MudItem>
+
+                        <MudItem xs="2">
+                            <MudText>
+                                Antal senge: @room.NumberOfBeds
+                            </MudText>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <AccessoryCreatorDisplay AbleToDelete="false" RoomAccessories="room.RoomAccessories"></AccessoryCreatorDisplay>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudGrid Class="grey lighten-1">
+                        @if (roomPictures.ContainsKey(room.Id))
+                        {
+                            @foreach (var item in roomPictures[room.Id])
+                            {
+                                <MudItem xs="3">
+                                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 indigo darken-5"><MudImage Src="@item.Base64" Height="250" Width="300"></MudImage></MudPaper>
+                                </MudItem>
+                            }
+                        }
+                    </MudGrid>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudCardContent>
+
+</MudCard>
+
+@code {
+    // Used as a roomId to pass in the url
+    [Parameter]
+    public int? locationId { get; set; }
+
+    private ErrorManager _errorManager;
+    private Room _room = new Room();
+    private List<Room> _rooms = new List<Room>();
+    private Location _location = new Location();
+    private Dictionary<int, List<Picture>> roomPictures = new Dictionary<int, List<Picture>>();
+    private List<Picture> locationPictures = new List<Picture>();
+    private PictureManager _pictureManager;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _errorManager = new ErrorManager(_snackbar);
+        #region Data loading
+        if (locationId == null)
+            return;
+
+        _pictureManager = new PictureManager(_roomService, _pictureService);
+
+        try
+        {
+            _rooms = (await _roomService.GetRooms(locationId ?? 0)).ToList();
+            _location = await _locationService.Get(locationId ?? 0);
+
+            roomPictures = await _pictureManager.GetPictureList(_rooms);
+            
+            locationPictures = await _pictureService.GetLocationPictures(_location.Id);
+        }
+        catch (Exception ex)
+        {
+            _errorManager.InfoBar("Error while loading data", Variant.Text, Severity.Error);
+        }
+        #endregion
+        base.OnInitialized();
+    }
+}

@@ -12,6 +12,5 @@ namespace B_B_ClassLibrary.BusinessModels
         //TypeId is either a LocationId or RoomId
         public int TypeId { get; set; }
         public string Base64 { get; set; }
-        public bool Selected { get; set; }
     }
 }

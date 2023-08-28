@@ -37,6 +37,11 @@ namespace B_B_ClassLibrary.BusinessModels
             NumberOfBeds = dbRoom.NumberOfBeds;
             PricePerNight = dbRoom.PricePerNight;
             Rating = dbRoom.Rating;
+
+            if (dbRoom.Accessories != null)
+                RoomAccessories = dbRoom.Accessories.ToList().RoomAccessories();
+            else
+                RoomAccessories = new List<RoomAccessory>();
         }
     }
 }

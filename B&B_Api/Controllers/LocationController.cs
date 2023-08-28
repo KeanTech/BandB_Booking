@@ -4,7 +4,7 @@ using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace B_B_Api.Controllers
+namespace B_B_api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -27,15 +27,28 @@ namespace B_B_Api.Controllers
 
         [HttpGet]
         [Route("GetLocation/{id}")]
-        public async Task<ActionResult<DbLocation>> GetLocation(int id)
+        public async Task<ActionResult<Location>> GetLocation(int id)
         {
             var location = await _context.Locations.FindAsync(id);
             if (location == null)
             {
                 return NotFound();
             }
-            return location;
 
+            return Ok(new Location(location));
+        }
+
+        [HttpGet]
+        [Route("GetLocationByLandlordId/{landlordId}")]
+        public async Task<ActionResult<IEnumerable<DbLocation>>> GetLocationByLandlordId(int landlordId)
+        {
+            var location = (await _context.Locations.ToListAsync()).Where(x => x.LandlordId == landlordId);
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(location);
         }
 
         [HttpPost]

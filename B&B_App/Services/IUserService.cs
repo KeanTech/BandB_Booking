@@ -4,5 +4,6 @@ namespace B_B_App.Services
 {
     public interface IUserService<T> :IDataService<T>
     {
+        Task<List<User>> Get();
     }
 }

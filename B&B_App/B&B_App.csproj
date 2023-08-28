@@ -8,7 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\FormCreating\**" />
+    <Content Remove="Components\FormCreating\**" />
+    <EmbeddedResource Remove="Components\FormCreating\**" />
+    <None Remove="Components\FormCreating\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\UserEditor.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+	  
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />

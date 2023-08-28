@@ -1,5 +1,6 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace B_B_App.Services
 {
@@ -44,14 +45,27 @@ namespace B_B_App.Services
 
         public async Task<List<Picture>> GetLocationPictures(int locationId)
         {
-            var returnedPictures = await _httpClient.GetFromJsonAsync<List<Picture>>($"Picture/GetLocationPictures/{locationId}");
-            return returnedPictures;
+            List<Picture>? pictures;
+            var response = await _httpClient.GetAsync($"Picture/GetLocationPictures/{locationId}");
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                return new List<Picture>();
+
+            pictures = await response.Content.ReadFromJsonAsync<List<Picture>>();
+
+            return pictures ?? new List<Picture>();
         }
 
         public async Task<List<Picture>> GetRoomPictures(int roomId)
         {
-            var returnedPictures = await _httpClient.GetFromJsonAsync<List<Picture>>($"Picture/GetRoomPictures/{roomId}");
-            return returnedPictures;
+            List<Picture>? pictures;
+            var response = await _httpClient.GetAsync($"Picture/GetRoomPictures/{roomId}");
+            if(response.StatusCode != System.Net.HttpStatusCode.OK)
+                return new List<Picture>();
+
+            pictures = await response.Content.ReadFromJsonAsync<List<Picture>>();
+
+            
+            return pictures ?? new List<Picture>();
         }
     }
 }

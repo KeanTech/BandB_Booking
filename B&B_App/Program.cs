@@ -9,9 +9,8 @@ using MudBlazor.Services;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-LoginManager.Login(new B_B_ClassLibrary.BusinessModels.User() { FirstName = "Kenneth" });
 
-Uri uri = new Uri("http://192.168.1.11:5188");
+Uri uri = new Uri("http://192.168.1.101:5188");
 
 builder.Services.AddHttpClient<IRoomService<Room>, RoomService>(client =>
 {
@@ -34,6 +33,11 @@ builder.Services.AddHttpClient<ILandlordService<Landlord>, LandlordService>(clie
 });
 
 builder.Services.AddHttpClient<IContractService<Contract>, ContractService>(client =>
+{
+    client.BaseAddress = uri;
+});
+
+builder.Services.AddHttpClient<IAccessoryService, AccessoryService>(client =>
 {
     client.BaseAddress = uri;
 });

@@ -3,8 +3,9 @@ using B_B_api.Managers;
 using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace B_B_Api.Controllers
+namespace B_B_api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -19,13 +20,13 @@ namespace B_B_Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetLandlord/{Id}")]
-        public async Task<ActionResult<DbLandlord>> GetLandlord(int id)
+        [Route("GetLandlord/{userId}")]
+        public async Task<ActionResult<DbLandlord>> GetLandlord(int userId)
         {
-            var landlord = await _context.Landlords.FindAsync(id);
+            var landlord = (await _context.Landlords.ToListAsync()).FirstOrDefault(x => x.UserId == userId);
             if (landlord != null)
             {
-                return landlord;
+                return Ok(landlord);
             }
             else
             {

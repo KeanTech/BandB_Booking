@@ -1,9 +1,9 @@
-﻿using B_B_ClassLibrary.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using B_B_ClassLibrary.Models;
 
 namespace B_B_ClassLibrary.BusinessModels
 {
@@ -11,5 +11,17 @@ namespace B_B_ClassLibrary.BusinessModels
     {
         public int Id { get; set; }
         public Accessory Type { get; set; }
+
+        public RoomAccessory()
+        {
+            
+        }
+
+        public RoomAccessory(DbRoomAccessory accessory)
+        {
+            Id = accessory.Id;
+            Type = accessory.Type;
+        }
+
     }
 }

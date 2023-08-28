@@ -3,11 +3,12 @@ using B_B_ClassLibrary.BusinessModels;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 
-namespace B_B_Api.Controllers
+namespace B_B_api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -60,11 +61,11 @@ namespace B_B_Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetRooms")]
-        public async Task<ActionResult<IEnumerable<DbRoom>>> GetRooms(int locationId)
+        [Route("GetRooms/{locationId}")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetRooms(int locationId)
         {
-            var allRooms = await _context.Rooms.Include(x => x.Accessories).Include(y => y.Pictures).Include(i => i.Ratings).Where(x => x.LocationId == locationId).ToListAsync();
-            return allRooms;
+            var allRooms = await _context.Rooms.Include(z => z.Accessories).Where(x => x.LocationId == locationId).ToListAsync();
+            return allRooms.ConvertToRooms();
         }
 
         [HttpGet]
@@ -84,7 +85,7 @@ namespace B_B_Api.Controllers
 
         [HttpPost]
         [Route("CreateRoom")]
-        public async Task<ActionResult<DbRoom>> CreateRoom([FromBody]Room room)
+        public async Task<ActionResult<DbRoom>> CreateRoom(Room room)
         {
             var checkForRoom = _context.Rooms.Where(x => x.Id == room.Id).FirstOrDefault();
             List<DbRoomAccessory> newAccList = new List<DbRoomAccessory>();
@@ -154,7 +155,7 @@ namespace B_B_Api.Controllers
                 {
                     return BadRequest(e);
                 }
-                return Ok();
+                return Ok(room);
             }
         }
 
@@ -173,5 +174,67 @@ namespace B_B_Api.Controllers
                 return false;
             }
         }
+
+        [HttpPost]
+        [Route("AddAccessoriesToRoom")]
+        public async Task<ActionResult<bool>> AddAccessoriesToRoom(Room room) 
+        {
+            if (room == null)
+                return NotFound(false);
+
+            if (room.RoomAccessories.Any() == false)
+                return NotFound(false);
+            
+            DbRoom dbRoom = new DbRoom(room);
+            dbRoom.Accessories = new List<DbRoomAccessory>();
+
+            room.RoomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+
+            _context.Set<DbRoomAccessory>().Remove(dbRoom.Accessories.First());
+
+            _context.Rooms.Update(dbRoom);
+            await _context.SaveChangesAsync();
+
+            return Ok(true);
+        }
+
+        [HttpPost]
+        [Route("RemoveAccessoryFromRoom")]
+        public async Task<ActionResult<bool>> RemoveAccessoryFromRoom(Room room)
+        {
+            if(room == null || room.RoomAccessories == null)
+                return NotFound(false);
+
+            if (room.RoomAccessories.Any() == false)
+                return NotFound(false);
+
+            DbRoom dbRoom = new DbRoom(room);
+            dbRoom.Accessories = new List<DbRoomAccessory>();
+
+            room.RoomAccessories.ForEach((x) => dbRoom.Accessories?.Add(new DbRoomAccessory(x)));
+
+            _context.Set<DbRoomAccessory>().RemoveRange(dbRoom.Accessories);
+            await _context.SaveChangesAsync();
+
+            return Ok(true);
+        }
+
+        [HttpGet]
+        [Route("GetRoomAccessories/{roomId}")]
+        public ActionResult<Room> GetRoomAccessories(int roomId) 
+        {
+            if (roomId == 0)
+                return NotFound();
+
+            var roomAccessories = _context.Rooms.Include(a => a.Accessories).ToList().FirstOrDefault(x => x.Id == roomId);
+
+            if(roomAccessories == null || roomAccessories.Accessories.Any() == false)
+                return NotFound(new List<RoomAccessory>());
+
+            Room room = new Room(roomAccessories);
+            
+            return room;
+        }
+
     }
 }
