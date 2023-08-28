@@ -5,26 +5,30 @@
 @inject IContractService<Contract> contractService
 @inject NewBookingsContainer NewBookingsContainer
 @inject LoginManager loginManager
+@inject NavigationManager navigationManager
 
 <MudDialog>
     <TitleContent>
-        Er du sikker på at du vil booke?
+        <MudText Typo="Typo.h6"> Er du sikker på at du vil booke?</MudText>
     </TitleContent>
     <DialogContent>
-        <MudText>Rum nummer: @Room.Number</MudText>
-        <MudText>Pris per nat: @Room.PricePerNight</MudText>
-        <MudText>Antal senge: @Room.NumberOfBeds</MudText>
-        <MudText>Antal senge: @Room.NumberOfBeds</MudText>
-        <MudText>Bed and Breakfast navn: @Location.Name</MudText>
-        <MudText>Område: @Location.Area</MudText>
-        <MudText>By: @Location.City</MudText>
-        <MudText>Adresse: @Location.Address</MudText>
-        <MudText>Post nummer: @Location.ZipCode</MudText>
-        <MudText>Fra dato:</MudText>
-        <MudButton @onclick="Book" Color="Color.Primary">Reserver</MudButton>
-        <MudButton @onclick="CancelBooking" Color="Color.Secondary">Fortryd</MudButton>
+        <MudText><b> Rum nummer:</b> @Room.Number</MudText>
+        <MudText><b>Pris per nat:</b> @Room.PricePerNight</MudText>
+        <MudText><b>Antal senge:</b> @Room.NumberOfBeds</MudText>
+        <MudText><b>Antal senge:</b> @Room.NumberOfBeds</MudText>
+        <MudText><b>Bed and Breakfast navn:</b> @Location.Name</MudText>
+        <MudText><b>Område:</b> @Location.Area</MudText>
+        <MudText><b>By:</b> @Location.City</MudText>
+        <MudText><b>Adresse:</b> @Location.Address</MudText>
+        <MudText><b>Post nummer:</b> @Location.ZipCode</MudText>
+        <MudText><b>Fra dato:</b> @Contract.FromDate</MudText>
+        <MudText><b>Til dato:</b> @Contract.ToDate</MudText>
+        <MudText Typo="Typo.caption">The room will need to be confirmed by the landlord before being reserved. You can view pending bookings on the bookings page</MudText>
+        <MudButton @onclick="Book" Color="Color.Primary" Variant="Variant.Filled">Add to pending bookings</MudButton>
+        <MudButton @onclick="BookAndGotoBookings" Color="Color.Secondary" Variant="Variant.Filled">Add and go to bookings</MudButton>
+        <MudButton @onclick="CancelBooking" Color="Color.Error" Variant="Variant.Filled">Cancel</MudButton>
 
-        <MudText>Bookingen kan ikke blive godkendt før betalingen er gennemført</MudText>
+        <MudText >The booking cannot be completed before the payment has been received</MudText>
     </DialogContent>
 </MudDialog>
 
@@ -55,10 +59,34 @@
         NewBookingsContainer.AddContract(Contract);
     }
 
+    void BookAndGotoBookings()
+    {
+        Contract.RoomId = Room.Id;
+        Contract.FromDate = DateTime.Now;
+        Contract.ToDate = DateTime.Now;
+        //CHANGE TO CHECK IF USER INSTANCE OF LOGINMANAGER IS NOT NULL
+        if (true)
+        {
+            //Contract.UserId = LoginManager.User.Id;
+            Contract.UserId = 4;
+        }
+        ChangePropertyValue();
+
+        MudDialog.Close(DialogResult.Ok(true));
+        navigationManager.NavigateTo("/bookings");
+    }
+
     void Book()
     {
         Contract.RoomId = Room.Id;
-        Contract.UserId = LoginManager.User.Id;
+        Contract.FromDate = DateTime.Now;
+        Contract.ToDate = DateTime.Now;
+        //CHANGE TO CHECK IF USER INSTANCE OF LOGINMANAGER IS NOT NULL
+        if (true)
+        {
+            //Contract.UserId = LoginManager.User.Id;
+            Contract.UserId = 4;
+        }
         ChangePropertyValue();
 
         MudDialog.Close(DialogResult.Ok(true));

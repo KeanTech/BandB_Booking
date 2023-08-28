@@ -95,6 +95,7 @@
         var response = await loginService.Login(_user.Username, _user.Password);
         if (!String.IsNullOrEmpty(response.Username))
         {
+            //LoginManager.User
             loggedIn = true;
         }
     }

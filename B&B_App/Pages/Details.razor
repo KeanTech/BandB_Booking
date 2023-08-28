@@ -3,6 +3,7 @@
 @inject ILocationService<Location> _locationService
 @inject IPictureService _pictureService
 @inject ISnackbar _snackbar
+@inject IDialogService dialogService
 
 <MudItem>
     <MudDatePicker @bind-Date="@_contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
@@ -137,6 +138,7 @@
     public int? locationId { get; set; }
 
     private ErrorManager _errorManager;
+    private Contract _contract = new Contract();
     private Room _room = new Room();
     private Room _selectedRoom = new Room();
     private List<Room> _rooms = new List<Room>();
@@ -172,9 +174,20 @@
         base.OnInitialized();
     }
 
-    private void Book(Room room)
+    private async void Book(Room room)
     {
         _selectedRoom = room;
         _bookingDialog = true;
+
+        var parameters = new DialogParameters();
+        parameters.Add("Contract", _contract);
+        parameters.Add("Room", room);
+        parameters.Add("Location", _location);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium };
+        var result = dialogService.Show<NewBookingDialog>("Ny booking", parameters, options);
+
+        var resultData = await result.Result;
+
     }
 }
