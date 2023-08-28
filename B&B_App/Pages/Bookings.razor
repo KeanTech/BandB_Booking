@@ -4,7 +4,7 @@
 @inject IContractService<Contract> contractService
 
 <MudCard>
-    <MudCardHeader>Bookings</MudCardHeader>
+    <MudCardHeader>Pending bookings</MudCardHeader>
     <MudCardContent>
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
@@ -13,7 +13,7 @@
     </MudCardContent>
 </MudCard>
 
-<MudButton OnClick="OnSubmitBookings">Book</MudButton>
+<MudButton OnClick="OnSubmitBookings" Variant="Variant.Filled" Color="Color.Success">Book</MudButton>
 
 
 @code {

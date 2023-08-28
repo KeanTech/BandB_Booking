@@ -29,7 +29,7 @@ namespace B_B_api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateContract")]
+        [Route("CreateContracts")]
         public async Task<ActionResult<DbContract>> CreateContracts(List<Contract> contracts)
         {
             if (contracts == null)
