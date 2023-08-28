@@ -188,6 +188,10 @@
         var result = dialogService.Show<NewBookingDialog>("Ny booking", parameters, options);
 
         var resultData = await result.Result;
+        if (!resultData.Cancelled)
+        {
+            _contract = new Contract();
+        }
 
     }
 }

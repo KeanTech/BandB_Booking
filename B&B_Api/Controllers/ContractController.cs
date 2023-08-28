@@ -17,6 +17,13 @@ namespace B_B_api.Controllers
         }
 
         [HttpGet]
+        []
+        public async Task<ActionResult<Contract>> GetUserContracts()
+        {
+
+        }
+
+        [HttpGet]
         [Route("GetContract/{id}")]
         public async Task<ActionResult<DbContract>> GetContract(int id)
         {

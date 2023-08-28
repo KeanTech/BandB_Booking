@@ -9,22 +9,41 @@
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
             <MudText>Booking ID: @booking.Id</MudText>
+            <MudText>User ID: @booking.UserId</MudText>
+            <MudText>From: @booking.FromDate</MudText>
+            <MudText>To: @booking.ToDate</MudText>
+            <MudText>Signed on: @booking.</MudText>
+            <MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit booking</MudButton>
+            <MudButton @onclick="OnCancelPendingBooking" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
         }
     </MudCardContent>
 </MudCard>
 
-<MudButton OnClick="OnSubmitBookings" Variant="Variant.Filled" Color="Color.Success">Book</MudButton>
+<MudCard>
+    <MudCardHeader>Your bookings</MudCardHeader>
+    <MudCardContent>
+        
+    </MudCardContent>
+</MudCard>
 
 
 @code {
-    private List<Room> _rooms = new List<Room>();
+    private List<Contract> _userContracts = new List<Contract>();
 
     protected override void OnInitialized()
     {
+
+
         NewBookingsContainer.OnChange += StateHasChanged;
+        base.OnInitialized();
     }
 
-    public async void OnSubmitBookings()
+    public void OnCancelPendingBooking()
+    {
+        
+    }
+
+    public async void OnSubmitBooking()
     {
         await contractService.Create(NewBookingsContainer.newBookings);
     }
