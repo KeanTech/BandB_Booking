@@ -40,7 +40,7 @@ namespace B_B_api.Controllers
 
             try
             {
-                _context.RoomAccessories.Add(new DbRoomAccessory(accessory));
+                _context.RoomAccessory.Add(new DbRoomAccessory(accessory));
                 await _context.SaveChangesAsync();
 
                 return Ok(accessory);
