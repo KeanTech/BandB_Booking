@@ -17,9 +17,9 @@ namespace B_B_ClassLibrary.Models
         public int UserId { get; set; }
         [ForeignKey("DbRoom")]
         public int RoomId { get; set; }
-        public DateTime SignedDate { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
+        public DateTime? SignedDate { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
 
         public DbContract()
         {

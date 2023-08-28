@@ -32,6 +32,11 @@ builder.Services.AddHttpClient<ILandlordService<Landlord>, LandlordService>(clie
     client.BaseAddress = uri;
 });
 
+builder.Services.AddHttpClient<IContractService<Contract>, ContractService>(client =>
+{
+    client.BaseAddress = uri;
+});
+
 builder.Services.AddHttpClient<IAccessoryService, AccessoryService>(client =>
 {
     client.BaseAddress = uri;
@@ -42,8 +47,14 @@ builder.Services.AddHttpClient<IPictureService, PictureService>(client =>
     client.BaseAddress = uri;
 });
 
+builder.Services.AddHttpClient<ILoginService, LoginService>(client =>
+{
+    client.BaseAddress = uri;
+});
+
 
 builder.Services.AddSingleton<LoginManager>();
+builder.Services.AddSingleton<NewBookingsContainer>();
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddMudServices();

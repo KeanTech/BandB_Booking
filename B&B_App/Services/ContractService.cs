@@ -12,6 +12,13 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
+        public async Task<Contract> Create(List<Contract> contracts)
+        {
+            var returnedContract = await _httpClient.PostAsJsonAsync("Contract/CreateContract", contracts);
+            var data = await returnedContract.Content.ReadFromJsonAsync<Contract>();
+            return data;
+        }
+
         public async Task<Contract> Create(Contract contract)
         {
             var returnedContract = await _httpClient.PostAsJsonAsync("Contract/CreateContract", contract);

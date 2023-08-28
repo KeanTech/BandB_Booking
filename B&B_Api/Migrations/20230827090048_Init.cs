@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace B_B_api.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace B_B_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,7 +36,9 @@ namespace B_B_api.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -120,8 +122,8 @@ namespace B_B_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Rating = table.Column<double>(type: "float", nullable: true),
-                    LocationId = table.Column<int>(type: "int", nullable: true)
+                    LocationId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,7 +132,8 @@ namespace B_B_api.Migrations
                         name: "FK_LocationRatings_Locations_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Locations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,8 +237,8 @@ namespace B_B_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Rating = table.Column<double>(type: "float", nullable: true),
-                    RoomId = table.Column<int>(type: "int", nullable: true)
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -244,7 +247,8 @@ namespace B_B_api.Migrations
                         name: "FK_RoomRatings_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -260,12 +264,12 @@ namespace B_B_api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Country", "Created", "Email", "FirstName", "LastName", "Password", "PhoneNumber" },
+                columns: new[] { "Id", "Country", "Created", "Email", "FirstName", "LastName", "Password", "PasswordSalt", "PhoneNumber", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Denmark", new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6533), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "12345", "12345678" },
-                    { 2, "Denmark", new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6586), "mortvest5@gmail.com", "Morten", "Vestergaard", "12345", "11223344" },
-                    { 3, "Denmark", new DateTime(2023, 8, 22, 23, 8, 50, 31, DateTimeKind.Local).AddTicks(6588), "buster@outlook.com", "Buster", "Jørgensen", "12345", "55005500" }
+                    { 1, "Denmark", new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2679), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "12345", "NotRealSalt", "12345678", "Kenneth123" },
+                    { 2, "Denmark", new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2724), "mortvest5@gmail.com", "Morten", "Vestergaard", "12345", "NotRealSalt", "11223344", "Morten123" },
+                    { 3, "Denmark", new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2726), "buster@outlook.com", "Buster", "Jørgensen", "12345", "NotRealSalt", "55005500", "Buster123" }
                 });
 
             migrationBuilder.InsertData(
@@ -279,6 +283,15 @@ namespace B_B_api.Migrations
                 values: new object[] { 1, "Havnevej 1", 4, "TestArea", "Skagen", "Denmark", 1, "Hansens fede Bed and Breakfast", 4.0999999999999996, "1000" });
 
             migrationBuilder.InsertData(
+                table: "LocationRatings",
+                columns: new[] { "Id", "LocationId", "Rating" },
+                values: new object[,]
+                {
+                    { 1, 1, 4.0 },
+                    { 2, 1, 5.0 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Rooms",
                 columns: new[] { "Id", "LocationId", "Number", "NumberOfBeds", "PricePerNight", "Rating" },
                 values: new object[,]
@@ -287,6 +300,16 @@ namespace B_B_api.Migrations
                     { 2, 1, 2, 2, 200, 2.0 },
                     { 3, 1, 3, 1, 1000, 5.0 },
                     { 4, 1, 4, 3, 2000, 1.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RoomRatings",
+                columns: new[] { "Id", "Rating", "RoomId" },
+                values: new object[,]
+                {
+                    { 1, 1.0, 1 },
+                    { 2, 5.0, 2 },
+                    { 3, 3.0, 4 }
                 });
 
             migrationBuilder.CreateIndex(

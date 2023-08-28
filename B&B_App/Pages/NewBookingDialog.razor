@@ -1,0 +1,69 @@
+﻿@using System.ComponentModel
+@using System.Reflection
+@using B_B_App.Services;
+@implements IDisposable
+@inject IContractService<Contract> contractService
+@inject NewBookingsContainer NewBookingsContainer
+@inject LoginManager loginManager
+
+<MudDialog>
+    <TitleContent>
+        Er du sikker på at du vil booke?
+    </TitleContent>
+    <DialogContent>
+        <MudText>Rum nummer: @Room.Number</MudText>
+        <MudText>Pris per nat: @Room.PricePerNight</MudText>
+        <MudText>Antal senge: @Room.NumberOfBeds</MudText>
+        <MudText>Antal senge: @Room.NumberOfBeds</MudText>
+        <MudText>Bed and Breakfast navn: @Location.Name</MudText>
+        <MudText>Område: @Location.Area</MudText>
+        <MudText>By: @Location.City</MudText>
+        <MudText>Adresse: @Location.Address</MudText>
+        <MudText>Post nummer: @Location.ZipCode</MudText>
+        <MudText>Fra dato:</MudText>
+        <MudDatePicker @bind-Date="@contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
+        <MudDatePicker @bind-Date="@contract.ToDate" Label="Til:" DisableToolbar="true"></MudDatePicker>
+        <MudButton @onclick="Book" Color="Color.Primary">Reserver</MudButton>
+        <MudButton @onclick="CancelBooking" Color="Color.Secondary">Fortryd</MudButton>
+
+        <MudText>Bookingen kan ikke blive godkendt før betalingen er gennemført</MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Room Room { get; set; }
+    [Parameter] public Location Location { get; set; }
+
+    DateTime? from = DateTime.Today;
+
+    public Contract contract = new Contract();
+
+    protected override void OnInitialized()
+    {
+        NewBookingsContainer.OnChange += StateHasChanged;
+    }
+
+
+
+    public void Dispose()
+    {
+        NewBookingsContainer.OnChange -= StateHasChanged;
+    }
+
+    private void ChangePropertyValue()
+    {
+        NewBookingsContainer.AddContract(contract);
+    }
+
+    void Book()
+    {
+        contract.RoomId = Room.Id;
+        contract.UserId = LoginManager.User.Id;
+        ChangePropertyValue();
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    void CancelBooking() => MudDialog.Cancel();
+}

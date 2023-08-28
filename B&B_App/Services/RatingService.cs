@@ -2,24 +2,34 @@
 
 namespace B_B_App.Services
 {
-    public class RatingService : IRatingService<Rating>
+    public class RatingService : IRatingService
     {
-        public Task<Rating> Create(Rating type)
+        public Task<Rating> GetRoomRatings(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Delete(Rating type)
+        public Task<Rating> GetLocationRatings(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Rating> Get(int id)
+        public Task<Rating> CreateRoomRating(Rating rating)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Rating> Update(Rating type)
+        public Task<Rating> CreateLocationRating(Rating rating)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Rating> DeleteRoomRating(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Rating> DeleteLocationRating(int id)
         {
             throw new NotImplementedException();
         }

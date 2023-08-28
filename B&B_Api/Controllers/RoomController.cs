@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 
 namespace B_B_api.Controllers
@@ -30,7 +31,7 @@ namespace B_B_api.Controllers
         {
             try
             {
-                var allRooms = await _context.Rooms.ToListAsync();
+                var allRooms = await _context.Rooms.Include(x => x.Ratings).Include(y => y.Pictures).Include(i => i.Accessories).ToListAsync();
                 return allRooms;
             }
             catch (Exception e)
@@ -71,7 +72,7 @@ namespace B_B_api.Controllers
         [Route("GetRoom/{id}")]
         public async Task<ActionResult<DbRoom>> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms.Include(x => x.Accessories).Where(y => y.Id == id).FirstOrDefaultAsync();
             if (room != null)
             {
                 return room;
@@ -84,12 +85,26 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("CreateRoom")]
-        public async Task<ActionResult<Room>> CreateRoom(Room room)
+        public async Task<ActionResult<DbRoom>> CreateRoom(Room room)
         {
             var checkForRoom = _context.Rooms.Where(x => x.Id == room.Id).FirstOrDefault();
+            List<DbRoomAccessory> newAccList = new List<DbRoomAccessory>();
+            foreach (var accessory in room.Accessories) 
+            {
+                DbRoomAccessory newAcc = new DbRoomAccessory(accessory);
+                newAccList.Add(newAcc);
+            }
+
+            //var accessoryCheck = _context.RoomAccessory.Where(x => room.Accessories.Contains(x.Type));
+            //var accessoryCheck = await _context.RoomAccessory.Where(x => room.Accessories.Any(y => y.Type == x.Type)).ToListAsync();
+            var allAccessories = _context.RoomAccessory.ToList();
+            var accessoryCheck = allAccessories.Where(x => room.Accessories.Any(y => y.Type == x.Type)).ToList();
+
             if (checkForRoom == null)
             {
                 DbRoom newRoom = new DbRoom(room);
+                newRoom.Accessories = accessoryCheck;
+                
                 _context.Rooms.Add(newRoom);
                 await _context.SaveChangesAsync();
                 room.Id = newRoom.Id;

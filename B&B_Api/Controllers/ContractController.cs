@@ -30,6 +30,34 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("CreateContract")]
+        public async Task<ActionResult<DbContract>> CreateContracts(List<Contract> contracts)
+        {
+            if (contracts == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                foreach (var contract in contracts)
+                {
+                    DbContract newContract = new DbContract(contract);
+                    _context.Add(newContract);
+                }
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                    throw;
+                }
+                return Ok();
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateContract")]
         public async Task<ActionResult<DbContract>> CreateContract(Contract contract)
         {
             var contractCheck = _context.Contracts.Where(x => x.Id == contract.Id).FirstOrDefault();

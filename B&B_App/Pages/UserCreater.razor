@@ -29,6 +29,9 @@
 {
     <MudItem xs="15" sm="10">
         <MudForm @bind-IsValid="_formSuccess" @bind-Errors="@formErrors">
+            <MudTextField @bind-Value="_user.Username" Label="Indtast brugernavn" Placeholder="Brugernavn"></MudTextField>
+
+            <MudTextField @bind-Value="_user.Password" Label="Indkast adgangskode" Placeholder="Adgangskode" Adornment="Adornment.End" InputType="@PasswordInput" OnAdornmentClick="OnPasswordVisibilityClick" AdornmentIcon="PasswordInputIcon" AdornmentAriaLabel="Vis adgangskode"></MudTextField>
 
             <MudTextField @bind-Value="_user.FirstName" Label="Indtast fornavn" Placeholder="Fornavn"></MudTextField>
 
@@ -36,7 +39,6 @@
 
             <MudTextField @bind-Value="_user.Email" Label="Indtast email" Placeholder="Email"></MudTextField>
 
-            <MudTextField @bind-Value="_user.Password" Label="Indkast adgangskode" Placeholder="Adgangskode" Adornment="Adornment.End" InputType="@PasswordInput" OnAdornmentClick="OnPasswordVisibilityClick" AdornmentIcon="PasswordInputIcon" AdornmentAriaLabel="Vis adgangskode"></MudTextField>
 
             <MudTextField @bind-Value="_user.PhoneNumber" Label="Indtast telefonnummer" Placeholder="Telefonnummer"></MudTextField>
 
@@ -113,7 +115,7 @@
         {
             _user.Created = DateTime.Now;
             await userService.Create(_user);
-            _processing = false;
+            navi.NavigateTo("/");
         }
         else if (UserType == "Udlejer")
         {
@@ -125,8 +127,9 @@
             _landlord.PhoneNumber = _user.PhoneNumber;
             _landlord.Country = _user.Country;
             await landlordService.Create(_landlord);
-            _processing = false;
+            navi.NavigateTo("/");
         }
+        _processing = false;
     }
 
     private void Redirect()

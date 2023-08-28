@@ -1,18 +1,36 @@
 ﻿@page "/Bookings"
-@inject IRoomService<Room> roomService
+@implements IDisposable
+@inject NewBookingsContainer NewBookingsContainer
+@inject IContractService<Contract> contractService
 
-@foreach (var item in _rooms)
-{
-   <MudCard>
-       <MudCardContent>
-           
-       </MudCardContent>
-   </MudCard>
-}
+<MudCard>
+    <MudCardHeader>Bookings</MudCardHeader>
+    <MudCardContent>
+        @foreach (var booking in NewBookingsContainer.newBookings)
+        {
+            <MudText>Booking ID: @booking.Id</MudText>
+        }
+    </MudCardContent>
+</MudCard>
+
+<MudButton OnClick="OnSubmitBookings">Book</MudButton>
 
 
 @code {
     private List<Room> _rooms = new List<Room>();
-    
 
+    protected override void OnInitialized()
+    {
+        NewBookingsContainer.OnChange += StateHasChanged;
+    }
+
+    public async void OnSubmitBookings()
+    {
+        await contractService.Create(NewBookingsContainer.newBookings);
+    }
+
+    public void Dispose()
+    {
+        NewBookingsContainer.OnChange -= StateHasChanged;
+    }
 }
