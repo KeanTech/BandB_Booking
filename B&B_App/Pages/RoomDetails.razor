@@ -4,6 +4,7 @@
 @inject ILocationService<Location> locationService
 @inject IPictureService pictureService
 @inject IDialogService DialogService
+@inject NewBookingsContainer bookingContainer
 
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
@@ -26,7 +27,7 @@
             Antal senge: @_room.NumberOfBeds
         </MudText>
         <br />
-        <MudButton  OnClick="@(() => OnNewBooking(_room, _location))">Reserver</MudButton>
+        <MudButton  OnClick="@(() => OnNewBooking(_room, _location))">Føj til booking</MudButton>
     </MudCardContent>
 
     <MudCardContent>
@@ -99,7 +100,7 @@
     private List<Picture> locationPictures = new List<Picture>();
 
 
-    private void OnNewBooking(Room room, Location location)
+    private async void OnNewBooking(Room room, Location location)
     {
         var parameters = new DialogParameters();
         parameters.Add("Room", room);
@@ -107,6 +108,18 @@
 
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium };
         var result = DialogService.Show<NewBookingDialog>("Ny reservation", parameters, options);
+
+        if (result != null)
+        {
+            var dataFromDialog = await result.Result;
+            bookingContainer.newBookings.Add((Contract)dataFromDialog.Data);
+            //bookingContainer.OnChange() += StateHasChanged();
+        }
+    }
+
+    private void ChangePropertyValue()
+    {
+        
     }
 
     protected override async Task OnInitializedAsync()

@@ -11,15 +11,16 @@ namespace B_B_Api.Controllers
     public class LoginController : Controller
     {
         private readonly BedAndBreakfastContext _context;
-        private LoginManager _loginManager;
+        private LoginManager _loginManager = new LoginManager();
 
         public LoginController(BedAndBreakfastContext context)
         {
             _context = context;
         }
 
-        [HttpGet]
-        public IActionResult Login([FromBody]User user)
+        [HttpPost]
+        [Route("ValidateUser")]
+        public ActionResult<User> ValidateUser(User user)
         {
             if (String.IsNullOrEmpty(user.Username) || String.IsNullOrEmpty(user.Password))
             {
@@ -30,11 +31,12 @@ namespace B_B_Api.Controllers
             {
                 var salt = _loginManager.GetSaltFromDB(user.Username, _context);
 
-                var hashedPassword = _loginManager.GetHashedPasswordFromDB(user.Password, _context);
+                var hashedPassword = _loginManager.GetHashedPasswordFromDB(user.Username, _context);
 
                 if (_loginManager.ValidatePassword(user.Password, user.Username, salt, hashedPassword)) 
                 {
-                    return Ok(true);
+                    var userToReturn = _context.Users.Where(x => x.Username == user.Username);
+                    return Ok(userToReturn);
                 }
             }
             return BadRequest();

@@ -1,4 +1,6 @@
 ﻿@using B_B_ClassLibrary.BusinessModels;
+@inject ILoginService loginService
+
 <div class="modal fade show" id="myModal" style="display:block; position:relative; z-index:3;"   aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <MudTextField @bind-Value="User.Email" Variant="Variant.Filled" Placeholder="Username" For="@(() => User.Email)" DisableUnderLine="true" Margin="Margin.Dense"></MudTextField>
+                    <MudTextField @bind-Value="User.Username" Variant="Variant.Filled" Placeholder="Username" For="@(() => User.Username)" DisableUnderLine="true" Margin="Margin.Dense"></MudTextField>
                     <MudTextField @bind-Value="User.Password" Variant="Variant.Filled" InputType="InputType.Password" Placeholder="Password" For="@(() => User.Password)" DisableUnderLine="true" Margin="Margin.Dense"></MudTextField>
                 </form>
 

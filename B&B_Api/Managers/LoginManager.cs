@@ -55,7 +55,7 @@ namespace B_B_api.Managers
 
         public string GetHashedPasswordFromDB(string username, BedAndBreakfastContext context)
         {
-            var user = context.Users.Where(x => x.Username.Equals(username)).FirstOrDefault();
+            var user = context.Users.Where(x => x.Username == username).FirstOrDefault();
             return user.Password;
         }
 

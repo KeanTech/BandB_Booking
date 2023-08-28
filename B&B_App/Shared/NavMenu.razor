@@ -35,8 +35,8 @@
             </NavLink>
             @if (loggedIn)
             {
-                <NavLink class="nav-link" href="/reservations" Match="NavLinkMatch.All">
-                    <span class="oi oi-home" aria-hidden="true"></span> Bookings
+                <NavLink class="nav-link" href="/bookings" Match="NavLinkMatch.All">
+                    <span class="oi oi-calendar" aria-hidden="true"></span> Bookings
                 </NavLink>
 
             }
@@ -67,7 +67,6 @@
 
         loginDialogOpen = true;
 
-
         return;
     }
 
@@ -85,11 +84,19 @@
 
         if (pair.Key)
         {
-            var response = loginService.Login(_user.Username, _user.Password);
             loggedIn = true;
-
         }
+        TryLogin();
 
+    }
+
+    private async void TryLogin()
+    {
+        var response = await loginService.Login(_user);
+        if (response.FirstName != "" && response.FirstName != null)
+        {
+            loggedIn = true;
+        }
     }
 
     private void CreateUserRedirect()

@@ -1,6 +1,10 @@
 ﻿@using System.ComponentModel
 @using System.Reflection
 @using B_B_App.Services;
+@implements IDisposable
+@inject IContractService<Contract> contractService
+@inject NewBookingsContainer NewBookingsContainer
+@inject LoginManager loginManager
 
 <MudDialog>
     <TitleContent>
@@ -16,7 +20,9 @@
         <MudText>By: @Location.City</MudText>
         <MudText>Adresse: @Location.Address</MudText>
         <MudText>Post nummer: @Location.ZipCode</MudText>
-
+        <MudText>Fra dato:</MudText>
+        <MudDatePicker @bind-Date="@contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
+        <MudDatePicker @bind-Date="@contract.ToDate" Label="Til:" DisableToolbar="true"></MudDatePicker>
         <MudButton @onclick="Book" Color="Color.Primary">Reserver</MudButton>
         <MudButton @onclick="CancelBooking" Color="Color.Secondary">Fortryd</MudButton>
 
@@ -27,11 +33,37 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter]public Room Room { get; set; }
-    [Parameter]public Location Location { get; set; }
-    public List<Contract> contracts = new List<Contract>();
+    [Parameter] public Room Room { get; set; }
+    [Parameter] public Location Location { get; set; }
+
+    DateTime? from = DateTime.Today;
+
+    public Contract contract = new Contract();
+
+    protected override void OnInitialized()
+    {
+        NewBookingsContainer.OnChange += StateHasChanged;
+    }
 
 
-    void Book() => MudDialog.Close(DialogResult.Ok(contracts));
+
+    public void Dispose()
+    {
+        NewBookingsContainer.OnChange -= StateHasChanged;
+    }
+
+    private void ChangePropertyValue()
+    {
+        NewBookingsContainer.AddContract(contract);
+    }
+
+    void Book()
+    {
+        contract.RoomId = Room.Id;
+        contract.UserId = LoginManager.User.Id;
+        ChangePropertyValue();
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
     void CancelBooking() => MudDialog.Cancel();
 }
