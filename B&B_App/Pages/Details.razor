@@ -4,6 +4,10 @@
 @inject IPictureService _pictureService
 @inject ISnackbar _snackbar
 
+<MudItem>
+    <MudDatePicker @bind-Date="@_contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
+    <MudDatePicker @bind-Date="@_contract.ToDate" Label="Til:" DisableToolbar="true"></MudDatePicker>
+</MudItem>
 
 <MudCard Class="indigo lighten-5">
     <MudCardHeader>
@@ -39,6 +43,7 @@
         </MudText>
 
     </MudCardContent>
+
     <MudDivider DividerType="DividerType.Middle" Light="false"></MudDivider>
     <MudCardContent>
         <MudGrid>
@@ -96,6 +101,11 @@
                 </MudItem>
 
                 <MudItem xs="12">
+                    <MudButton ButtonType="ButtonType.Button" Color="Color.Warning" Variant="Variant.Filled" @onclick="() => Book(room)">Book</MudButton>
+                </MudItem>
+
+
+                <MudItem xs="12">
                     <MudGrid Class="grey lighten-1">
                         @if (roomPictures.ContainsKey(room.Id))
                         {
@@ -114,6 +124,13 @@
 
 </MudCard>
 
+@if (_bookingDialog)
+{
+    <MudCardActions>
+        <NewBookingDialog Location="_location" Room="_selectedRoom"></NewBookingDialog>
+    </MudCardActions>
+}
+
 @code {
     // Used as a roomId to pass in the url
     [Parameter]
@@ -121,11 +138,13 @@
 
     private ErrorManager _errorManager;
     private Room _room = new Room();
+    private Room _selectedRoom = new Room();
     private List<Room> _rooms = new List<Room>();
     private Location _location = new Location();
     private Dictionary<int, List<Picture>> roomPictures = new Dictionary<int, List<Picture>>();
     private List<Picture> locationPictures = new List<Picture>();
     private PictureManager _pictureManager;
+    private bool _bookingDialog;
 
     protected override async Task OnInitializedAsync()
     {
@@ -142,7 +161,7 @@
             _location = await _locationService.Get(locationId ?? 0);
 
             roomPictures = await _pictureManager.GetPictureList(_rooms);
-            
+
             locationPictures = await _pictureService.GetLocationPictures(_location.Id);
         }
         catch (Exception ex)
@@ -151,5 +170,11 @@
         }
         #endregion
         base.OnInitialized();
+    }
+
+    private void Book(Room room)
+    {
+        _selectedRoom = room;
+        _bookingDialog = true;
     }
 }
