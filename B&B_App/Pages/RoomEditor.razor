@@ -6,6 +6,8 @@
 @inject IAccessoryService _accessoryService
 @inject LoginManager _loginManager
 @inject ISnackbar _snackbar
+@inject NavigationManager _navi
+@inject LoginManager _loginManager  
 
 <MudCard>
     <MudCardHeader>
@@ -141,14 +143,21 @@
     protected override async Task OnInitializedAsync()
     {
         _user = LoginManager.User;
-        _errorManager = new ErrorManager(_snackbar);
+        if (string.IsNullOrEmpty(_user.FirstName))
+            _navi.NavigateTo("/");
 
+        if (_loginManager.IsLandLord() == false)
+            _navi.NavigateTo("/");
+
+
+
+        _errorManager = new ErrorManager(_snackbar);
+        
         if (RoomId == 0)
             return;
 
         try
         {
-            //if (loginManager.IsLandLord(_user.Id))
             _room = await _roomService.Get(RoomId);
             _accessories = await _accessoryService.GetAllAccessories();
             _roomAccessories = (await _roomService.GetRoomAccessories(RoomId)).Accessories;

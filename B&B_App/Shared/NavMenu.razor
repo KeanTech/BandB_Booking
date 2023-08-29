@@ -41,7 +41,7 @@
                 if (_loginManager.IsLandLord())
                 {
                     <NavLink class="nav-link" href="/bnbcreator" Match="NavLinkMatch.All">
-                        <span class="oi oi-calendar" aria-hidden="true"></span> Bookings
+                        <span class="oi oi-wrench" aria-hidden="true"></span> Editor
                     </NavLink>
                 }
             }
@@ -94,8 +94,8 @@
             loggedIn = true;
             _user = pair.Value;
         }
-        
 
+        StateHasChanged();
     }
 
     private void CreateUserRedirect()

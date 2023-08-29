@@ -34,7 +34,7 @@ namespace B_B_api.Controllers
         {
             var pictures = _context.LocationPictures.Where(x => x.LocationId == locationId).ToList();
             if (pictures.Any())
-                return Ok(pictures);
+                return Ok(pictures.ConvertToPictures());
             else
                 return NotFound();
         }

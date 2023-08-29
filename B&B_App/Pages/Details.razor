@@ -3,14 +3,19 @@
 @inject ILocationService<Location> _locationService
 @inject IPictureService _pictureService
 @inject ISnackbar _snackbar
-@inject IDialogService dialogService
+@inject IDialogService _dialogService
+@inject NavigationManager _navi
 
-<MudItem>
-    <MudDatePicker @bind-Date="@_contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
-    <MudDatePicker @bind-Date="@_contract.ToDate" Label="Til:" DisableToolbar="true"></MudDatePicker>
-</MudItem>
+<MudGrid>
+    <MudItem xs="6">
+        <MudDatePicker Variant="Variant.Filled" PickerVariant="PickerVariant.Dialog" Style="z-index:4" @bind-Date="@_contract.FromDate" Label="Fra:" DisableToolbar="true"></MudDatePicker>
+    </MudItem>
+    <MudItem xs="6">
+        <MudDatePicker Variant="Variant.Filled" PickerVariant="PickerVariant.Dialog" Style="z-index:4" @bind-Date="@_contract.ToDate" Label="Til:" DisableToolbar="true"></MudDatePicker>
+    </MudItem>
+</MudGrid>
 
-<MudCard Class="indigo lighten-5">
+<MudCard Class="indigo lighten-5" Elevation="1">
     <MudCardHeader>
         <MudText>Info om stedet</MudText>
     </MudCardHeader>
@@ -151,6 +156,9 @@
     protected override async Task OnInitializedAsync()
     {
         _errorManager = new ErrorManager(_snackbar);
+        if (string.IsNullOrEmpty(LoginManager.User?.FirstName))
+            _navi.NavigateTo("/");
+
         #region Data loading
         if (locationId == null)
             return;
@@ -185,7 +193,7 @@
         parameters.Add("Location", _location);
 
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium };
-        var result = dialogService.Show<NewBookingDialog>("Ny booking", parameters, options);
+        var result = _dialogService.Show<NewBookingDialog>("Ny booking", parameters, options);
 
         var resultData = await result.Result;
         if (!resultData.Cancelled)
