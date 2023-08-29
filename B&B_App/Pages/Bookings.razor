@@ -4,15 +4,14 @@
 @inject IContractService<Contract> contractService
 
 <MudCard>
-    <MudCardHeader>Rooms you have selected to book</MudCardHeader>
+    <MudCardHeader><h6>Rooms you have selected to book</h6> </MudCardHeader>
     <MudCardContent>
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
-            <MudText>Booking ID: @booking.Id</MudText>
-            <MudText>User ID: @booking.UserId</MudText>
-            <MudText>From: @booking.FromDate</MudText>
-            <MudText>To: @booking.ToDate</MudText>
-            <MudText>Signed on: @booking.</MudText>
+            <MudText><b>Room ID: </b>@booking.RoomId</MudText>
+            <MudText><b>From:</b> @booking.FromDate</MudText>
+            <MudText><b>To:</b> @booking.ToDate</MudText>
+            <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
             <MudButton @onclick="() => OnCancelSelectedBooking(booking)" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
         }
     </MudCardContent>
@@ -20,18 +19,25 @@
 <MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit your bookings</MudButton>
 
 <MudCard>
-    <MudCardHeader>Pending bookings</MudCardHeader>
+    <MudCardHeader><h6>Pending bookings</h6></MudCardHeader>
     <MudCardContent>
-
+        @foreach (var booking in _pendingUserContracts)
+        {
+            <MudText><b>From:</b> @booking.FromDate</MudText>
+            <MudText><b>To:</b> @booking.ToDate</MudText>
+            <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+        }
     </MudCardContent>
 </MudCard>
 
 <MudCard>
-    <MudCardHeader>Your bookings</MudCardHeader>
+    <MudCardHeader><h6>Your bookings</h6> </MudCardHeader>
     <MudCardContent>
         @foreach(var booking in _userContracts)
         {
-            
+            <MudText><b>From:</b> @booking.FromDate</MudText>
+            <MudText><b>To:</b> @booking.ToDate</MudText>
+            <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
         }
     </MudCardContent>
 </MudCard>
@@ -39,11 +45,14 @@
 
 @code {
     private List<Contract> _userContracts = new List<Contract>();
+    private List<Contract> _pendingUserContracts = new List<Contract>();
     private User _user = LoginManager.User;
 
     protected override async void OnInitialized()
     {
-        _userContracts = await contractService.GetContracts(_user.Id);
+        _userContracts = await contractService.GetUserContracts(_user.Id);
+        _pendingUserContracts = await contractService.GetPendingContracts(_user.Id);
+
 
         NewBookingsContainer.OnChange += StateHasChanged;
         base.OnInitialized();

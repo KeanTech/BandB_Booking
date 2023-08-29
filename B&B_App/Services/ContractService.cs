@@ -12,6 +12,24 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
+        public async Task<List<Contract>> GetUserContracts(int id)
+        {
+            var returnedContracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetUserContracts{id}");
+            return returnedContracts;
+        }
+
+        public async Task<List<Contract>> GetPendingContracts(int id)
+        {
+            var pendingContracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetPendingContracts{id}");
+            return pendingContracts;
+        }
+
+        public async Task<List<Contract>> GetRejectedContracts(int id)
+        {
+            var approvedCotnracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetRejectedContracts{id}");
+            return approvedCotnracts;
+        }
+
         public async Task<Contract> Create(List<Contract> contracts)
         {
             var returnedContract = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
@@ -40,11 +58,6 @@ namespace B_B_App.Services
         }
 
 
-        public async Task<List<Contract>> GetUserContracts(int id)
-        {
-            var returnedContracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetUserContracts{id}");
-            return returnedContracts;
-        }
 
         public async Task<Contract> Get(int id)
         {

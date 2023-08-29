@@ -17,10 +17,10 @@ namespace B_B_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserContracts")]
+        [Route("GetUserContracts{id}")]
         public ActionResult<List<Contract>> GetUserContracts(int id)
         {
-            var contractsFromDb = _context.Contracts.Where(x => x.UserId == id).ToList();
+            var contractsFromDb = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Approved)).ToList();
             if (contractsFromDb != null)
             {
                 List<Contract> contractsForFrontend = new List<Contract>();
@@ -35,10 +35,28 @@ namespace B_B_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetPendingContracts")]
+        [Route("GetPendingContracts{id}")]
         public async Task<ActionResult<List<Contract>>> GetPendingContracts(int id)
         {
             var pendingContracts = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Pending)).ToList();
+            if (pendingContracts != null)
+            {
+                List<Contract> frontendConctacts = new List<Contract>();
+                foreach (var contract in pendingContracts)
+                {
+                    Contract frontendContract = new Contract(contract);
+                    frontendConctacts.Add(frontendContract);
+                }
+                return frontendConctacts;
+            }
+            return NotFound("No pending contracts");
+        }
+
+        [HttpGet]
+        [Route("GetRejectedContracts{id}")]
+        public async Task<ActionResult<List<Contract>>> GetRejectedContracts(int id)
+        {
+            var pendingContracts = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Rejected)).ToList();
             if (pendingContracts != null)
             {
                 List<Contract> frontendConctacts = new List<Contract>();

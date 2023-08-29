@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace B_B_api.Migrations
 {
     [DbContext(typeof(BedAndBreakfastContext))]
-    [Migration("20230827090048_Init")]
+    [Migration("20230829081405_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -33,16 +33,20 @@ namespace B_B_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("FromDate")
+                    b.Property<DateTime?>("FromDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("SignedDate")
+                    b.Property<DateTime?>("SignedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ToDate")
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ToDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
@@ -55,6 +59,48 @@ namespace B_B_api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Contracts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FromDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(883),
+                            RoomId = 1,
+                            SignedDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(877),
+                            State = "Pending",
+                            ToDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(885),
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FromDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(890),
+                            RoomId = 2,
+                            SignedDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(888),
+                            State = "Pending",
+                            ToDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(891),
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FromDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(895),
+                            RoomId = 3,
+                            SignedDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(893),
+                            State = "Approved",
+                            ToDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(896),
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FromDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(899),
+                            RoomId = 4,
+                            SignedDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(898),
+                            State = "Approved",
+                            ToDate = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(901),
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("B_B_ClassLibrary.Models.DbLandlord", b =>
@@ -439,33 +485,33 @@ namespace B_B_api.Migrations
                         {
                             Id = 1,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2679),
+                            Created = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(602),
                             Email = "ken1ander2@hotmail.com",
                             FirstName = "Kenneth",
                             LastName = "Andersen",
-                            Password = "12345",
-                            PasswordSalt = "NotRealSalt",
+                            Password = "q5yHTWQW2SrE3gyI3SHQfZYmjsdy274WcllLHch+Zho=",
+                            PasswordSalt = "wuB6MiK4WMA=",
                             PhoneNumber = "12345678",
-                            Username = "Kenneth123"
+                            Username = "Kenneth"
                         },
                         new
                         {
                             Id = 2,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2724),
+                            Created = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(656),
                             Email = "mortvest5@gmail.com",
                             FirstName = "Morten",
                             LastName = "Vestergaard",
-                            Password = "12345",
-                            PasswordSalt = "NotRealSalt",
+                            Password = "Eyki/vykvjv6hF1GC3xN49mFA9Sxf8+GL2DA3qVV5Os=",
+                            PasswordSalt = "aUDcodYHRV8=",
                             PhoneNumber = "11223344",
-                            Username = "Morten123"
+                            Username = "Mort"
                         },
                         new
                         {
                             Id = 3,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 27, 11, 0, 48, 724, DateTimeKind.Local).AddTicks(2726),
+                            Created = new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(658),
                             Email = "buster@outlook.com",
                             FirstName = "Buster",
                             LastName = "Jørgensen",

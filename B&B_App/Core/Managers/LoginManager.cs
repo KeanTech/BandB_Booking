@@ -39,7 +39,7 @@ namespace B_B_App.Core.Managers
             Login();
             var landLord = await _landlordService.Get(User.Id);
             
-            if (landLord == null)
+            if (landLord.UserId == null || landLord.UserId == 0)
                 return;
 
             _landlord = landLord;

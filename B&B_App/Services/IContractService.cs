@@ -8,5 +8,6 @@ namespace B_B_App.Services
     {
         public Task<Contract> Create(List<Contract> contracts);
         public Task<List<Contract>> GetUserContracts(int id);
+        public Task<List<Contract>> GetPendingContracts(int id);
     }
 }
