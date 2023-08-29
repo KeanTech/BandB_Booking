@@ -268,15 +268,15 @@ namespace B_B_api.Migrations
                 columns: new[] { "Id", "Country", "Created", "Email", "FirstName", "LastName", "Password", "PasswordSalt", "PhoneNumber", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Denmark", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(602), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "q5yHTWQW2SrE3gyI3SHQfZYmjsdy274WcllLHch+Zho=", "wuB6MiK4WMA=", "12345678", "Kenneth" },
-                    { 2, "Denmark", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(656), "mortvest5@gmail.com", "Morten", "Vestergaard", "Eyki/vykvjv6hF1GC3xN49mFA9Sxf8+GL2DA3qVV5Os=", "aUDcodYHRV8=", "11223344", "Mort" },
-                    { 3, "Denmark", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(658), "buster@outlook.com", "Buster", "Jørgensen", "12345", "NotRealSalt", "55005500", "Buster123" }
+                    { 1, "Denmark", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5207), "ken1ander2@hotmail.com", "Kenneth", "Andersen", "q5yHTWQW2SrE3gyI3SHQfZYmjsdy274WcllLHch+Zho=", "wuB6MiK4WMA=", "12345678", "Kenneth" },
+                    { 2, "Denmark", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5259), "mortvest5@gmail.com", "Morten", "Vestergaard", "Eyki/vykvjv6hF1GC3xN49mFA9Sxf8+GL2DA3qVV5Os=", "aUDcodYHRV8=", "11223344", "Mort" },
+                    { 3, "Denmark", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5262), "buster@outlook.com", "Buster", "Jørgensen", "12345", "NotRealSalt", "55005500", "Buster123" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Landlords",
                 columns: new[] { "Id", "AccountNumber", "CPRNumber", "RegistrationNumber", "UserId" },
-                values: new object[] { 1, "0000222244446666", "0101906673", "6789", 3 });
+                values: new object[] { 1, "0000222244446666", "0101906673", "6789", 1 });
 
             migrationBuilder.InsertData(
                 table: "Locations",
@@ -308,10 +308,10 @@ namespace B_B_api.Migrations
                 columns: new[] { "Id", "FromDate", "RoomId", "SignedDate", "State", "ToDate", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(883), 1, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(877), "Pending", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(885), 2 },
-                    { 2, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(890), 2, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(888), "Pending", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(891), 2 },
-                    { 3, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(895), 3, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(893), "Approved", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(896), 2 },
-                    { 4, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(899), 4, new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(898), "Approved", new DateTime(2023, 8, 29, 10, 14, 5, 390, DateTimeKind.Local).AddTicks(901), 2 }
+                    { 1, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5471), 1, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5467), "Pending", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5472), 2 },
+                    { 2, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5476), 2, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5474), "Pending", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5477), 2 },
+                    { 3, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5480), 3, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5478), "Approved", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5481), 2 },
+                    { 4, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5484), 4, new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5482), "Approved", new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5485), 2 }
                 });
 
             migrationBuilder.InsertData(

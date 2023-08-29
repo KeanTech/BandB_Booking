@@ -65,7 +65,7 @@
         Contract.RoomId = Room.Id;
         Contract.FromDate = DateTime.Now;
         Contract.ToDate = DateTime.Now;
-
+        Contract.State = ContractState.Pending;
         if (LoginManager.User != null)
         {
             Contract.UserId = LoginManager.User.Id;

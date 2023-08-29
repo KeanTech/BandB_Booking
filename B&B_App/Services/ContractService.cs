@@ -30,11 +30,10 @@ namespace B_B_App.Services
             return approvedCotnracts;
         }
 
-        public async Task<Contract> Create(List<Contract> contracts)
+        public async Task<HttpResponseMessage> Create(List<Contract> contracts)
         {
-            var returnedContract = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
-            var data = await returnedContract.Content.ReadFromJsonAsync<Contract>();
-            return data;
+            var returnedMessage = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
+            return returnedMessage;
         }
 
         public async Task<Contract> Create(Contract contract)

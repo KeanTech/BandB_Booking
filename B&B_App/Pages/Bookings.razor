@@ -8,11 +8,14 @@
     <MudCardContent>
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
-            <MudText><b>Room ID: </b>@booking.RoomId</MudText>
-            <MudText><b>From:</b> @booking.FromDate</MudText>
-            <MudText><b>To:</b> @booking.ToDate</MudText>
-            <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
-            <MudButton @onclick="() => OnCancelSelectedBooking(booking)" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
+            <MudCard>
+                <MudText><b>Room ID: </b>@booking.RoomId</MudText>
+                <MudText><b>From:</b> @booking.FromDate</MudText>
+                <MudText><b>To:</b> @booking.ToDate</MudText>
+                <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+                <MudButton @onclick="() => OnCancelSelectedBooking(booking)" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
+            </MudCard>
+            <br>
         }
     </MudCardContent>
 </MudCard>
@@ -23,9 +26,13 @@
     <MudCardContent>
         @foreach (var booking in _pendingUserContracts)
         {
-            <MudText><b>From:</b> @booking.FromDate</MudText>
-            <MudText><b>To:</b> @booking.ToDate</MudText>
-            <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+            <MudCard>
+
+                <MudText><b>From:</b> @booking.FromDate</MudText>
+                <MudText><b>To:</b> @booking.ToDate</MudText>
+                <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+            </MudCard>
+                <br>
         }
     </MudCardContent>
 </MudCard>
@@ -33,11 +40,15 @@
 <MudCard>
     <MudCardHeader><h6>Your bookings</h6> </MudCardHeader>
     <MudCardContent>
-        @foreach(var booking in _userContracts)
+        @foreach (var booking in _userContracts)
         {
-            <MudText><b>From:</b> @booking.FromDate</MudText>
-            <MudText><b>To:</b> @booking.ToDate</MudText>
-            <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+            <MudCard>
+
+                <MudText><b>From:</b> @booking.FromDate</MudText>
+                <MudText><b>To:</b> @booking.ToDate</MudText>
+                <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+            </MudCard>
+                <br>
         }
     </MudCardContent>
 </MudCard>
@@ -54,8 +65,8 @@
         _pendingUserContracts = await contractService.GetPendingContracts(_user.Id);
 
 
-        NewBookingsContainer.OnChange += StateHasChanged;
         base.OnInitialized();
+        NewBookingsContainer.OnChange += StateHasChanged;
     }
 
     public void OnCancelSelectedBooking(Contract contract)
@@ -66,6 +77,7 @@
     public async void OnSubmitBooking()
     {
         await contractService.Create(NewBookingsContainer.newBookings);
+        NewBookingsContainer.newBookings.Clear();
     }
 
     public void Dispose()

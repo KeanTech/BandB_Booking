@@ -69,7 +69,7 @@ namespace B_B_api.Data
                 new DbLandlord
                 {
                     Id = 1,
-                    UserId = 3,
+                    UserId = 1,
                     CPRNumber = "0101906673",
                     AccountNumber = "0000222244446666",
                     RegistrationNumber = "6789",

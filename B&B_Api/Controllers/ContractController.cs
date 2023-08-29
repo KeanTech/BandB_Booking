@@ -85,7 +85,7 @@ namespace B_B_api.Controllers
                 foreach (var contract in contracts)
                 {
                     DbContract newContract = new DbContract(contract);
-                    _context.Add(newContract);
+                    _context.Contracts.Add(newContract);
                 }
                 try
                 {
