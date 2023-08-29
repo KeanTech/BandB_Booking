@@ -33,7 +33,7 @@ namespace B_B_App.Core.Managers
         public async Task UserLogin(string username, string password)
         {
             var user = await _loginService.Login(username, password);
-            if (string.IsNullOrEmpty(user.FirstName))
+            if (string.IsNullOrEmpty(user.FirstName) == false)
                 User = user;
 
             Login();

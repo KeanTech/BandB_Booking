@@ -53,7 +53,7 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("CreateLocation")]
-        public async Task<ActionResult<DbLocation>> CreateLocation(Location location)
+        public async Task<ActionResult<Location>> CreateLocation(Location location)
         {
             var checkForLocation = _context.Locations.Where(x => x.Id == location.Id).FirstOrDefault();
             if (checkForLocation == null)
@@ -62,7 +62,7 @@ namespace B_B_api.Controllers
                 await _context.Locations.AddAsync(newLocation);
 
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("Create", new { id = newLocation.Id }, newLocation);
+                return Ok(new Location(newLocation));
             }
             else
             {
