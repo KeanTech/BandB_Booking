@@ -1,6 +1,7 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
 using System.Net.Http.Json;
 using System.Net;
+using System.Text.Json;
 
 namespace B_B_App.Services
 {
@@ -30,10 +31,12 @@ namespace B_B_App.Services
             return approvedCotnracts;
         }
 
-        public async Task<HttpResponseMessage> Create(List<Contract> contracts)
+        public async Task<List<Contract>> Create(List<Contract> contracts)
         {
-            var returnedMessage = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
-            return returnedMessage;
+            var response = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
+            var content = await response.Content.ReadAsStringAsync();
+            var returnedContracts = JsonSerializer.Deserialize<List<Contract>>(content);
+            return returnedContracts;
         }
 
         public async Task<Contract> Create(Contract contract)

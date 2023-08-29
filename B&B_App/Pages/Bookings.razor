@@ -4,7 +4,7 @@
 @inject IContractService<Contract> contractService
 
 <MudCard>
-    <MudCardHeader><h6>Rooms you have selected to book</h6> </MudCardHeader>
+    <MudCardHeader><h6>Rooms you have selected to book (@NewBookingsContainer.newBookings.Count)</h6> </MudCardHeader>
     <MudCardContent>
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
@@ -19,10 +19,13 @@
         }
     </MudCardContent>
 </MudCard>
-<MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit your bookings</MudButton>
+@if (NewBookingsContainer.newBookings.Count > 0)
+{
+    <MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit your bookings</MudButton>
+}
 
 <MudCard>
-    <MudCardHeader><h6>Pending bookings</h6></MudCardHeader>
+    <MudCardHeader><h6>Pending bookings (@_pendingUserContracts.Count)</h6></MudCardHeader>
     <MudCardContent>
         @foreach (var booking in _pendingUserContracts)
         {
@@ -32,13 +35,13 @@
                 <MudText><b>To:</b> @booking.ToDate</MudText>
                 <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
             </MudCard>
-                <br>
+            <br>
         }
     </MudCardContent>
 </MudCard>
 
 <MudCard>
-    <MudCardHeader><h6>Your bookings</h6> </MudCardHeader>
+    <MudCardHeader><h6>Your bookings (@_userContracts.Count)</h6> </MudCardHeader>
     <MudCardContent>
         @foreach (var booking in _userContracts)
         {
@@ -48,7 +51,7 @@
                 <MudText><b>To:</b> @booking.ToDate</MudText>
                 <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
             </MudCard>
-                <br>
+            <br>
         }
     </MudCardContent>
 </MudCard>
@@ -64,20 +67,25 @@
         _userContracts = await contractService.GetUserContracts(_user.Id);
         _pendingUserContracts = await contractService.GetPendingContracts(_user.Id);
 
+        var first = _userContracts[0];
+        StateHasChanged();
 
-        base.OnInitialized();
         NewBookingsContainer.OnChange += StateHasChanged;
+        base.OnInitialized();
     }
 
     public void OnCancelSelectedBooking(Contract contract)
     {
         NewBookingsContainer.newBookings.Remove(contract);
+        StateHasChanged();
     }
 
     public async void OnSubmitBooking()
     {
-        await contractService.Create(NewBookingsContainer.newBookings);
+        var returnedContracts = await contractService.Create(NewBookingsContainer.newBookings);
+        _pendingUserContracts.AddRange(returnedContracts);
         NewBookingsContainer.newBookings.Clear();
+        StateHasChanged();
     }
 
     public void Dispose()

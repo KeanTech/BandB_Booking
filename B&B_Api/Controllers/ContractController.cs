@@ -73,7 +73,7 @@ namespace B_B_api.Controllers
 
         [HttpPost]
         [Route("CreateContracts")]
-        public async Task<ActionResult> CreateContracts(List<Contract> contracts)
+        public async Task<ActionResult<List<Contract>>> CreateContracts(List<Contract> contracts)
         {
             if (contracts == null)
             {
@@ -81,21 +81,17 @@ namespace B_B_api.Controllers
             }
             else
             {
-                
-                foreach (var contract in contracts)
-                {
-                    DbContract newContract = new DbContract(contract);
-                    _context.Contracts.Add(newContract);
-                }
+                    var dbContracts = contracts.ConvertToDbContracts();
                 try
                 {
+                    _context.Contracts.AddRange(dbContracts);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
                     return BadRequest(e);
                 }
-                return Ok("Contracts created");
+                return Ok(dbContracts.ConvertToContracts());
             }
         }
 

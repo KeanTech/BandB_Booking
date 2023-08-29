@@ -21,6 +21,7 @@ namespace B_B_ClassLibrary.BusinessModels
         {
             
         }
+
         public Contract(DbContract contract)
         {
             Id = contract.Id;
@@ -30,6 +31,28 @@ namespace B_B_ClassLibrary.BusinessModels
             FromDate = contract.FromDate;
             ToDate = contract.ToDate;
             State = contract.State;
+        }
+    }
+    public static class ContractExtensions
+    {
+        public static List<Contract> ConvertToContracts(this List<DbContract> dbContracts)
+        {
+            List<Contract> newContracts = new List<Contract>();
+            foreach (DbContract contract in dbContracts)
+            {
+                newContracts.Add(new Contract(contract));
+            }
+            return newContracts;
+        }
+
+        public static List<DbContract> ConvertToDbContracts(this List<Contract> contracts)
+        {
+            List<DbContract> newDbContracts = new List<DbContract>();
+            foreach (Contract contract in contracts)
+            {
+                newDbContracts.Add(new DbContract(contract));
+            }
+            return newDbContracts;
         }
     }
 }

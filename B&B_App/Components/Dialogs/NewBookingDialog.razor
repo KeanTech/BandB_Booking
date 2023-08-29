@@ -63,8 +63,6 @@
     void BookAndGotoBookings()
     {
         Contract.RoomId = Room.Id;
-        Contract.FromDate = DateTime.Now;
-        Contract.ToDate = DateTime.Now;
         Contract.State = ContractState.Pending;
         if (LoginManager.User != null)
         {
@@ -79,8 +77,6 @@
     void Book()
     {
         Contract.RoomId = Room.Id;
-        Contract.FromDate = DateTime.Now;
-        Contract.ToDate = DateTime.Now;
         Contract.State = ContractState.Pending;
         if (LoginManager.User != null)
         {

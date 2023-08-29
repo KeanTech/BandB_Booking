@@ -186,9 +186,11 @@
     {
         _selectedRoom = room;
         _bookingDialog = true;
+        Contract contractForDialog = _contract;
+
 
         var parameters = new DialogParameters();
-        parameters.Add("Contract", _contract);
+        parameters.Add("Contract", contractForDialog);
         parameters.Add("Room", room);
         parameters.Add("Location", _location);
 
@@ -198,7 +200,7 @@
         var resultData = await result.Result;
         if (!resultData.Cancelled)
         {
-            _contract = new Contract();
+            contractForDialog = new Contract();
         }
 
     }
