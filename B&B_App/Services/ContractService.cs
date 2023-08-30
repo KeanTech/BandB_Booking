@@ -1,6 +1,7 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
 using System.Net.Http.Json;
 using System.Net;
+using System.Text.Json;
 
 namespace B_B_App.Services
 {
@@ -12,11 +13,30 @@ namespace B_B_App.Services
             _httpClient = client;
         }
 
-        public async Task<Contract> Create(List<Contract> contracts)
+        public async Task<List<Contract>> GetUserContracts(int id)
         {
-            var returnedContract = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
-            var data = await returnedContract.Content.ReadFromJsonAsync<Contract>();
-            return data;
+            var returnedContracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetUserContracts{id}");
+            return returnedContracts;
+        }
+
+        public async Task<List<Contract>> GetPendingContracts(int id)
+        {
+            var pendingContracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetPendingContracts{id}");
+            return pendingContracts;
+        }
+
+        public async Task<List<Contract>> GetRejectedContracts(int id)
+        {
+            var approvedCotnracts = await _httpClient.GetFromJsonAsync<List<Contract>>($"Contract/GetRejectedContracts{id}");
+            return approvedCotnracts;
+        }
+
+        public async Task<List<Contract>> Create(List<Contract> contracts)
+        {
+            var response = await _httpClient.PostAsJsonAsync("Contract/CreateContracts", contracts);
+            var content = await response.Content.ReadAsStringAsync();
+            var returnedContracts = JsonSerializer.Deserialize<List<Contract>>(content);
+            return returnedContracts;
         }
 
         public async Task<Contract> Create(Contract contract)
@@ -38,6 +58,8 @@ namespace B_B_App.Services
                 return false;
             }
         }
+
+
 
         public async Task<Contract> Get(int id)
         {

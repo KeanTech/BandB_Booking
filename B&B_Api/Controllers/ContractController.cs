@@ -1,5 +1,6 @@
 ﻿using B_B_api.Data;
 using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Enums;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,84 @@ namespace B_B_api.Controllers
             _context = context;
         }
 
-        //[HttpGet]
-        //[Route("GetUserContracts")]
-        //public async Task<ActionResult<Contract>> GetUserContracts(Contract contract)
-        //{
-            
-        //}
+        [HttpGet]
+        [Route("GetUserContracts{id}")]
+        public ActionResult<List<Contract>> GetUserContracts(int id)
+        {
+            var contractsFromDb = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Approved)).ToList();
+            if (contractsFromDb != null)
+            {
+                List<Contract> contractsForFrontend = new List<Contract>();
+                foreach (var contract in contractsFromDb)
+                {
+                    Contract contractConv = new Contract(contract);
+                    contractsForFrontend.Add(contractConv);
+                }
+                return Ok(contractsForFrontend);
+            }
+            return NotFound("No contracts found");
+        }
+
+        [HttpGet]
+        [Route("GetPendingContracts{id}")]
+        public async Task<ActionResult<List<Contract>>> GetPendingContracts(int id)
+        {
+            var pendingContracts = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Pending)).ToList();
+            if (pendingContracts != null)
+            {
+                List<Contract> frontendConctacts = new List<Contract>();
+                foreach (var contract in pendingContracts)
+                {
+                    Contract frontendContract = new Contract(contract);
+                    frontendConctacts.Add(frontendContract);
+                }
+                return frontendConctacts;
+            }
+            return NotFound("No pending contracts");
+        }
+
+        [HttpGet]
+        [Route("GetRejectedContracts{id}")]
+        public async Task<ActionResult<List<Contract>>> GetRejectedContracts(int id)
+        {
+            var pendingContracts = _context.Contracts.Where(x => (x.UserId == id) && (x.State == ContractState.Rejected)).ToList();
+            if (pendingContracts != null)
+            {
+                List<Contract> frontendConctacts = new List<Contract>();
+                foreach (var contract in pendingContracts)
+                {
+                    Contract frontendContract = new Contract(contract);
+                    frontendConctacts.Add(frontendContract);
+                }
+                return frontendConctacts;
+            }
+            return NotFound("No pending contracts");
+        }
+
+
+        [HttpPost]
+        [Route("CreateContracts")]
+        public async Task<ActionResult<List<Contract>>> CreateContracts(List<Contract> contracts)
+        {
+            if (contracts == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                    var dbContracts = contracts.ConvertToDbContracts();
+                try
+                {
+                    _context.Contracts.AddRange(dbContracts);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok(dbContracts.ConvertToContracts());
+            }
+        }
 
         [HttpGet]
         [Route("GetContract/{id}")]
@@ -33,34 +106,6 @@ namespace B_B_api.Controllers
                 return NotFound();
             }
             return contract;
-        }
-
-        [HttpPost]
-        [Route("CreateContracts")]
-        public async Task<ActionResult<DbContract>> CreateContracts(List<Contract> contracts)
-        {
-            if (contracts == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                foreach (var contract in contracts)
-                {
-                    DbContract newContract = new DbContract(contract);
-                    _context.Add(newContract);
-                }
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e);
-                    throw;
-                }
-                return Ok();
-            }
         }
 
         [HttpPost]

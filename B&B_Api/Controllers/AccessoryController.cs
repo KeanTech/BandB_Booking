@@ -1,5 +1,6 @@
 ﻿using B_B_api.Data;
 using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Enums;
 using B_B_ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

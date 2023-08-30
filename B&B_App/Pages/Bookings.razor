@@ -4,48 +4,88 @@
 @inject IContractService<Contract> contractService
 
 <MudCard>
-    <MudCardHeader>Pending bookings</MudCardHeader>
+    <MudCardHeader><h6>Rooms you have selected to book (@NewBookingsContainer.newBookings.Count)</h6> </MudCardHeader>
     <MudCardContent>
         @foreach (var booking in NewBookingsContainer.newBookings)
         {
-            <MudText>Booking ID: @booking.Id</MudText>
-            <MudText>User ID: @booking.UserId</MudText>
-            <MudText>From: @booking.FromDate</MudText>
-            <MudText>To: @booking.ToDate</MudText>
-            <MudText>Signed on: @booking.</MudText>
-            <MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit booking</MudButton>
-            <MudButton @onclick="OnCancelPendingBooking" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
+            <MudCard>
+                <MudText><b>Room ID: </b>@booking.RoomId</MudText>
+                <MudText><b>From:</b> @booking.FromDate</MudText>
+                <MudText><b>To:</b> @booking.ToDate</MudText>
+                <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+                <MudButton @onclick="() => OnCancelSelectedBooking(booking)" Variant="Variant.Filled" Color="Color.Error">Cancel Pending booking</MudButton>
+            </MudCard>
+            <br>
+        }
+    </MudCardContent>
+</MudCard>
+@if (NewBookingsContainer.newBookings.Count > 0)
+{
+    <MudButton @onclick="OnSubmitBooking" Variant="Variant.Filled" Color="Color.Success">Submit your bookings</MudButton>
+}
+
+<MudCard>
+    <MudCardHeader><h6>Pending bookings (@_pendingUserContracts.Count)</h6></MudCardHeader>
+    <MudCardContent>
+        @foreach (var booking in _pendingUserContracts)
+        {
+            <MudCard>
+
+                <MudText><b>From:</b> @booking.FromDate</MudText>
+                <MudText><b>To:</b> @booking.ToDate</MudText>
+                <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+            </MudCard>
+            <br>
         }
     </MudCardContent>
 </MudCard>
 
 <MudCard>
-    <MudCardHeader>Your bookings</MudCardHeader>
+    <MudCardHeader><h6>Your bookings (@_userContracts.Count)</h6> </MudCardHeader>
     <MudCardContent>
-        
+        @foreach (var booking in _userContracts)
+        {
+            <MudCard>
+
+                <MudText><b>From:</b> @booking.FromDate</MudText>
+                <MudText><b>To:</b> @booking.ToDate</MudText>
+                <MudText><b>Signed on:</b> @booking.SignedDate</MudText>
+            </MudCard>
+            <br>
+        }
     </MudCardContent>
 </MudCard>
 
 
 @code {
     private List<Contract> _userContracts = new List<Contract>();
+    private List<Contract> _pendingUserContracts = new List<Contract>();
+    private User _user = LoginManager.User;
 
     protected override async void OnInitialized()
     {
-        //_userContracts = await contractService.
+        _userContracts = await contractService.GetUserContracts(_user.Id);
+        _pendingUserContracts = await contractService.GetPendingContracts(_user.Id);
+
+        var first = _userContracts[0];
+        StateHasChanged();
 
         NewBookingsContainer.OnChange += StateHasChanged;
         base.OnInitialized();
     }
 
-    public void OnCancelPendingBooking()
+    public void OnCancelSelectedBooking(Contract contract)
     {
-        
+        NewBookingsContainer.newBookings.Remove(contract);
+        StateHasChanged();
     }
 
     public async void OnSubmitBooking()
     {
-        await contractService.Create(NewBookingsContainer.newBookings);
+        var returnedContracts = await contractService.Create(NewBookingsContainer.newBookings);
+        _pendingUserContracts.AddRange(returnedContracts);
+        NewBookingsContainer.newBookings.Clear();
+        StateHasChanged();
     }
 
     public void Dispose()

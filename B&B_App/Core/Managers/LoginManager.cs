@@ -33,13 +33,13 @@ namespace B_B_App.Core.Managers
         public async Task UserLogin(string username, string password)
         {
             var user = await _loginService.Login(username, password);
-            if (string.IsNullOrEmpty(user.FirstName) == false)
+            if (!string.IsNullOrEmpty(user.FirstName))
                 User = user;
 
             Login();
             var landLord = await _landlordService.Get(User.Id);
             
-            if (landLord == null)
+            if (landLord.UserId == null || landLord.UserId == 0)
                 return;
 
             _landlord = landLord;

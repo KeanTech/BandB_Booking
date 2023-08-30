@@ -21,16 +21,17 @@ namespace B_B_api.Controllers
 
         [HttpGet]
         [Route("GetLandlord/{userId}")]
-        public async Task<ActionResult<DbLandlord>> GetLandlord(int userId)
+        public async Task<ActionResult<Landlord>> GetLandlord(int userId)
         {
             var landlord = (await _context.Landlords.ToListAsync()).FirstOrDefault(x => x.UserId == userId);
             if (landlord != null)
             {
-                return Ok(landlord);
+            Landlord frontendLandlord = new Landlord(landlord);
+                return Ok(frontendLandlord);
             }
             else
             {
-                return NotFound();
+                return Ok(new Landlord());
             }
         }
 

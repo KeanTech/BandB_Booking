@@ -1,6 +1,8 @@
-﻿using B_B_ClassLibrary.Models;
+﻿using B_B_ClassLibrary.Enums;
+using B_B_ClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Diagnostics.Contracts;
 
 namespace B_B_api.Data
 {
@@ -32,9 +34,9 @@ namespace B_B_api.Data
                     Email = "ken1ander2@hotmail.com",
                     Country = "Denmark",
                     Created = DateTime.Now,
-                    Username = "Kenneth123",
-                    Password = "12345",
-                    PasswordSalt = "NotRealSalt",
+                    Username = "Kenneth",
+                    Password = "q5yHTWQW2SrE3gyI3SHQfZYmjsdy274WcllLHch+Zho=",
+                    PasswordSalt = "wuB6MiK4WMA=",
                     PhoneNumber = "12345678",
                 },
                 new DbUser
@@ -45,9 +47,9 @@ namespace B_B_api.Data
                     Email = "mortvest5@gmail.com",
                     Country = "Denmark",
                     Created = DateTime.Now,
-                    Username = "Morten123",
-                    Password = "12345",
-                    PasswordSalt = "NotRealSalt",
+                    Username = "Mort",
+                    Password = "Eyki/vykvjv6hF1GC3xN49mFA9Sxf8+GL2DA3qVV5Os=",
+                    PasswordSalt = "aUDcodYHRV8=",
                     PhoneNumber = "11223344",
                 },
                 new DbUser
@@ -68,7 +70,7 @@ namespace B_B_api.Data
                 new DbLandlord
                 {
                     Id = 1,
-                    UserId = 3,
+                    UserId = 1,
                     CPRNumber = "0101906673",
                     AccountNumber = "0000222244446666",
                     RegistrationNumber = "6789",
@@ -141,6 +143,54 @@ namespace B_B_api.Data
             modelBuilder.Entity<DbLocationRating>().HasData(
                 new DbLocationRating { Id = 1, Rating = 4, LocationId = 1 },
                 new DbLocationRating { Id = 2, Rating = 5, LocationId = 1 });
+
+            modelBuilder.Entity<DbContract>().HasData(
+                new DbContract
+                {
+                    Id = 1,
+                    UserId = 2,
+                    RoomId = 1,
+                    SignedDate = DateTime.Now,
+                    FromDate = DateTime.Now,
+                    ToDate = DateTime.Now,
+                    State = ContractState.Pending
+                },
+                new DbContract
+                {
+                    Id = 2,
+                    UserId = 2,
+                    RoomId = 2,
+                    SignedDate = DateTime.Now,
+                    FromDate = DateTime.Now,
+                    ToDate = DateTime.Now,
+                    State = ContractState.Pending
+                },
+                new DbContract
+                {
+                    Id = 3,
+                    UserId = 2,
+                    RoomId = 3,
+                    SignedDate = DateTime.Now,
+                    FromDate = DateTime.Now,
+                    ToDate = DateTime.Now,
+                    State = ContractState.Approved
+                },
+                new DbContract
+                {
+                    Id = 4,
+                    UserId = 2,
+                    RoomId = 4,
+                    SignedDate = DateTime.Now,
+                    FromDate = DateTime.Now,
+                    ToDate = DateTime.Now,
+                    State = ContractState.Approved
+                });
+
+            modelBuilder.Entity<DbContract>()
+                .Property(x => x.State)
+                .HasConversion(
+                y => y.ToString(),
+                y => (ContractState)Enum.Parse(typeof(ContractState), y));
 
             modelBuilder.Entity<DbRoomAccessory>()
                 .Property(x => x.Type)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using B_B_ClassLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,15 @@ namespace B_B_ClassLibrary.BusinessModels
         public Landlord()
         {
             
+        }
+
+        public Landlord(DbLandlord landlord)
+        {
+            Id = landlord.Id;
+            UserId = landlord.UserId;
+            CPRNumber = landlord.CPRNumber;
+            AccountNumber = landlord.AccountNumber;
+            RegistrationNumber = landlord.RegistrationNumber;
         }
 
         public Landlord( User user, Landlord landlord) : base(user)
