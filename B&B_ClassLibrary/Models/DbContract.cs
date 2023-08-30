@@ -1,4 +1,5 @@
 ﻿using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

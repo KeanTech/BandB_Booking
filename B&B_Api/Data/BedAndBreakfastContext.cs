@@ -1,4 +1,5 @@
-﻿using B_B_ClassLibrary.Models;
+﻿using B_B_ClassLibrary.Enums;
+using B_B_ClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Diagnostics.Contracts;

@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace B_B_ClassLibrary.Models
+namespace B_B_ClassLibrary.Enums
 {
-    public enum Accessory
+    public enum ContractState
     {
-        Desk = 1,
-        TV = 2,
-        Wifi = 3,
-        Balcony = 4,
+        Pending = 1,
+        Rejected = 2,
+        Approved = 3,
     }
 }

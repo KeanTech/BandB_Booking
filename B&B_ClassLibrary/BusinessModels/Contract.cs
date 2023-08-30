@@ -1,4 +1,5 @@
-﻿using B_B_ClassLibrary.Models;
+﻿using B_B_ClassLibrary.Enums;
+using B_B_ClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
