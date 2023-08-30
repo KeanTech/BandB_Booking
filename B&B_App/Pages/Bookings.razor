@@ -67,7 +67,6 @@
         _userContracts = await contractService.GetUserContracts(_user.Id);
         _pendingUserContracts = await contractService.GetPendingContracts(_user.Id);
 
-        var first = _userContracts[0];
         StateHasChanged();
 
         NewBookingsContainer.OnChange += StateHasChanged;
