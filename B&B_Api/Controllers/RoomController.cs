@@ -105,7 +105,7 @@ namespace B_B_api.Controllers
                 
                 _context.Rooms.Add(newRoom);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("CreateRoom", room);
+                return Ok(new Room(newRoom));
             }
             else
             {

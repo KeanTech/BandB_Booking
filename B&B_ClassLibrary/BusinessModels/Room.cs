@@ -1,4 +1,5 @@
-﻿using B_B_ClassLibrary.Models;
+﻿using B_B_ClassLibrary.BusinessModels;
+using B_B_ClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace B_B_ClassLibrary.BusinessModels
 {
@@ -26,8 +28,10 @@ namespace B_B_ClassLibrary.BusinessModels
         public List<Rating> Ratings{ get; set; }
         public Room()
         {
-            
-        }
+            Accessories = new List<RoomAccessory>();
+            Pictures = new List<Picture>();
+            Ratings = new List<Rating>();
+        }   
 
         public Room(DbRoom dbRoom)
         {

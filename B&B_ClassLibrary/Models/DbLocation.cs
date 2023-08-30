@@ -31,6 +31,13 @@ namespace B_B_ClassLibrary.Models
         {
             Id = location.Id;
             LandlordId = location.LandlordId;
+            Name = location.Name;
+            Address = location.Address;
+            City = location.City;
+            ZipCode = location.ZipCode;
+            Country = location.Country;
+            AmountOfRooms = location.AmountOfRooms;
+            Area = location.Area;
 
         }
 
