@@ -34,7 +34,7 @@ namespace B_B_api.Controllers
 
                 var hashedPassword = _loginManager.GetHashedPasswordFromDB(credentials.Username, _context);
 
-                if (_loginManager.ValidatePassword(credentials.Password, credentials.Username, salt, hashedPassword)) 
+                if (_loginManager.ValidatePassword(credentials.Password, salt, hashedPassword)) 
                 {
                     var userFromDb = _context.Users.FirstOrDefault(x => x.Username == credentials.Username);
                     User userToReturn = new User(userFromDb);

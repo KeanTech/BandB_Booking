@@ -59,7 +59,7 @@ namespace B_B_api.Managers
             return user.Password;
         }
 
-        public bool ValidatePassword(string password, string username, string salt, string HashedPassword)
+        public bool ValidatePassword(string password, string salt, string HashedPassword)
         {
             string tempPwd = "";
             byte[] pwdWithSaltFromDB = Encoding.ASCII.GetBytes(string.Concat(password, salt));

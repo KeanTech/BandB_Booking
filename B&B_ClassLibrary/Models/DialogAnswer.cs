@@ -1,6 +1,6 @@
 ﻿namespace B_B_ClassLibrary.Models
 {
-    public class DialogAnwser
+    public class DialogAnswer
     {
         /// <summary>
         /// This string is nullable 
