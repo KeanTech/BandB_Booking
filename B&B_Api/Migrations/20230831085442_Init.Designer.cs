@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace B_B_api.Migrations
 {
     [DbContext(typeof(BedAndBreakfastContext))]
-    [Migration("20230829135338_Init")]
+    [Migration("20230831085442_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -64,41 +64,41 @@ namespace B_B_api.Migrations
                         new
                         {
                             Id = 1,
-                            FromDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5471),
+                            FromDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6761),
                             RoomId = 1,
-                            SignedDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5467),
+                            SignedDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6699),
                             State = "Pending",
-                            ToDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5472),
+                            ToDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6773),
                             UserId = 2
                         },
                         new
                         {
                             Id = 2,
-                            FromDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5476),
+                            FromDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6807),
                             RoomId = 2,
-                            SignedDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5474),
+                            SignedDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6794),
                             State = "Pending",
-                            ToDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5477),
+                            ToDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6820),
                             UserId = 2
                         },
                         new
                         {
                             Id = 3,
-                            FromDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5480),
+                            FromDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6851),
                             RoomId = 3,
-                            SignedDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5478),
+                            SignedDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6839),
                             State = "Approved",
-                            ToDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5481),
+                            ToDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6864),
                             UserId = 2
                         },
                         new
                         {
                             Id = 4,
-                            FromDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5484),
+                            FromDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6892),
                             RoomId = 4,
-                            SignedDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5482),
+                            SignedDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6879),
                             State = "Approved",
-                            ToDate = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5485),
+                            ToDate = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(6905),
                             UserId = 2
                         });
                 });
@@ -485,7 +485,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 1,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5207),
+                            Created = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(4237),
                             Email = "ken1ander2@hotmail.com",
                             FirstName = "Kenneth",
                             LastName = "Andersen",
@@ -498,7 +498,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 2,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5259),
+                            Created = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(4413),
                             Email = "mortvest5@gmail.com",
                             FirstName = "Morten",
                             LastName = "Vestergaard",
@@ -511,7 +511,7 @@ namespace B_B_api.Migrations
                         {
                             Id = 3,
                             Country = "Denmark",
-                            Created = new DateTime(2023, 8, 29, 15, 53, 38, 704, DateTimeKind.Local).AddTicks(5262),
+                            Created = new DateTime(2023, 8, 31, 10, 54, 41, 646, DateTimeKind.Local).AddTicks(4439),
                             Email = "buster@outlook.com",
                             FirstName = "Buster",
                             LastName = "Jørgensen",
